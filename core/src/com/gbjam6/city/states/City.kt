@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.gbjam6.city.GBJam6
+import com.gbjam6.city.Hills
 import ktx.app.KtxScreen
 
 class City(val gbJam6: GBJam6) : KtxScreen {
@@ -18,6 +19,8 @@ class City(val gbJam6: GBJam6) : KtxScreen {
 
     override fun show() {
         super.show()
+        val hills = Hills()
+        println(hills.chunks)
     }
 
     override fun render(delta: Float) {
