@@ -11,6 +11,10 @@
 - @Mirionos — [Twitter](https://www.twitter.com/Mirionos) : Game Design, Code
 - @yopox — [Twitter](https://www.twitter.com/elyopox) : Code
 
+## Build
+
+To build the game you will need [TanjentXM library](http://www.tanjent.se/labs/tanjentxm.html) in `core/src/`.
+
 ## Development
 
 ### Twitter thread
