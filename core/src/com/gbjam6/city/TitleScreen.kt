@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.FitViewport
 import ktx.app.KtxScreen
 
@@ -19,12 +18,16 @@ class TitleScreen(gbJam6: GBJam6): KtxScreen {
 
     private val bgColor = Color.valueOf("cdf6f7")
     private val titleName = Sprite(Texture("name.png"))
+    private val positions = Array(128) { Math.sin(it * Math.PI / 64).toFloat() }
+    private var frame = 0
 
     override fun show() {
         super.show()
     }
 
     override fun render(delta: Float) {
+
+        frame = (frame + 1) % 128
 
         camera.update()
 
@@ -36,7 +39,7 @@ class TitleScreen(gbJam6: GBJam6): KtxScreen {
         batch.projectionMatrix = camera.combined
         batch.begin()
 
-        batch.draw(titleName, -64f, 16f)
+        batch.draw(titleName, -64f, 16f +  Util.getPixel(2 * positions[frame]))
 
         batch.end()
 
