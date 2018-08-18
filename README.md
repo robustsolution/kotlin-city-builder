@@ -4,7 +4,7 @@
 
 ## Team
 
-- @adorikill — [Twitter](twitter.com/adorikill) : Pixel art
+- @A_Do — [Twitter](twitter.com/adorikill) : Pixel art
 - Le Art — [Twitter](twitter.com/LeArtRemix) : Chiptunes
 - @Mirionos — [Twitter](twitter.com/Mirionos) : Game Design, Code
 - @yopox — [Twitter](twitter.com/elyopox) : Code
