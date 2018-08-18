@@ -79,6 +79,9 @@ project(":core") {
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+        compile group: 'io.github.libktx', name: 'ktx-app', version: '1.9.8-b1'
+        compile group: 'io.github.libktx', name: 'ktx-scene2d', version: '1.9.8-b1'
     }
 }
 

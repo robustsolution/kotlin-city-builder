@@ -1,30 +1,17 @@
 package com.gbjam6.city
 
-import com.badlogic.gdx.ApplicationAdapter
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.Screen
+import ktx.app.KtxGame
 
-class GBJam6 : ApplicationAdapter() {
-    internal var batch: SpriteBatch
-    internal var img: Texture
+class GBJam6() : KtxGame<Screen>() {
 
     override fun create() {
-        batch = SpriteBatch()
-        img = Texture("badlogic.jpg")
+
+        // Add the different states
+        addScreen(TitleScreen(this))
+
+        setScreen<TitleScreen>()
+
     }
 
-    override fun render() {
-        Gdx.gl.glClearColor(1f, 0f, 0f, 1f)
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-        batch.begin()
-        batch.draw(img, 0f, 0f)
-        batch.end()
-    }
-
-    override fun dispose() {
-        batch.dispose()
-        img.dispose()
-    }
 }
