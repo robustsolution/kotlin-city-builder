@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.gbjam6.city.GBJam6
 import com.gbjam6.city.Util
+import com.tanjent.tanjentxm.Player
 import ktx.app.KtxScreen
 
 class TitleScreen(val gbJam6: GBJam6) : KtxScreen {
@@ -22,9 +23,9 @@ class TitleScreen(val gbJam6: GBJam6) : KtxScreen {
     private val viewport = FitViewport(160f, 144f, camera)
 
     private val bgColor = Color.valueOf("A7CBD5")
-    private val font = BitmapFont(FileHandle("fonts/skullboy.fnt"))
-    private val titleName = Sprite(Texture("name.png"))
-    private val dot = Sprite(Texture("dot.png"))
+    private lateinit var font: BitmapFont
+    private lateinit var titleName: Sprite
+    private lateinit var dot: Sprite
 
     private val positions = Array(128) { Math.sin(it * Math.PI / 64).toFloat() }
     private val xPos = listOf(-37f - 8f, -33f - 8f, -46f - 8f)
@@ -34,6 +35,15 @@ class TitleScreen(val gbJam6: GBJam6) : KtxScreen {
 
     override fun show() {
         super.show()
+
+        font = gbJam6.manager.get("fonts/skullboy.fnt", BitmapFont::class.java)
+        titleName = Sprite(gbJam6.manager.get("sprites/name.png", Texture::class.java))
+        dot = Sprite(gbJam6.manager.get("sprites/dot.png", Texture::class.java))
+
+        //val myPlayer = Player(44100, Player.INTERPOLATION_MODE_NONE)
+        //val moduleOne = myPlayer.loadXM(Gdx.files.internal("music/strayed.xm").readBytes(), 0f)
+        //myPlayer.play(moduleOne, true, true, 0f, 0f)
+
     }
 
     override fun render(delta: Float) {
