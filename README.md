@@ -1,3 +1,5 @@
+![license](https://img.shields.io/badge/license-CC0--1.0-blue.svg)
+
 # GBJAM6
 
 <!-- Title screen gif -->
@@ -17,6 +19,4 @@ We created a development thread during the GBJAM6 week [here](https://twitter.co
 
 ## License
 
-[TanjentXLM](http://www.tanjent.se/labs/tanjentxm.html) is used to play `.xm` modules. It is licensed under the [MIT license](https://github.com/yopox/GBJAM6/blob/master/core/src/com/tanjent/tanjentxm.license.txt).
-
-Everything else is licensed under the [UNLICENSE](https://github.com/yopox/GBJAM6/blob/master/UNLICENSE).
+This project is licensed under the [cc0-1.0 license](https://github.com/yopox/GBJAM6/blob/master/LICENSE).
