@@ -1,16 +1,17 @@
 package com.gbjam6.city.states
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.gbjam6.city.*
-import com.gbjam6.city.Def.bgColor
+import com.gbjam6.city.general.Def.bgColor
+import com.gbjam6.city.general.Util
+import com.gbjam6.city.logic.Hills
 import ktx.app.KtxScreen
 
 enum class States {
@@ -24,23 +25,33 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private val batch = SpriteBatch()
     private val camera = OrthographicCamera()
     private val viewport = FitViewport(160f, 144f, camera)
+    private val menuManager = MenuManager(gbJam6)
 
     private lateinit var hills: Hills
     private lateinit var hillSprites: Array<Sprite>
     private lateinit var pointer: Sprite
+    private lateinit var font: BitmapFont
 
     private var state = States.IDLE
+    private val buildings = mutableListOf<Building>()
 
     override fun show() {
         super.show()
-        hills = Hills()
-
         camera.position.x = 0f
 
+        // Generate a map
+        hills = Hills()
+
+        // Initialize the font
+        font = gbJam6.manager.get("fonts/skullboy.fnt", BitmapFont::class.java)
+
+        // Initializes the pointer
         pointer = Sprite(gbJam6.manager.get("sprites/pointer.png", Texture::class.java))
         pointer.x = -4f
         pointer.y = -69f
+        updatePointer()
 
+        // Creates sprites for each slope
         val ttext = gbJam6.manager.get("sprites/tiles-sheet.png", Texture::class.java)
         hillSprites = arrayOf(
                 Sprite(ttext, 1 * 2 + 0, 2, 32, 32),
@@ -52,9 +63,6 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         )
         hillSprites[4].flip(true, false)
         hillSprites[5].flip(true, false)
-
-        updatePointer()
-
     }
 
     override fun render(delta: Float) {
@@ -68,6 +76,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
         batch.begin()
 
+        // Draw chunks
         for ((i, chunk) in hills.chunks.withIndex()) {
             // Draw 7 chunks around camera x position
             val x = Math.floor(camera.position.x / 32.0)
@@ -90,7 +99,12 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             }
         }
 
+        // Draw the pointer
         pointer.draw(batch)
+
+        // Draw the menu
+        menuManager.draw(batch, font)
+
         batch.end()
 
         processInputs()
@@ -117,24 +131,65 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         pointer.y = Util.getPixel(-87f + chunk.height + diff * chunk.slope / 32)
     }
 
+    override fun up() {
+        if (state == States.MENU) {
+            Util.inputFreeze = 8
+            menuManager.moveCursor(-1)
+        }
+    }
+
+    override fun down() {
+        if (state == States.MENU) {
+            Util.inputFreeze = 8
+            menuManager.moveCursor(1)
+        }
+    }
+
     override fun left() {
-        Util.inputFreeze = 1
-        if (camera.position.x > -798f + 80f) {
-            camera.translate(-2f, 0f)
-            updatePointer()
+        if (state == States.IDLE || state == States.PLACE_BUILDING) {
+            Util.inputFreeze = 1
+            if (camera.position.x > -798f + 80f) {
+                camera.translate(-2f, 0f)
+                updatePointer()
+            }
         }
     }
 
     override fun right() {
-        Util.inputFreeze = 1
-        if (camera.position.x < 798f - 80f) {
-            camera.translate(2f, 0f)
-            updatePointer()
+        if (state == States.IDLE || state == States.PLACE_BUILDING) {
+            Util.inputFreeze = 1
+            if (camera.position.x < 798f - 80f) {
+                camera.translate(2f, 0f)
+                updatePointer()
+            }
         }
     }
 
+    override fun a() {
+        when (state) {
+            States.IDLE -> {
+                menuManager.open(buildings, camera.position.x)
+                state = States.MENU
+            }
+            States.MENU -> {
+
+            }
+            States.PLACE_BUILDING -> {
+
+            }
+        }
+
+    }
+
     override fun b() {
-        gbJam6.setScreen<TitleScreen>()
+        when (state) {
+            States.IDLE -> {}
+            States.MENU -> {
+                menuManager.close()
+                state = States.IDLE
+            }
+            States.PLACE_BUILDING -> {}
+        }
     }
 
 }

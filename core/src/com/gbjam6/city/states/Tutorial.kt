@@ -1,15 +1,14 @@
 package com.gbjam6.city.states
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
-import com.gbjam6.city.Def.bgColor
+import com.gbjam6.city.general.Def.bgColor
 import com.gbjam6.city.GBJam6
 import com.gbjam6.city.Input
-import com.gbjam6.city.Util
+import com.gbjam6.city.general.Util
 import ktx.app.KtxScreen
 
 /**

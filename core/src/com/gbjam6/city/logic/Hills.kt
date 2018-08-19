@@ -1,4 +1,4 @@
-package com.gbjam6.city
+package com.gbjam6.city.logic
 
 import java.util.*
 

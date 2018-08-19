@@ -10,7 +10,7 @@ import ktx.app.KtxScreen
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.gbjam6.city.Def.bgColor
+import com.gbjam6.city.general.Def.bgColor
 
 /**
  * Loading screen with a loading bar.

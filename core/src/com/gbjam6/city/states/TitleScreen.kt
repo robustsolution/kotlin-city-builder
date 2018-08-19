@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
-import com.gbjam6.city.Def.bgColor
+import com.gbjam6.city.general.Def.bgColor
 import com.gbjam6.city.GBJam6
-import com.gbjam6.city.Util
+import com.gbjam6.city.general.Util
 import ktx.app.KtxScreen
 
 /**
@@ -25,8 +25,8 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
     private val viewport = FitViewport(160f, 144f, camera)
 
     private lateinit var font: BitmapFont
-    private lateinit var titleName: Sprite
-    private lateinit var dot: Sprite
+    private lateinit var titleName: Texture
+    private lateinit var dot: Texture
 
     companion object {
         // Successive logo y positions
@@ -43,8 +43,8 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
 
         // Getting assets
         font = gbJam6.manager.get("fonts/skullboy.fnt", BitmapFont::class.java)
-        titleName = Sprite(gbJam6.manager.get("sprites/name.png", Texture::class.java))
-        dot = Sprite(gbJam6.manager.get("sprites/dot.png", Texture::class.java))
+        titleName = gbJam6.manager.get("sprites/name.png", Texture::class.java)
+        dot = gbJam6.manager.get("sprites/dot.png", Texture::class.java)
 
         // Reset
         cursorPos = 0
@@ -108,6 +108,7 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
     }
 
     override fun a() {
+        Util.inputFreeze = 16
         when (cursorPos) {
             0 -> gbJam6.setScreen<City>()
             1 -> gbJam6.setScreen<Tutorial>()
