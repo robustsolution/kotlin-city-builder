@@ -10,7 +10,10 @@ import com.gbjam6.city.GBJam6
 import com.gbjam6.city.Hills
 import ktx.app.KtxScreen
 
-class City(val gbJam6: GBJam6) : KtxScreen {
+/**
+ * Main game class.
+ */
+class City(private val gbJam6: GBJam6) : KtxScreen {
     private val batch = SpriteBatch()
     private val camera = OrthographicCamera()
     private val viewport = FitViewport(160f, 144f, camera)

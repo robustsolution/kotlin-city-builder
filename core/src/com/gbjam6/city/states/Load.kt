@@ -4,21 +4,21 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.gbjam6.city.GBJam6
 import ktx.app.KtxScreen
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.gbjam6.city.Def.bgColor
 
-
-class Load(val gbJam6: GBJam6): KtxScreen {
+/**
+ * Loading screen with a loading bar.
+ */
+class Load(private val gbJam6: GBJam6) : KtxScreen {
     private val shapeRenderer = ShapeRenderer()
     private val camera = OrthographicCamera()
     private val viewport = FitViewport(160f, 144f, camera)
-
-    private val bgColor = Color.valueOf("A7CBD5")
 
     override fun show() {
         super.show()
@@ -33,7 +33,7 @@ class Load(val gbJam6: GBJam6): KtxScreen {
 
     override fun render(delta: Float) {
 
-        if(gbJam6.manager.update()) {
+        if (gbJam6.manager.update()) {
             gbJam6.setScreen<TitleScreen>()
         }
 

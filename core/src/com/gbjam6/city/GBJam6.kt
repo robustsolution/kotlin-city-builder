@@ -5,6 +5,9 @@ import com.badlogic.gdx.assets.AssetManager
 import com.gbjam6.city.states.*
 import ktx.app.KtxGame
 
+/**
+ * Main class.
+ */
 class GBJam6() : KtxGame<Screen>() {
 
     val manager = AssetManager()
@@ -18,6 +21,7 @@ class GBJam6() : KtxGame<Screen>() {
         addScreen(Tutorial(this))
         addScreen(Achievements(this))
 
+        // Start loading screen
         setScreen<Load>()
 
     }
