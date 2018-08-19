@@ -6,10 +6,10 @@
 
 ## Team
 
-- @A_Do — [Twitter](https://www.twitter.com/adorikill) : Pixel art
-- Le Art — [Twitter](https://www.twitter.com/LeArtRemix) : Chiptunes
-- @Mirionos — [Twitter](https://www.twitter.com/Mirionos) : Game Design, Code
-- @yopox — [Twitter](https://www.twitter.com/elyopox) : Code
+- [A_Do](https://www.twitter.com/adorikill) : Pixel art
+- [Le Art](https://www.twitter.com/LeArtRemix) : Chiptunes
+- [Mirionos](https://www.twitter.com/Mirionos) : Game Design, Code
+- [yopox](https://www.twitter.com/elyopox) : Code
 
 ## Build
 
@@ -23,4 +23,4 @@ We created a development thread during the GBJAM6 week [here](https://twitter.co
 
 ## License
 
-This project is licensed under the [cc0-1.0 license](https://github.com/yopox/GBJAM6/blob/master/LICENSE).
+This project is licensed under the [CC0-1.0 license](https://github.com/yopox/GBJAM6/blob/master/LICENSE).
