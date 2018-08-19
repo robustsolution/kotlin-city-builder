@@ -20,11 +20,16 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private val batch = SpriteBatch()
     private val camera = OrthographicCamera()
     private val viewport = FitViewport(160f, 144f, camera)
+    private val menu = Menu()
 
     private lateinit var hills: Hills
     private lateinit var hillSprites: Array<Sprite>
     private lateinit var pointer: Sprite
 
+
+    companion object {
+        val buildings = mutableListOf<Building>()
+    }
     override fun show() {
         super.show()
         hills = Hills()
@@ -125,6 +130,9 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             camera.translate(2f, 0f)
             updatePointer()
         }
+    }
+    override fun a() {
+        menu.open(camera.position.x)
     }
 
     override fun b() {
