@@ -2,23 +2,23 @@
 
 ## The different ressources
 
-| Ressource |                                                                               Explanation                                                                               |
-| :-------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|  Citizen  |         Citizens are the main ressource of the game. They are placed in the buildings to activate the production or to improve it. They also have a life time.          |
-| Happiness |                                                       Happiness is the ressource which allows citizens' birth.                                                        |
-|   Food    |                     Food is the ressource consumed by every citizen. It is necessary to find a balance. If the food is at zero, citizens will die.                      |
-| Research  |                                 Research is the ressource which lets you obtain improvements, bonuses, new buildings or enlarge your city.                                  |
-|   Stone   |                                                 Stone is the ressource which lets you build new buildings or improve them.                                                  |
+| Ressource |                                                                            Explanation                                                                             |
+| :-------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|  Citizen  |       Citizens are the main ressource of the game. They are placed in the buildings to activate the production or to improve it. They also have a life time.       |
+| Happiness |                                                      Happiness is the ressource which allows citizens' birth.                                                      |
+|   Food    |                   Food is the ressource consumed by every citizen. It is necessary to find a balance. If the food is at zero, citizens will die.                   |
+| Research  |                             Research is the ressource which lets you obtain improvements, bonuses, new buildings or enlarge your city.                             |
+|   Stone   |                                             Stone is the ressource which lets you build new buildings or improve them.                                             |
 | Building  | Buildings allow ressources production. They are disintegrating over time, so they must be repaired with stone, otherwise they will collapse and citizens will die. |
 
 ## The different types of buildings
 
 |   Type    |                                                                                          Explanation                                                                                           |
 | :-------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| Citizens  |                                                     These buildings increase the the city's citizens capacity and allow citizens' birth.                                                     |
+| Citizens  |                                                      These buildings increase the the city's citizens capacity and allow citizens' birth.                                                      |
 | Happiness |                                                                        These buildings produce the Happiness ressource.                                                                        |
 |   Food    |                                                             These buildings increase the capacity of Food storage and produce it.                                                              |
-| Research  |                                                  These buildings produce the Research ressource and let you improve your city.                                                  |
+| Research  |                                                         These buildings produce the Research ressource and let you improve your city.                                                          |
 |   Stone   |                                                             These buildings increase the capacity of Stone storage and produce it.                                                             |
 |   Water   | These buildings are necessary for the efficiency of citizens. They generate an area in which a set number of citizens can access water. A citizen without water supply will be less effective. |
 

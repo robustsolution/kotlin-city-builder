@@ -1,13 +1,14 @@
 package com.gbjam6.city.states
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.gbjam6.city.Def.bgColor
 import com.gbjam6.city.GBJam6
+import com.gbjam6.city.Input
+import com.gbjam6.city.Util
 import ktx.app.KtxScreen
 
 /**
@@ -17,7 +18,7 @@ import ktx.app.KtxScreen
  * TODO: Achievements description
  * TODO: Moving cursor
  */
-class Achievements(private val gbJam6: GBJam6) : KtxScreen {
+class Achievements(private val gbJam6: GBJam6) : KtxScreen, Input {
     private val batch = SpriteBatch()
     private val camera = OrthographicCamera()
     private val viewport = FitViewport(160f, 144f, camera)
@@ -29,6 +30,7 @@ class Achievements(private val gbJam6: GBJam6) : KtxScreen {
     override fun render(delta: Float) {
 
         camera.update()
+        processInputs()
 
         // Clear screen
         Gdx.gl.glClearColor(bgColor.r, bgColor.g, bgColor.b, 1f)
@@ -49,4 +51,10 @@ class Achievements(private val gbJam6: GBJam6) : KtxScreen {
     override fun resize(width: Int, height: Int) {
         viewport.update(width, height)
     }
+
+    override fun b() {
+        Util.inputFreeze = 8
+        gbJam6.setScreen<TitleScreen>()
+    }
+
 }

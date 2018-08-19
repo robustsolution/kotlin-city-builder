@@ -14,11 +14,9 @@ import com.badlogic.gdx.Input
  */
 interface Input {
 
-    var inputFreeze: Int
-
-    fun processInput() {
-        if (inputFreeze > 0) {
-            inputFreeze--
+    fun processInputs() {
+        if (Util.inputFreeze > 0) {
+            Util.inputFreeze--
         } else {
             if (Gdx.input.isKeyPressed(Input.Keys.DPAD_UP) || Gdx.input.isKeyPressed(Input.Keys.Z) || Gdx.input.isKeyPressed(Input.Keys.W)) {
                 up()
