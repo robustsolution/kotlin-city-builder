@@ -13,6 +13,10 @@ import com.gbjam6.city.*
 import com.gbjam6.city.Def.bgColor
 import ktx.app.KtxScreen
 
+enum class States {
+    IDLE, PLACE_BUILDING, MENU
+}
+
 /**
  * Main game class.
  */
@@ -24,6 +28,8 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private lateinit var hills: Hills
     private lateinit var hillSprites: Array<Sprite>
     private lateinit var pointer: Sprite
+
+    private var state = States.IDLE
 
     override fun show() {
         super.show()
@@ -108,7 +114,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         val diff = camera.position.x - (n - 25) * 32
 
         // Set height to follow the slopes
-        pointer.y = Util.getPixel(-88f + chunk.height + diff * chunk.slope / 32)
+        pointer.y = Util.getPixel(-87f + chunk.height + diff * chunk.slope / 32)
     }
 
     override fun left() {
