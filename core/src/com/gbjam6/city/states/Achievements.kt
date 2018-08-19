@@ -3,8 +3,10 @@ package com.gbjam6.city.states
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
+import com.gbjam6.city.Def.achievements
 import com.gbjam6.city.Def.bgColor
 import com.gbjam6.city.GBJam6
 import com.gbjam6.city.Input
@@ -15,7 +17,6 @@ import ktx.app.KtxScreen
  * Achievements screen.
  *
  * TODO: Achievements tiles
- * TODO: Achievements description
  * TODO: Moving cursor
  */
 class Achievements(private val gbJam6: GBJam6) : KtxScreen, Input {
@@ -23,8 +24,12 @@ class Achievements(private val gbJam6: GBJam6) : KtxScreen, Input {
     private val camera = OrthographicCamera()
     private val viewport = FitViewport(160f, 144f, camera)
 
+    private lateinit var font: BitmapFont
+    private var selected = 0
+
     override fun show() {
         super.show()
+        font = gbJam6.manager.get("fonts/skullboy.fnt", BitmapFont::class.java)
     }
 
     override fun render(delta: Float) {
@@ -40,6 +45,20 @@ class Achievements(private val gbJam6: GBJam6) : KtxScreen, Input {
         batch.projectionMatrix = camera.combined
         batch.begin()
 
+        // Draw title
+        font.draw(batch, "ACHIEVEMENTS", -80f, 64f, 160f, 1, true)
+
+        // Draw achievements tiles
+        font.draw(batch, "1   2   3   4   5\n\n6   7   8   9   10",
+                -80f, 32f, 160f, 1, true)
+
+        // Draw cursor
+
+        // Draw description
+        font.draw(batch,
+                achievements[selected].first + "\n\n" + achievements[selected].second,
+                -80f, -16f, 160f, 1, true)
+
         batch.end()
 
     }
@@ -50,6 +69,16 @@ class Achievements(private val gbJam6: GBJam6) : KtxScreen, Input {
 
     override fun resize(width: Int, height: Int) {
         viewport.update(width, height)
+    }
+
+    override fun left() {
+        Util.inputFreeze = 16
+        selected = (selected + achievements.size - 1) % achievements.size
+    }
+
+    override fun right() {
+        Util.inputFreeze = 16
+        selected = (selected + 1) % achievements.size
     }
 
     override fun b() {
