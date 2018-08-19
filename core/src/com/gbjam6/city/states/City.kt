@@ -28,7 +28,6 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     override fun show() {
         super.show()
         hills = Hills()
-        println(hills.chunks)
 
         camera.position.x = 0f
 
@@ -47,6 +46,8 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         )
         hillSprites[4].flip(true, false)
         hillSprites[5].flip(true, false)
+
+        updatePointer()
 
     }
 
@@ -98,19 +99,31 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         viewport.update(width, height)
     }
 
+    private fun updatePointer() {
+        pointer.x = camera.position.x - 4
+
+        // Compute difference between camera x and the current chunk x
+        val n = Math.floor(camera.position.x / 32.0).toInt() + 25
+        val chunk = hills.chunks[n]
+        val diff = camera.position.x - (n - 25) * 32
+
+        // Set height to follow the slopes
+        pointer.y = Util.getPixel(-88f + chunk.height + diff * chunk.slope / 32)
+    }
+
     override fun left() {
         Util.inputFreeze = 1
         if (camera.position.x > -798f + 80f) {
-            pointer.x -= 2
             camera.translate(-2f, 0f)
+            updatePointer()
         }
     }
 
     override fun right() {
         Util.inputFreeze = 1
         if (camera.position.x < 798f - 80f) {
-            pointer.x += 2
             camera.translate(2f, 0f)
+            updatePointer()
         }
     }
 
