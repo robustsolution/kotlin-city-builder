@@ -28,6 +28,8 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         gbJam6.manager.load("fonts/skullboy.fnt", BitmapFont::class.java)
         gbJam6.manager.load("sprites/dot.png", Texture::class.java)
         gbJam6.manager.load("sprites/name.png", Texture::class.java)
+        gbJam6.manager.load("sprites/pointer.png", Texture::class.java)
+        gbJam6.manager.load("sprites/tiles-sheet.png", Texture::class.java)
 
     }
 
