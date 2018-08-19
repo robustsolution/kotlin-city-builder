@@ -6,15 +6,19 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
+import com.gbjam6.city.Def.bgColor
 import com.gbjam6.city.GBJam6
 import ktx.app.KtxScreen
 
-class Tutorial(val gbJam6: GBJam6) : KtxScreen {
+/**
+ * Tutorial screen.
+ *
+ * TODO: Tutorial pages
+ */
+class Tutorial(private val gbJam6: GBJam6) : KtxScreen {
     private val batch = SpriteBatch()
     private val camera = OrthographicCamera()
     private val viewport = FitViewport(160f, 144f, camera)
-
-    private val bgColor = Color.valueOf("A7CBD5")
 
     override fun show() {
         super.show()
