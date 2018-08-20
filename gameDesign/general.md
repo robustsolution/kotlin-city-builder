@@ -55,3 +55,34 @@ Each building produces its ressource, but this production is influenced by diffe
 | Green  |           +           |
 |  Blue  |           -           |
 | Yellow |          - -          |
+
+##Research tree
+```mermaid
+graph LR
+  House+ --> Garden;
+  F --> B;
+  Hospital --> B;
+  Factorie+ --> Well;
+  Factorie+ --> Craftman;
+  Factorie+ --> Laboratory+;
+  Tavern+ --> Laboratory+;
+  Tavern+ --> House+;
+  Farm+ --> House+;
+  Farm+ --> Warehouse;
+  Craftman --> Hospital;
+  Laboratory+ --> Hospital;
+  Laboratory+ --> Garden;
+  Garden --> Tree;
+  Warehouse --> Tree;
+  Well --> F;
+  Tree --> E;
+  Warehouse --> G;
+```
+## Buildings
+|Name|Picture|Resource|Slot|Production|Effet|
+|:-:|:-:|:-:|:-:|:-:|:-:|
+|House|![House](../android/assets/sprites/buildings/CITIZENS1.png)|Citizens|6 citizens|1 Citizen / 100 Happiness|Increases the maximum number of citizens by 6|
+|Farm|![Farm](../android/assets/sprites/buildings/FOOD1.png)|Food|2 citizens|4 Foods / Citizen / Month|Increases the maximum number of citizens by 100
+|Tavern|![Tavern](../android/assets/sprites/buildings/HAPPINESS1.png)|Happiness|2 citizens|1 Happiness / Citizen / Month|None|
+
+
