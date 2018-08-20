@@ -2,22 +2,61 @@ package com.gbjam6.city
 
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.gbjam6.city.general.BuildingType
 import com.gbjam6.city.general.LBuilding
+import com.gbjam6.city.general.Util
+import com.gbjam6.city.states.City
 
 data class Citizen(val name: String)
 
-class Building(private val lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetManager) {
+class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetManager) {
 
     val citizens = mutableListOf<Citizen>()
 
-    private val texture = manager.get("sprites/buildings/${lBuilding.name}.png", Texture::class.java)
-    val width = texture.width
+    private var sprite = Sprite(manager.get("sprites/buildings/${lBuilding.name}.png", Texture::class.java))
+    val width = sprite.width
+    val lBuilding = lBuilding.copy()
+    var validPos: Boolean = true
 
+    /**
+     * Flip the building.
+     */
+    fun flip() {
+        sprite.flip(true, false)
+        lBuilding.door = lBuilding.door.copy(
+                width.toInt() - lBuilding.door.second,
+                width.toInt() - lBuilding.door.first)
+        lBuilding.s8 = lBuilding.s8.copy(
+                width.toInt() - lBuilding.s8.second,
+                width.toInt() - lBuilding.s8.first)
+        lBuilding.s16 = lBuilding.s16.copy(
+                width.toInt() - lBuilding.s16.second,
+                width.toInt() - lBuilding.s16.first)
+    }
+
+    /**
+     * Draw the building.
+     */
     fun draw(batch: SpriteBatch) {
-        batch.draw(texture, x, y)
+        batch.draw(sprite, Util.getPixel(x), Util.getPixel(y))
+    }
+
+    fun updateValid() {
+        validPos = true
+
+        // The door must be placed on a flat surface
+        val door = lBuilding.door
+        val chunk1 = City.hills.chunks[Math.floor((x + door.first) / 32.0).toInt() + 25]
+        val chunk2 = City.hills.chunks[Math.floor((x + door.second) / 32.0).toInt() + 25]
+        if (chunk1.slope != 0 || chunk2.slope != 0) {
+            validPos = false
+        }
+
+        // No collisions
+
+        // Slopes limit
+
     }
 
 }

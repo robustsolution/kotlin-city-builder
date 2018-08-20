@@ -72,17 +72,14 @@ class Achievements(private val gbJam6: GBJam6) : KtxScreen, Input {
     }
 
     override fun left() {
-        Util.inputFreeze = 16
         selected = (selected + achievements.size - 1) % achievements.size
     }
 
     override fun right() {
-        Util.inputFreeze = 16
         selected = (selected + 1) % achievements.size
     }
 
     override fun b() {
-        Util.inputFreeze = 8
         gbJam6.setScreen<TitleScreen>()
     }
 

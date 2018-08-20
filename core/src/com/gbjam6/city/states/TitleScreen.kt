@@ -98,16 +98,13 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
 
     override fun up() {
         cursorPos = (cursorPos + 2) % 3
-        Util.inputFreeze = 16
     }
 
     override fun down() {
         cursorPos = (cursorPos + 1) % 3
-        Util.inputFreeze = 16
     }
 
     override fun a() {
-        Util.inputFreeze = 16
         when (cursorPos) {
             0 -> gbJam6.setScreen<City>()
             1 -> gbJam6.setScreen<Tutorial>()

@@ -10,7 +10,7 @@ enum class BuildingType {
     CITIZENS, HAPPINESS, FOOD, RESEARCH, STONE, WATER
 }
 
-data class LBuilding(val type: BuildingType, val name: String)
+data class LBuilding(val type: BuildingType, val name: String, var door: Pair<Int, Int>, var s8: Pair<Int, Int>, var s16: Pair<Int, Int>)
 
 object Def {
 
@@ -23,22 +23,23 @@ object Def {
     // SIZE
     val nChunks = 50
     val menuWidth = 72f
+    val menuY = 68f
 
     // MENUS
     val menus = mapOf(
-            MenuType.CREATION to arrayOf("Citizen", "Happiness", "Food", "Research", "Stone", "Water"),
-            MenuType.BUILDING to arrayOf("ELEM1", "ELEM2", "ELEM3"),
+            MenuType.CREATION to arrayOf("CITIZEN", "HAPPINESS", "FOOD", "RESEARCH", "STONE", "WATER"),
+            MenuType.BUILDING to arrayOf("CITIZENS", "USE", "DESTROY"),
             MenuType.CONFIRM to arrayOf("YES", "NO")
     )
 
     // BUILDINGS
     val buildings = listOf(
-            LBuilding(BuildingType.CITIZENS, "CITIZENS1"),
-            LBuilding(BuildingType.HAPPINESS, "HAPPINESS1"),
-            LBuilding(BuildingType.FOOD, "FOOD1"),
-            LBuilding(BuildingType.RESEARCH, "RESEARCH1"),
-            LBuilding(BuildingType.STONE, "STONE1"),
-            LBuilding(BuildingType.WATER, "WATER1")
+            LBuilding(BuildingType.CITIZENS, "CITIZENS1", Pair(34, 41), Pair(34, 41), Pair(24, 41)),
+            LBuilding(BuildingType.HAPPINESS, "HAPPINESS1", Pair(13, 20), Pair(13, 26), Pair(13, 39)),
+            LBuilding(BuildingType.FOOD, "FOOD1", Pair(19, 39), Pair(19, 39), Pair(19, 39)),
+            LBuilding(BuildingType.RESEARCH, "RESEARCH1", Pair(20, 28), Pair(20, 29), Pair(20, 38)),
+            LBuilding(BuildingType.STONE, "STONE1", Pair(6, 19), Pair(6, 19), Pair(6, 22)),
+            LBuilding(BuildingType.WATER, "WATER1", Pair(0, 17), Pair(0, 17), Pair(0, 17))
     )
 
     // ACHIEVEMENTS

@@ -27,21 +27,20 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private val viewport = FitViewport(160f, 144f, camera)
     private val menuManager = MenuManager(gbJam6)
 
-    private lateinit var hills: Hills
     private lateinit var hillSprites: Array<Sprite>
     private lateinit var pointer: Sprite
     private lateinit var font: BitmapFont
     private lateinit var smallFont: BitmapFont
 
-    private var state = States.IDLE
-    private val buildings = mutableListOf<Building>()
+    companion object {
+        var hills = Hills()
+        var state = States.IDLE
+        val buildings = mutableListOf<Building>()
+    }
 
     override fun show() {
         super.show()
         camera.position.x = 0f
-
-        // Generate a map
-        hills = Hills()
 
         // Initialize fonts
         font = gbJam6.manager.get("fonts/skullboy.fnt", BitmapFont::class.java)
@@ -70,6 +69,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     override fun render(delta: Float) {
 
         camera.update()
+        menuManager.update()
         batch.projectionMatrix = camera.combined
 
         // Clear screen
@@ -149,9 +149,13 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     }
 
     override fun down() {
-        if (state == States.MENU) {
-            Util.inputFreeze = 8
-            menuManager.moveCursor(1)
+        when (state) {
+            States.MENU -> {
+                Util.inputFreeze = 8
+                menuManager.moveCursor(1)
+            }
+            States.PLACE_BUILDING -> menuManager.flip(camera.position.x, pointer.y)
+            else -> {}
         }
     }
 
@@ -178,32 +182,33 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     }
 
     override fun a() {
-        Util.inputFreeze = 16
         state = when (state) {
             States.IDLE -> {
-                menuManager.open(buildings, camera.position.x)
+                menuManager.open(camera.position.x)
                 States.MENU
             }
             States.MENU -> {
-                menuManager.select(state, camera.position, buildings, pointer.y)
+                menuManager.select(camera.position, pointer.y)
             }
             States.PLACE_BUILDING -> {
-                menuManager.select(state, camera.position, buildings, pointer.y)
+                menuManager.select(camera.position, pointer.y)
             }
         }
 
     }
 
     override fun b() {
-        when (state) {
-            States.IDLE -> {
-            }
+        state = when (state) {
             States.MENU -> {
                 menuManager.close()
-                state = States.IDLE
+                if (menuManager.menus.any()) States.MENU else States.IDLE
             }
             States.PLACE_BUILDING -> {
+                menuManager.placingB = null
+                menuManager.updateMenu(camera.position.x)
+                States.MENU
             }
+            else -> States.IDLE
         }
     }
 

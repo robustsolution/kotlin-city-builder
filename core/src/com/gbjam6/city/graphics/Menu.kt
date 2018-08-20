@@ -13,7 +13,7 @@ import com.gbjam6.city.GBJam6
  * Simple list of [items].
  * [items] can be initialized automatically using [Def.menus] map.
  */
-class Menu(val type: MenuType, val title: String, val x: Float, val y: Float, gbJam6: GBJam6, array: Array<String> = arrayOf()) {
+class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gbJam6: GBJam6, array: Array<String> = arrayOf()) {
 
     val items: Array<String> = Def.menus[type] ?: array
     private val height = (items.size * 9 + 19).toFloat()

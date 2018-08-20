@@ -20,28 +20,28 @@ interface Input {
             Util.inputFreeze--
         } else {
             if (Gdx.input.isKeyPressed(Input.Keys.DPAD_UP) || Gdx.input.isKeyPressed(Input.Keys.Z) || Gdx.input.isKeyPressed(Input.Keys.W)) {
-                up()
+                Util.inputFreeze = 16 ; up()
             }
             if (Gdx.input.isKeyPressed(Input.Keys.DPAD_DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
-                down()
+                Util.inputFreeze = 16 ; down()
             }
             if (Gdx.input.isKeyPressed(Input.Keys.DPAD_LEFT) || Gdx.input.isKeyPressed(Input.Keys.Q) || Gdx.input.isKeyPressed(Input.Keys.A)) {
-                left()
+                Util.inputFreeze = 16 ; left()
             }
             if (Gdx.input.isKeyPressed(Input.Keys.DPAD_RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
-                right()
+                Util.inputFreeze = 16 ; right()
             }
             if (Gdx.input.isKeyPressed(Input.Keys.O) || Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                a()
+                Util.inputFreeze = 16 ; a()
             }
             if (Gdx.input.isKeyPressed(Input.Keys.K) || Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-                b()
+                Util.inputFreeze = 16 ; b()
             }
             if (Gdx.input.isKeyPressed(Input.Keys.B) || Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-                start()
+                Util.inputFreeze = 16 ; start()
             }
             if (Gdx.input.isKeyPressed(Input.Keys.V) || Gdx.input.isKeyPressed(Input.Keys.TAB)) {
-                select()
+                Util.inputFreeze = 16 ; select()
             }
         }
     }
