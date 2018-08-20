@@ -42,20 +42,31 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetM
         batch.draw(sprite, Util.getPixel(x), Util.getPixel(y))
     }
 
-    fun updateValid() {
-        validPos = true
+    fun isValid(): Boolean {
 
         // The door must be placed on a flat surface
         val door = lBuilding.door
         val chunk1 = City.hills.chunks[Math.floor((x + door.first) / 32.0).toInt() + 25]
         val chunk2 = City.hills.chunks[Math.floor((x + door.second) / 32.0).toInt() + 25]
         if (chunk1.slope != 0 || chunk2.slope != 0) {
-            validPos = false
+            return false
         }
 
         // No collisions
+        val collision = City.buildings.firstOrNull { if (x < it.x) it.x - x <= width else x - it.x <= it.width }
+        if (collision != null) {
+            return false
+        }
 
         // Slopes limit
+        val chunk3 = City.hills.chunks[Math.floor(x / 32.0).toInt() + 25]
+
+        when (chunk3.slope) {
+            8 -> if (x % 32 > lBuilding.s8.first) return false
+            16 -> if ((x + width - 1) % 32 > lBuilding.s16.first) return false
+        }
+
+        return true
 
     }
 

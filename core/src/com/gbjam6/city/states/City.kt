@@ -86,6 +86,9 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 building.draw(batch)
         }
 
+        // Draw moving building
+        menuManager.drawBuilding(batch)
+
         // Draw chunks
         for ((i, chunk) in hills.chunks.withIndex()) {
             // Draw 7 chunks around camera x position
@@ -113,7 +116,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         pointer.draw(batch)
 
         // Draw the menu
-        menuManager.draw(batch, smallFont)
+        menuManager.drawMenu(batch, smallFont)
 
         batch.end()
 
@@ -155,7 +158,8 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 menuManager.moveCursor(1)
             }
             States.PLACE_BUILDING -> menuManager.flip(camera.position.x, pointer.y)
-            else -> {}
+            else -> {
+            }
         }
     }
 
@@ -163,7 +167,12 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         if (state == States.IDLE || state == States.PLACE_BUILDING) {
             Util.inputFreeze = 1
             if (camera.position.x > -798f + 80f) {
+                if (Util.wasPressed) {
                 camera.translate(-2f, 0f)
+                } else {
+                    Util.inputFreeze = 4
+                    camera.translate(-1f, 0f)
+                }
                 updatePointer()
             }
             menuManager.updateBuilding(camera.position.x, pointer.y)
@@ -174,7 +183,12 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         if (state == States.IDLE || state == States.PLACE_BUILDING) {
             Util.inputFreeze = 1
             if (camera.position.x < 798f - 80f) {
-                camera.translate(2f, 0f)
+                if (Util.wasPressed) {
+                    camera.translate(2f, 0f)
+                } else {
+                    Util.inputFreeze = 4
+                    camera.translate(1f, 0f)
+                }
                 updatePointer()
             }
             menuManager.updateBuilding(camera.position.x, pointer.y)

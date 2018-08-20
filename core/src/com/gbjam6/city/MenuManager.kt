@@ -103,13 +103,17 @@ class MenuManager(private val gbJam6: GBJam6) {
     /**
      * Draws the visible menu.
      */
-    fun draw(batch: SpriteBatch, font: BitmapFont) {
+    fun drawMenu(batch: SpriteBatch, font: BitmapFont) {
         // Draw the menu
         if (menus.any() && placingB == null) {
             menus.last().draw(batch, font)
         }
+    }
 
-        // Draw the building if it's not null
+    /**
+     * Draws the moving building
+     */
+    fun drawBuilding(batch: SpriteBatch) {
         placingB?.let {
             if (it.validPos || !it.validPos && frame < 30)
                 it.draw(batch)
@@ -122,8 +126,8 @@ class MenuManager(private val gbJam6: GBJam6) {
     fun updateBuilding(x: Float, y: Float) {
         placingB?.let {
             it.x = x - it.lBuilding.door.first - Math.ceil((it.lBuilding.door.second - it.lBuilding.door.first) / 2.0).toFloat()
-            it.y = y + 15
-            it.updateValid()
+            it.y = y - 2
+            it.validPos = it.isValid()
         }
     }
 

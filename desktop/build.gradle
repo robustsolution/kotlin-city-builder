@@ -30,8 +30,9 @@ task dist(type: Jar) {
     from files(project.assetsDir);
  
     manifest {
-        attributes 'Main-Class': project.mainClassName
+        attributes 'Main-Class': 'com.gbjam6.city.desktop.DesktopLauncher'
     }
+
 }
 
 dist.dependsOn classes

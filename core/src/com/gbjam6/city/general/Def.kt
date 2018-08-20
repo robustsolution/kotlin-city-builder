@@ -16,9 +16,9 @@ object Def {
 
     // COLORS
     val color1 = Color.valueOf("000000")
-    val color2 = Color.valueOf("4D533C")
-    val color3 = Color.valueOf("8B956D")
-    val color4 = Color.valueOf("C3C2AE")
+    val color2 = Color.valueOf("545454")
+    val color3 = Color.valueOf("A9A9A9")
+    val color4 = Color.valueOf("FFFFFF")
 
     // SIZE
     val nChunks = 50
