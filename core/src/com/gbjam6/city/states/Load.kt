@@ -27,8 +27,10 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         gbJam6.manager.load("fonts/skullboy.fnt", BitmapFont::class.java)
         gbJam6.manager.load("fonts/little.fnt", BitmapFont::class.java)
         gbJam6.manager.load("sprites/pointerRight.png", Texture::class.java)
+        gbJam6.titleMusic = gbJam6.player.loadXM(Gdx.files.internal("music/title.xm").readBytes(), 0f)
         gbJam6.manager.load("sprites/name.png", Texture::class.java)
         gbJam6.manager.load("sprites/pointerUp.png", Texture::class.java)
+        gbJam6.cityMusic1 = gbJam6.player.loadXM(Gdx.files.internal("music/city1.xm").readBytes(), 0f)
         gbJam6.manager.load("sprites/smallPointerRight.png", Texture::class.java)
         gbJam6.manager.load("sprites/tiles-sheet.png", Texture::class.java)
         for (lBuilding in Def.buildings) {
