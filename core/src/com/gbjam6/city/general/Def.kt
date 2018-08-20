@@ -6,21 +6,39 @@ enum class MenuType {
     CREATION, BUILDING, CITIZENS, CONFIRM, IMPROVE
 }
 
+enum class BuildingType {
+    CITIZENS, HAPPINESS, FOOD, RESEARCH, STONE, WATER
+}
+
+data class LBuilding(val type: BuildingType, val name: String)
+
 object Def {
 
     // COLORS
-    val bgColor = Color.valueOf("A7CBD5")
-    val darkColor = Color.valueOf("362C36")
+    val color1 = Color.valueOf("000000")
+    val color2 = Color.valueOf("4D533C")
+    val color3 = Color.valueOf("8B956D")
+    val color4 = Color.valueOf("C3C2AE")
 
     // SIZE
     val nChunks = 50
-    val menuWidth = 80f
+    val menuWidth = 72f
 
     // MENUS
     val menus = mapOf(
             MenuType.CREATION to arrayOf("Citizen", "Happiness", "Food", "Research", "Stone", "Water"),
             MenuType.BUILDING to arrayOf("ELEM1", "ELEM2", "ELEM3"),
             MenuType.CONFIRM to arrayOf("YES", "NO")
+    )
+
+    // BUILDINGS
+    val buildings = listOf(
+            LBuilding(BuildingType.CITIZENS, "CITIZENS1"),
+            LBuilding(BuildingType.HAPPINESS, "HAPPINESS1"),
+            LBuilding(BuildingType.FOOD, "FOOD1"),
+            LBuilding(BuildingType.RESEARCH, "RESEARCH1"),
+            LBuilding(BuildingType.STONE, "STONE1"),
+            LBuilding(BuildingType.WATER, "WATER1")
     )
 
     // ACHIEVEMENTS

@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.MenuType
-import kotlin.math.min
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.gbjam6.city.Building
@@ -14,19 +13,18 @@ import com.gbjam6.city.GBJam6
  * Simple list of [items].
  * [items] can be initialized automatically using [Def.menus] map.
  */
-class Menu(val type: MenuType, val x: Float, val y: Float, gbJam6: GBJam6, array: Array<String> = arrayOf()) {
+class Menu(val type: MenuType, val title: String, val x: Float, val y: Float, gbJam6: GBJam6, array: Array<String> = arrayOf()) {
 
     val items: Array<String> = Def.menus[type] ?: array
-    private val height = min(items.size * 16, 6 * 16).toFloat() + 8
+    private val height = (items.size * 9 + 19).toFloat()
     private val texture: Texture
-    private val dot = gbJam6.manager.get("sprites/dot.png", Texture::class.java)
-    val building: Building? = null
+    private val cursor = gbJam6.manager.get("sprites/smallPointerRight.png", Texture::class.java)
 
     var cursorPos = 0
 
     init {
         val pixmap = Pixmap(Def.menuWidth.toInt(), height.toInt(), Pixmap.Format.RGBA8888)
-        pixmap.setColor(Def.darkColor)
+        pixmap.setColor(Def.color1)
         pixmap.fillRectangle(0, 0, Def.menuWidth.toInt(), height.toInt())
         texture = Texture(pixmap)
         pixmap.dispose()
@@ -37,13 +35,16 @@ class Menu(val type: MenuType, val x: Float, val y: Float, gbJam6: GBJam6, array
         // Draw the background
         batch.draw(texture, x, y - height)
 
+        // Draw the title
+        font.draw(batch, title, x, y - 4, Def.menuWidth, 1, false)
+
         // Draw the items
         for ((i, item) in items.withIndex()) {
-            font.draw(batch, item, x + 16f, y - 8f - 16f * i)
+            font.draw(batch, item, x + 16f, y - 17 - 9f * i)
         }
 
         // Draw the cursor
-        batch.draw(dot, x + 4f, y - (cursorPos + 1) * 16f)
+        batch.draw(cursor, x + 8f, y - (cursorPos + 1) * 9f - 13)
     }
 
 }

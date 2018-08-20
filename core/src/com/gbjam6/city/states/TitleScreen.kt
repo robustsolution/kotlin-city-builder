@@ -5,11 +5,10 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
-import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
-import com.gbjam6.city.general.Def.bgColor
 import com.gbjam6.city.GBJam6
+import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.Util
 import ktx.app.KtxScreen
 
@@ -26,7 +25,7 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
 
     private lateinit var font: BitmapFont
     private lateinit var titleName: Texture
-    private lateinit var dot: Texture
+    private lateinit var cursor: Texture
 
     companion object {
         // Successive logo y positions
@@ -44,7 +43,7 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
         // Getting assets
         font = gbJam6.manager.get("fonts/skullboy.fnt", BitmapFont::class.java)
         titleName = gbJam6.manager.get("sprites/name.png", Texture::class.java)
-        dot = gbJam6.manager.get("sprites/dot.png", Texture::class.java)
+        cursor = gbJam6.manager.get("sprites/pointerRight.png", Texture::class.java)
 
         // Reset
         cursorPos = 0
@@ -64,7 +63,7 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
         camera.update()
 
         // Clear screen
-        Gdx.gl.glClearColor(bgColor.r, bgColor.g, bgColor.b, 1f)
+        Gdx.gl.glClearColor(Def.color2.r, Def.color2.g, Def.color2.b, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         // Prepare for drawing
@@ -80,7 +79,7 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
         font.draw(batch, "ACHIEVEMENTS", -80f, -26f, 160f, 1, false)
 
         // Draw the cursor
-        batch.draw(dot, cursorX[cursorPos], -2f - 16f * cursorPos)
+        batch.draw(cursor, cursorX[cursorPos], -2f - 16f * cursorPos)
 
         // Draw credits
         font.draw(batch, "2018 - A_Do, Le Art,\nMirionos, yopox", -80f, -47f, 160f, 1, true)

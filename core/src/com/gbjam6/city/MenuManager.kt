@@ -2,15 +2,19 @@ package com.gbjam6.city
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Vector3
+import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.MenuType
 import com.gbjam6.city.graphics.Menu
+import com.gbjam6.city.states.States
 
 /**
- *
+ * Manages the menus' logic.
  */
 class MenuManager(private val gbJam6: GBJam6) {
 
-    private val menus = mutableListOf<Menu>()
+    private var menus = mutableListOf<Menu>()
+    var placingB: Building? = null
 
     /**
      * Called when the user selects a spot of the map.
@@ -21,9 +25,9 @@ class MenuManager(private val gbJam6: GBJam6) {
 
         // Add the corresponding menu
         if (building == null) {
-            menus.add(Menu(MenuType.CREATION, x + 8f, 68f, gbJam6))
+            menus.add(Menu(MenuType.CREATION, "SELECT CATEGORY", x + 4f, 68f, gbJam6))
         } else {
-            menus.add(Menu(MenuType.BUILDING, x + 8f, 68f, gbJam6))
+            menus.add(Menu(MenuType.BUILDING, "SELECT ACTION", x + 4f, 68f, gbJam6))
         }
     }
 
@@ -32,26 +36,43 @@ class MenuManager(private val gbJam6: GBJam6) {
      */
     fun close() {
         if (menus.any())
-            menus.removeAt(menus.lastIndex)
+            menus = menus.dropLast(1).toMutableList()
     }
 
     /**
      * Called when the user selects an option from the menu.
      */
-    fun select() {
-        val menu = menus.last()
-        when (Pair(menu.type, menu.cursorPos)) {
-            Pair(MenuType.BUILDING, 0) -> {
-                val citizens = menu.building!!.citizens
-                val list = List(citizens.size) { citizens[it].name }
+    fun select(state: States, position: Vector3, buildings: MutableList<Building>, pointerY: Float): States {
+        if (state == States.MENU) {
+            // A menu item is selected
+            val menu = menus.last()
+            when (menu.type) {
+                MenuType.CREATION -> {
+                    placingB = Building(Def.buildings[menu.cursorPos], position.x, -16f, gbJam6.manager)
+                    updateBuilding(position.x, pointerY)
+                    close()
+                    return States.PLACE_BUILDING
+                }
+                MenuType.BUILDING -> {
+                    //val citizens = menu.building!!.citizens
+                    //val list = List(citizens.size) { citizens[it].name }
+                }
+                MenuType.CITIZENS -> {
+                }
+                MenuType.CONFIRM -> {
+                }
+                MenuType.IMPROVE -> {
+                }
             }
-            Pair(MenuType.CITIZENS, 0) -> {
-            }
-            Pair(MenuType.CONFIRM, 0) -> {
-            }
-            Pair(MenuType.IMPROVE, 0) -> {
-            }
+            return States.MENU
+        } else if (state == States.PLACE_BUILDING) {
+            // The building is placed
+            buildings.add(placingB!!)
+            placingB = null
         }
+
+        return States.IDLE
+
     }
 
     /**
@@ -66,8 +87,20 @@ class MenuManager(private val gbJam6: GBJam6) {
      * Draws the visible menu.
      */
     fun draw(batch: SpriteBatch, font: BitmapFont) {
-        if (menus.any())
+        // Draw the menu
+        if (menus.any()) {
             menus.last().draw(batch, font)
+        }
+
+        // Draw the building if it's not null
+        placingB?.draw(batch)
+    }
+
+    fun updateBuilding(x: Float, y: Float) {
+        placingB?.let {
+            it.x = x - it.width / 2
+            it.y = y + 15
+        }
     }
 
 }

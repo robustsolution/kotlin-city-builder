@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.gbjam6.city.*
-import com.gbjam6.city.general.Def.bgColor
+import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.Util
 import com.gbjam6.city.logic.Hills
 import ktx.app.KtxScreen
@@ -31,6 +31,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private lateinit var hillSprites: Array<Sprite>
     private lateinit var pointer: Sprite
     private lateinit var font: BitmapFont
+    private lateinit var smallFont: BitmapFont
 
     private var state = States.IDLE
     private val buildings = mutableListOf<Building>()
@@ -42,11 +43,12 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         // Generate a map
         hills = Hills()
 
-        // Initialize the font
+        // Initialize fonts
         font = gbJam6.manager.get("fonts/skullboy.fnt", BitmapFont::class.java)
+        smallFont = gbJam6.manager.get("fonts/little.fnt", BitmapFont::class.java)
 
         // Initializes the pointer
-        pointer = Sprite(gbJam6.manager.get("sprites/pointer.png", Texture::class.java))
+        pointer = Sprite(gbJam6.manager.get("sprites/pointerUp.png", Texture::class.java))
         pointer.x = -4f
         pointer.y = -69f
         updatePointer()
@@ -71,10 +73,18 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         batch.projectionMatrix = camera.combined
 
         // Clear screen
-        Gdx.gl.glClearColor(bgColor.r, bgColor.g, bgColor.b, 1f)
+        Gdx.gl.glClearColor(Def.color4.r, Def.color4.g, Def.color4.b, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         batch.begin()
+
+        // Draw background
+
+        // Draw buildings
+        for (building in buildings) {
+            if (Math.abs(building.x - camera.position.x) < 240)
+                building.draw(batch)
+        }
 
         // Draw chunks
         for ((i, chunk) in hills.chunks.withIndex()) {
@@ -103,7 +113,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         pointer.draw(batch)
 
         // Draw the menu
-        menuManager.draw(batch, font)
+        menuManager.draw(batch, smallFont)
 
         batch.end()
 
@@ -152,6 +162,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 camera.translate(-2f, 0f)
                 updatePointer()
             }
+            menuManager.updateBuilding(camera.position.x, pointer.y)
         }
     }
 
@@ -162,20 +173,22 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 camera.translate(2f, 0f)
                 updatePointer()
             }
+            menuManager.updateBuilding(camera.position.x, pointer.y)
         }
     }
 
     override fun a() {
-        when (state) {
+        Util.inputFreeze = 16
+        state = when (state) {
             States.IDLE -> {
                 menuManager.open(buildings, camera.position.x)
-                state = States.MENU
+                States.MENU
             }
             States.MENU -> {
-
+                menuManager.select(state, camera.position, buildings, pointer.y)
             }
             States.PLACE_BUILDING -> {
-
+                menuManager.select(state, camera.position, buildings, pointer.y)
             }
         }
 
@@ -183,12 +196,14 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
     override fun b() {
         when (state) {
-            States.IDLE -> {}
+            States.IDLE -> {
+            }
             States.MENU -> {
                 menuManager.close()
                 state = States.IDLE
             }
-            States.PLACE_BUILDING -> {}
+            States.PLACE_BUILDING -> {
+            }
         }
     }
 
