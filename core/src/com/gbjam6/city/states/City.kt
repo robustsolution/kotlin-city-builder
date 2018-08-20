@@ -93,7 +93,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         for ((i, chunk) in hills.chunks.withIndex()) {
             // Draw 7 chunks around camera x position
             val x = Math.floor(camera.position.x / 32.0)
-            if (i - 25 in x - 3..x + 3) {
+            if (i - Def.nChunks / 2 in x - 3..x + 3) {
 
                 val chunkX = -800f + 32f * i
                 val chunkY = -88f + chunk.height.toFloat()

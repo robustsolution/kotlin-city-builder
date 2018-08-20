@@ -38,7 +38,7 @@ object Def {
             LBuilding(BuildingType.HAPPINESS, "HAPPINESS1", Pair(13, 20), Pair(13, 26), Pair(13, 39)),
             LBuilding(BuildingType.FOOD, "FOOD1", Pair(19, 39), Pair(19, 39), Pair(19, 39)),
             LBuilding(BuildingType.RESEARCH, "RESEARCH1", Pair(20, 28), Pair(20, 29), Pair(20, 38)),
-            LBuilding(BuildingType.STONE, "STONE1", Pair(6, 19), Pair(6, 19), Pair(6, 22)),
+            LBuilding(BuildingType.STONE, "STONE1", Pair(6, 19), Pair(6, 30), Pair(6, 22)),
             LBuilding(BuildingType.WATER, "WATER1", Pair(0, 17), Pair(0, 17), Pair(0, 17))
     )
 
