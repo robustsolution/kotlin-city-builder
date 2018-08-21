@@ -96,4 +96,15 @@ object Def {
     // NAMES
     val names = listOf("Jean", "Pas Jean")
 
+    // DESCRIPTIONS
+    const val backupDesc = "MISSING :-c\nADD ME IN\nDEF.DESCRIPTIONS"
+    val descriptions = mapOf(
+            "CITIZENS" to "DESC OF\nCITIZENS",
+            "HAPPINESS" to "DESC OF\nHAPP",
+            "FOOD" to "DESC OF\nFOOD",
+            "RESEARCH" to "DESC OF\nRESEARCH",
+            "STONE" to "DESC OF\nSTONE",
+            "REPAIR" to "OCULUS\nREPARO :>"
+    )
+
 }

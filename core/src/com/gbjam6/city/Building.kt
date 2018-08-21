@@ -9,7 +9,7 @@ import com.gbjam6.city.general.LBuilding
 import com.gbjam6.city.general.Ressources
 import com.gbjam6.city.general.Util
 import com.gbjam6.city.states.City
-import java.util.*
+import kotlin.math.min
 
 class Citizen(val name: String, var building: Building)
 
@@ -45,6 +45,9 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetM
         batch.draw(sprite, Util.getPixel(x), Util.getPixel(y))
     }
 
+    /**
+     * Returns true if the building can be placed
+     */
     fun isValid(): Boolean {
 
         // The door must be placed on a flat surface
@@ -119,36 +122,46 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetM
         return false
     }
 
-    fun use() {
-
-    }
-
-    fun placed() {
+    /**
+     * Called when the player places the building.
+     */
+    fun onPlaced() {
+        // Update stones count
         City.ressources.stone -= this.lBuilding.cost
-        when {
-            lBuilding.name == "FACTORY" -> City.limits.stone += 100
-            lBuilding.name == "FARM" -> City.limits.food += 100
-            lBuilding.name == "HOUSE" -> City.limits.citizens += 6
-        }
-        if (City.limits.stone > 999)
-            City.limits.stone = 999
-        if (City.limits.food > 999)
-            City.limits.food = 999
-        if (City.limits.citizens > 999)
-            City.limits.citizens = 999
 
+        // Update limits
+        when (lBuilding.name) {
+            "FACTORY" -> City.limits.stone += 100
+            "FARM" -> City.limits.food += 100
+            "HOUSE" -> City.limits.citizens += 6
+        }
+
+        // Make sure limits don't go over 999
+        City.limits.stone = min(City.limits.stone, 999)
+        City.limits.food = min(City.limits.food, 999)
+        City.limits.citizens = min(City.limits.citizens, 999)
     }
 
-
+    /**
+     * Returns the ressources producted by the building.
+     */
     fun getProduction(): Ressources {
-        return when {
-            lBuilding.name == "FACTORY" -> Ressources(stone = citizens.size, food = -citizens.size)
-            lBuilding.name == "FARM" -> Ressources(food = citizens.size * 3)
-            lBuilding.name == "HOUSE" -> Ressources(food = -citizens.size)
-            lBuilding.name == "TAVERN" -> Ressources(happiness = citizens.size * 1, food = -citizens.size)
-            lBuilding.name == "LABORATORY" -> Ressources(research = citizens.size * 3, food = -citizens.size)
+        return when (lBuilding.name) {
+            "FACTORY" -> Ressources(stone = citizens.size, food = -citizens.size)
+            "FARM" -> Ressources(food = citizens.size * 3)
+            "HOUSE" -> Ressources(food = -citizens.size)
+            "TAVERN" -> Ressources(happiness = citizens.size * 1, food = -citizens.size)
+            "LABORATORY" -> Ressources(research = citizens.size * 3, food = -citizens.size)
             else -> Ressources()
         }
+    }
+
+    /**
+     * Returns the description of the building.
+     * It will be displayed in [Helper].
+     */
+    fun getDescription(): String {
+        return "CITIZENS : ${citizens.size}/${lBuilding.capacity}"
     }
 
 }

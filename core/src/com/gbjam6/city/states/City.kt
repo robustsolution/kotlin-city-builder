@@ -43,7 +43,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         var state = States.IDLE
         val buildings = mutableListOf<Building>()
         val ressources = Def.startingRessources.copy()
-        val limits = Ressources(happiness = 9999,research = 9999)
+        val limits = Ressources(happiness = 9999, research = 9999)
     }
 
     override fun show() {
@@ -204,11 +204,13 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
     override fun left() {
         if (state == States.IDLE || state == States.PLACE_BUILDING || state == States.PLACE_CITIZEN) {
+            // Move the camera
             Util.inputFreeze = 1
             if (camera.position.x > -798f + 80f) {
                 if (Util.wasPressed) {
                     camera.translate(-3f, 0f)
                 } else {
+                    // Special slow first frame (for precise movements)
                     Util.inputFreeze = 4
                     camera.translate(-1f, 0f)
                 }
@@ -221,11 +223,13 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
     override fun right() {
         if (state == States.IDLE || state == States.PLACE_BUILDING || state == States.PLACE_CITIZEN) {
+            // Move the camera
             Util.inputFreeze = 1
             if (camera.position.x < 798f - 80f) {
                 if (Util.wasPressed) {
                     camera.translate(3f, 0f)
                 } else {
+                    // Special slow first frame (for precise movements)
                     Util.inputFreeze = 4
                     camera.translate(1f, 0f)
                 }
@@ -238,29 +242,29 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
     override fun a() {
         state = when (state) {
+            // Open the menu
             States.IDLE -> {
-                // TODO: pause
                 menuManager.open(camera.position.x)
-                States.MENU
             }
-            States.MENU -> {
-                menuManager.select(camera.position, pointer.y)
-            }
-            States.PLACE_BUILDING -> {
-                menuManager.select(camera.position, pointer.y)
-            }
-            States.PLACE_CITIZEN -> {
+            // Select the pointed menu option or the pointed spot
+            States.MENU, States.PLACE_BUILDING, States.PLACE_CITIZEN -> {
                 menuManager.select(camera.position, pointer.y)
             }
         }
-
     }
 
     override fun b() {
         state = when (state) {
             States.MENU -> {
                 menuManager.close()
-                if (menuManager.menus.any()) States.MENU else States.IDLE
+                if (menuManager.menus.any()) {
+                    States.MENU
+                } else {
+                    // Close the helper
+                    MenuManager.helper.visible = false
+                    // Go back to IDLE state
+                    States.IDLE
+                }
             }
             States.PLACE_BUILDING -> {
                 menuManager.placingB = null
