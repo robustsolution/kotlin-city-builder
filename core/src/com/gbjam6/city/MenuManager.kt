@@ -3,6 +3,7 @@ package com.gbjam6.city
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector3
+import com.gbjam6.city.general.BuildingType
 import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.MenuType
 import com.gbjam6.city.general.Util
@@ -31,7 +32,10 @@ class MenuManager(private val gbJam6: GBJam6) {
         if (building == null) {
             menus.add(Menu(MenuType.CREATION, "SELECT CATEGORY", x + 4f, Def.menuY, gbJam6))
         } else {
-            menus.add(Menu(MenuType.BUILDING, "SELECT ACTION", x + 4f, Def.menuY, gbJam6))
+            val items = Def.customMenus[building.lBuilding.name] ?: Def.menus[MenuType.BUILDING]!!
+            println(building.lBuilding.name)
+            // TODO: non selectable elements
+            menus.add(Menu(MenuType.BUILDING, "SELECT ACTION", x + 4f, Def.menuY, gbJam6, items))
         }
     }
 
@@ -51,12 +55,20 @@ class MenuManager(private val gbJam6: GBJam6) {
             // A menu item is selected
             val menu = menus.last()
             when (menu.type) {
-                // TODO: Open the category menu
                 MenuType.CREATION -> {
-                    placingB = Building(Def.buildings[menu.cursorPos], position.x, -16f, gbJam6.manager)
-                    updateBuilding(position.x, pointerY)
-                    frame = 0
-                    return States.PLACE_BUILDING
+                    // TODO: Building conditions
+                    val categoryB = Def.buildings.filter { it.type == BuildingType.valueOf(menu.items[menu.cursorPos]) }
+                    val items = Array(categoryB.size) { categoryB[it].name }
+                    menus.add(Menu(MenuType.CATEGORY, menu.items[menu.cursorPos], position.x + 4f, Def.menuY, gbJam6, items))
+                }
+                // The user chooses a building to build
+                MenuType.CATEGORY -> {
+                    if (menu.activated[menu.cursorPos]) {
+                        placingB = Building(Def.buildings.first { it.name == menu.items[menu.cursorPos] }, position.x, -16f, gbJam6.manager)
+                        updateBuilding(position.x, pointerY)
+                        frame = 0
+                        return States.PLACE_BUILDING
+                    }
                 }
                 // The user checks a building
                 MenuType.BUILDING -> {
@@ -95,7 +107,7 @@ class MenuManager(private val gbJam6: GBJam6) {
             // The building is placed
             if (placingB!!.validPos) {
                 City.buildings.add(placingB!!)
-                close()
+                menus.clear()
                 placingB = null
             } else {
                 return States.PLACE_BUILDING

@@ -24,3 +24,5 @@ We created a development thread during the GBJAM6 week [here](https://twitter.co
 ## License
 
 This project is licensed under the [CC0-1.0 license](https://github.com/yopox/GBJAM6/blob/master/LICENSE).
+
+In other words, feel free to use anything, fork or submit pull requests to this project :-)

@@ -213,6 +213,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     override fun a() {
         state = when (state) {
             States.IDLE -> {
+                // TODO: pause
                 menuManager.open(camera.position.x)
                 States.MENU
             }

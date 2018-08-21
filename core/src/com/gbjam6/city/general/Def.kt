@@ -3,7 +3,7 @@ package com.gbjam6.city.general
 import com.badlogic.gdx.graphics.Color
 
 enum class MenuType {
-    CREATION, BUILDING, CITIZENS, CONFIRM, IMPROVE
+    CREATION, CATEGORY, BUILDING, CITIZENS, CONFIRM, IMPROVE
 }
 
 enum class BuildingType {
@@ -27,7 +27,7 @@ object Def {
 
     // MENUS
     val menus = mapOf(
-            MenuType.CREATION to arrayOf("CITIZEN", "HAPPINESS", "FOOD", "RESEARCH", "STONE", "WATER"),
+            MenuType.CREATION to arrayOf("CITIZENS", "HAPPINESS", "FOOD", "RESEARCH", "STONE", "WATER"),
             MenuType.BUILDING to arrayOf("CITIZENS", "USE", "UPGRADE", "REPAIR", "DESTROY"),
             MenuType.CONFIRM to arrayOf("YES", "NO")
     )
@@ -40,6 +40,9 @@ object Def {
             LBuilding(BuildingType.RESEARCH, "RESEARCH1", 5, Pair(20, 28), Pair(20, 29), Pair(20, 38)),
             LBuilding(BuildingType.STONE, "STONE1", 5, Pair(6, 19), Pair(6, 30), Pair(6, 22)),
             LBuilding(BuildingType.WATER, "WATER1", 5, Pair(0, 17), Pair(0, 17), Pair(0, 17))
+    )
+    val customMenus = mapOf<String, Array<String>>(
+            "WATER1" to arrayOf("CITIZENS", "REPAIR")
     )
 
     // ACHIEVEMENTS
