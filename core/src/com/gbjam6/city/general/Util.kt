@@ -1,7 +1,9 @@
 package com.gbjam6.city.general
 
 import com.gbjam6.city.Building
+import com.gbjam6.city.MenuManager
 import com.gbjam6.city.states.City
+import com.gbjam6.city.states.States
 import kotlin.math.roundToInt
 
 object Util {
@@ -35,6 +37,28 @@ object Util {
     }
 
     fun update() {
+    }
+
+    /**
+     * Show a helper
+     */
+    fun showIDLEHelper() {
+        MenuManager.helper.visible = !MenuManager.helper.visible
+    }
+
+    fun updateHelper(x: Float) {
+        when (City.state) {
+            // Building description helper
+            States.IDLE -> {
+                val building = getBuilding(x)
+                if (building != null) {
+                    MenuManager.helper.update(building.lBuilding.name, "This building is a really cool one. Build it for 100 Stones.")
+                } else {
+                    MenuManager.helper.update("EMPTY", "YOU CAN BUILD HERE.")
+                }
+            }
+        }
+
     }
 
 

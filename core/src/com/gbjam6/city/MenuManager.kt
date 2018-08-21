@@ -7,6 +7,7 @@ import com.gbjam6.city.general.BuildingType
 import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.MenuType
 import com.gbjam6.city.general.Util
+import com.gbjam6.city.graphics.Helper
 import com.gbjam6.city.graphics.Menu
 import com.gbjam6.city.states.City
 import com.gbjam6.city.states.States
@@ -20,6 +21,10 @@ class MenuManager(private val gbJam6: GBJam6) {
     var placingB: Building? = null
     var placingC: Citizen? = null
     private var frame = 0
+
+    companion object {
+        var helper = Helper()
+    }
 
     /**
      * Called when the user selects a spot of the map.
@@ -90,7 +95,6 @@ class MenuManager(private val gbJam6: GBJam6) {
                             if (Util.housingLeft()) {
                                 val building = Util.getBuilding(position.x)!!
                                 placingC = building.citizens[menu.cursorPos]
-                                building.citizens.remove(placingC!!)
                                 return States.PLACE_CITIZEN
                             }
                         }
@@ -115,6 +119,7 @@ class MenuManager(private val gbJam6: GBJam6) {
             val building = Util.getBuilding(position.x)
             if (building != null && building.citizens.size < building.lBuilding.capacity) {
                 // We place the citizen in this building
+                placingC!!.building.citizens.remove(placingC!!)
                 placingC!!.building = building
                 building.citizens.add(placingC!!)
                 placingC = null
@@ -188,6 +193,10 @@ class MenuManager(private val gbJam6: GBJam6) {
      */
     fun update() {
         frame = (frame + 1) % 60
+    }
+
+    fun drawHelper(batch: SpriteBatch, smallFont: BitmapFont, x: Float) {
+        helper.draw(batch, smallFont, x - 76f)
     }
 
 }

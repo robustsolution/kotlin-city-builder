@@ -148,6 +148,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
         // Draw the menu
         menuManager.drawMenu(batch, smallFont)
+        menuManager.drawHelper(batch, smallFont, camera.position.x)
 
         batch.end()
 
@@ -178,9 +179,11 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     }
 
     override fun up() {
-        if (state == States.MENU) {
-            Util.inputFreeze = 8
-            menuManager.moveCursor(-1)
+        when (state) {
+            States.MENU -> {
+                Util.inputFreeze = 8
+                menuManager.moveCursor(-1)
+            }
         }
     }
 
@@ -191,6 +194,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 menuManager.moveCursor(1)
             }
             States.PLACE_BUILDING -> menuManager.flip(camera.position.x, pointer.y)
+            States.IDLE -> Util.showIDLEHelper()
             else -> {
             }
         }
@@ -209,6 +213,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 updatePointer()
             }
             menuManager.updateBuilding(camera.position.x, pointer.y)
+            Util.updateHelper(camera.position.x)
         }
     }
 
@@ -225,6 +230,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 updatePointer()
             }
             menuManager.updateBuilding(camera.position.x, pointer.y)
+            Util.updateHelper(camera.position.x)
         }
     }
 

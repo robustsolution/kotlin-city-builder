@@ -19,7 +19,10 @@ To build the game you will need [TanjentXM library](http://www.tanjent.se/labs/t
 
 ### Twitter thread
 
-We created a development thread during the GBJAM6 week [here](https://twitter.com/elyopox/status/1030698502471315458).
+We created development threads (french explanations & screenshots) during the GBJAM6 week:
+
+- [general](https://twitter.com/elyopox/status/1030698502471315458)
+- [graphics](https://twitter.com/Adorikill/status/1031343039032246272)
 
 ## License
 

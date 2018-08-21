@@ -1,6 +1,7 @@
 package com.gbjam6.city.general
 
 import com.badlogic.gdx.graphics.Color
+import com.gbjam6.city.states.City
 
 enum class MenuType {
     CREATION, CATEGORY, BUILDING, CITIZENS, CONFIRM, IMPROVE
@@ -30,6 +31,7 @@ object Def {
     val nChunks = 50
     val menuWidth = 72f
     val menuY = 52f
+    val helperWidth = 64f
 
     // MENUS
     val menus = mapOf(
