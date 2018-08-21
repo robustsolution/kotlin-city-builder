@@ -10,18 +10,6 @@
 | Research  |                             Research is the ressource which lets you obtain improvements, bonuses, new buildings or enlarge your city.                             |
 |   Stone   |                                             Stone is the ressource which lets you build new buildings or improve them.                                             |
 | Building  | Buildings allow ressources production. They are disintegrating over time, so they must be repaired with stone, otherwise they will collapse and citizens will die. |
-
-## The different types of buildings
-
-|   Type    |                                                                                          Explanation                                                                                           |
-| :-------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| Citizens  |                                                      These buildings increase the the city's citizens capacity and allow citizens' birth.                                                      |
-| Happiness |                                                                        These buildings produce the Happiness ressource.                                                                        |
-|   Food    |                                                             These buildings increase the capacity of Food storage and produce it.                                                              |
-| Research  |                                                         These buildings produce the Research ressource and let you improve your city.                                                          |
-|   Stone   |                                                             These buildings increase the capacity of Stone storage and produce it.                                                             |
-|   Water   | These buildings are necessary for the efficiency of citizens. They generate an area in which a set number of citizens can access water. A citizen without water supply will be less effective. |
-
 ## Interactions between the different types of buildings
 
 Each building produces its ressource, but this production is influenced by different factors, including the proximity other buildings.
@@ -56,33 +44,45 @@ Each building produces its ressource, but this production is influenced by diffe
 |  Blue  |           -           |
 | Yellow |          - -          |
 
-##Research tree
+## Research tree
 ```mermaid
 graph LR
-  House+ --> Garden;
-  F --> B;
-  Hospital --> B;
-  Factorie+ --> Well;
-  Factorie+ --> Craftman;
-  Factorie+ --> Laboratory+;
+  House+ --> School;
+  Well --> Tree;
+  Tree --> Garden;
+  Factory+ --> Well;
+  Factory+ --> Craftman;
+  Factory+ --> Laboratory+;
   Tavern+ --> Laboratory+;
   Tavern+ --> House+;
   Farm+ --> House+;
-  Farm+ --> Warehouse;
   Craftman --> Hospital;
+  Hospital --> E;
+  B --> E;
+  Farm+ --> Warehouse;
   Laboratory+ --> Hospital;
-  Laboratory+ --> Garden;
-  Garden --> Tree;
-  Warehouse --> Tree;
-  Well --> F;
-  Tree --> E;
+  Laboratory+ --> School;
+  School --> B;
+  Warehouse --> B;
   Warehouse --> G;
 ```
 ## Buildings
-|Name|Picture|Resource|Slot|Production|Effet|
+|Name|Picture|Type|Slot|Production|Effet|
 |:-:|:-:|:-:|:-:|:-:|:-:|
-|House|![House](../android/assets/sprites/buildings/CITIZENS1.png)|Citizens|6 citizens|1 Citizen / 100 Happiness|Increases the maximum number of citizens by 6|
-|Farm|![Farm](../android/assets/sprites/buildings/FOOD1.png)|Food|2 citizens|4 Foods / Citizen / Month|Increases the maximum number of citizens by 100
-|Tavern|![Tavern](../android/assets/sprites/buildings/HAPPINESS1.png)|Happiness|2 citizens|1 Happiness / Citizen / Month|None|
-
-
+|House|![House](../android/assets/sprites/buildings/CITIZENS1.png)|Citizen|6 citizens|1 Citizen / 100 Happiness|Increases the maximum number of citizens by 6|
+|House+||Citizen|9 citizens|1 Citizen / 100 Happiness|Increases the maximum number of citizens by 9|
+|School||Citizen|4 citizens|None|Now citizen cost 75 Hapiness to birth|
+|Farm|![Farm](../android/assets/sprites/buildings/FOOD1.png)|Food|2 citizens|4 Foods / Citizen in / Month|Increases the maximum number of foods by 100|
+|Farm+||Food|3 citizens|4 Foods / Citizen in / Month|Increases the maximum number of foods by 150|
+|Warehouse||Food|1 citizen|6 Foods / Citizen in / Month|Increases the maximum number of foods and stone by 200|
+|Tavern|![Tavern](../android/assets/sprites/buildings/HAPPINESS1.png)|Happiness|2 citizens|1 Happiness / Citizen in / Month|None|
+|Tavern+||Happiness|3 citizens|1 Happiness / Citizen in / Month|None|
+|Garden||Happiness|1 citizen|1 Happiness / Citizen in / Month|Echange 50 food contre 50 happiness|
+|Laboratory|![Laboratory](../android/assets/sprites/buildings/RESEARCH1.png)|Research|2 citizens|3 Research / Citizen in / Month|None|
+|Laboratory+||Research|3 citizens|3 Research / Citizen in / Month|None|
+|Hospital||Reaserch|1 citizen|4 Research / Citizen in / Month|Citizens die 1.5 times slower. (not combinable)|
+|Factory|![Factory](../android/assets/sprites/buildings/STONE1.png)|Stone|2 citizens|1 Stone / Citizen in / Month|Increases the maximum number of stones by 100|
+|Factory+||Stone|3 citizens|1 Stone / Citizen in / Month|Increases the maximum number of stones by 150|
+|Craftman||Stone|1 citizen|2 Stone / Citizen in / Month|The buildings are damaged twice less. (not combinable)|
+|Well||Other|None|None|Increases by 50% the effectiveness of 2 citizens who are in the 80 pixels around the well|
+|Tree||Other|None|None|Se place sur un bâtiment et empêche qu'il diminue l'efficacite des batiment au alentour|
