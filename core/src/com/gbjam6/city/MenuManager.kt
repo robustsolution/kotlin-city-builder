@@ -58,7 +58,8 @@ class MenuManager(private val gbJam6: GBJam6) {
                     // TODO: Building conditions
                     val categoryB = Def.buildings.filter { it.type == BuildingType.valueOf(menu.items[menu.cursorPos]) }
                     val items = Array(categoryB.size) { categoryB[it].name }
-                    menus.add(Menu(MenuType.CATEGORY, menu.items[menu.cursorPos], position.x + 4f, Def.menuY, gbJam6, items))
+                    val validity = Array(categoryB.size) { categoryB[it].cost <= City.ressources.stone }
+                    menus.add(Menu(MenuType.CATEGORY, menu.items[menu.cursorPos], position.x + 4f, Def.menuY, gbJam6, items, validity))
                 }
                 // The user chooses a building to build
                 MenuType.CATEGORY -> {
