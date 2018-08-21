@@ -24,20 +24,33 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
 
         shapeRenderer.projectionMatrix = camera.combined
 
+        // Fonts
         gbJam6.manager.load("fonts/skullboy.fnt", BitmapFont::class.java)
         gbJam6.manager.load("fonts/little.fnt", BitmapFont::class.java)
-        gbJam6.manager.load("sprites/pointerRight.png", Texture::class.java)
+
+        // Music
         gbJam6.titleMusic = gbJam6.player.loadXM(Gdx.files.internal("music/title.xm").readBytes(), 0f)
+        gbJam6.cityMusic1 = gbJam6.player.loadXM(Gdx.files.internal("music/city1.xm").readBytes(), 0f)
+
+        // Title screen
         gbJam6.manager.load("sprites/name.png", Texture::class.java)
+
+        // Pointers
+        gbJam6.manager.load("sprites/pointerRight.png", Texture::class.java)
         gbJam6.manager.load("sprites/pointerUp.png", Texture::class.java)
         gbJam6.manager.load("sprites/pointerSmiley.png", Texture::class.java)
-        gbJam6.cityMusic1 = gbJam6.player.loadXM(Gdx.files.internal("music/city1.xm").readBytes(), 0f)
         gbJam6.manager.load("sprites/smallPointerRight.png", Texture::class.java)
+
+        // Tiles
         gbJam6.manager.load("sprites/tiles-sheet.png", Texture::class.java)
         for (lBuilding in Def.buildings) {
             gbJam6.manager.load("sprites/buildings/${lBuilding.name}.png", Texture::class.java)
         }
 
+        // GUI
+        for (type in arrayOf("Citizens", "Food", "Happiness", "Research", "Stone")) {
+            gbJam6.manager.load("sprites/gui/$type.png", Texture::class.java)
+        }
     }
 
     override fun render(delta: Float) {

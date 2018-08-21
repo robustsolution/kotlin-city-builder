@@ -33,9 +33,8 @@ class MenuManager(private val gbJam6: GBJam6) {
             menus.add(Menu(MenuType.CREATION, "SELECT CATEGORY", x + 4f, Def.menuY, gbJam6))
         } else {
             val items = Def.customMenus[building.lBuilding.name] ?: Def.menus[MenuType.BUILDING]!!
-            println(building.lBuilding.name)
-            // TODO: non selectable elements
             menus.add(Menu(MenuType.BUILDING, "SELECT ACTION", x + 4f, Def.menuY, gbJam6, items))
+            menus.last().changeValidity(building)
         }
     }
 
@@ -106,7 +105,7 @@ class MenuManager(private val gbJam6: GBJam6) {
         } else if (City.state == States.PLACE_BUILDING) {
             // The building is placed
             if (placingB!!.validPos) {
-                City.buildings.add(placingB!!)
+                Util.placeBuilding(placingB!!)
                 menus.clear()
                 placingB = null
             } else {

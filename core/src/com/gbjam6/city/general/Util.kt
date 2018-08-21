@@ -22,4 +22,20 @@ object Util {
         return false
     }
 
+    fun tick() {
+        println("tick")
+    }
+
+    /**
+     * Called when a building is placed.
+     */
+    fun placeBuilding(placingB: Building) {
+        City.buildings.add(placingB)
+        update()
+    }
+
+    fun update() {
+    }
+
+
 }

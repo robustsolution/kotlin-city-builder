@@ -6,6 +6,7 @@ import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.MenuType
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.gbjam6.city.Building
 import com.gbjam6.city.GBJam6
 
 /**
@@ -30,7 +31,6 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
         pixmap.dispose()
     }
 
-
     fun draw(batch: SpriteBatch, font: BitmapFont) {
         // Draw the background
         batch.draw(texture, x, y - height)
@@ -47,6 +47,16 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
 
         // Draw the cursor
         batch.draw(cursor, x + 8f, y - (cursorPos + 1) * 9f - 13)
+    }
+
+    fun changeValidity(building: Building) {
+        for ((i, item) in items.withIndex()) {
+            when (item) {
+                "USE" -> activated[i] = building.canUse()
+                "UPGRADE" -> activated[i] = building.canUpgrade()
+                "REPAIR" -> activated[i] = building.canRepair()
+            }
+        }
     }
 
 }

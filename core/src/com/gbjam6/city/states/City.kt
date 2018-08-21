@@ -10,7 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.gbjam6.city.*
 import com.gbjam6.city.general.Def
+import com.gbjam6.city.general.Ressources
 import com.gbjam6.city.general.Util
+import com.gbjam6.city.graphics.GUI
 import com.gbjam6.city.logic.Hills
 import ktx.app.KtxScreen
 
@@ -30,30 +32,37 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private lateinit var hillSprites: Array<Sprite>
     private lateinit var pointer: Sprite
     private lateinit var pointerSmiley: Sprite
+    private lateinit var gui: GUI
     private lateinit var font: BitmapFont
     private lateinit var smallFont: BitmapFont
     private var frame = 0
+    private var pause = false
 
     companion object {
         var hills = Hills()
         var state = States.IDLE
         val buildings = mutableListOf<Building>()
+        val ressources = Def.startingRessources.copy()
+        val limits = Ressources()
     }
 
     override fun show() {
         super.show()
         camera.position.x = 0f
 
-        // Initialize fonts
+        // Init fonts
         font = gbJam6.manager.get("fonts/skullboy.fnt", BitmapFont::class.java)
         smallFont = gbJam6.manager.get("fonts/little.fnt", BitmapFont::class.java)
 
-        // Initializes the pointer
+        // Init pointers
         pointer = Sprite(gbJam6.manager.get("sprites/pointerUp.png", Texture::class.java))
         pointerSmiley = Sprite(gbJam6.manager.get("sprites/pointerSmiley.png", Texture::class.java))
         updatePointer()
 
-        // Creates sprites for each slope
+        // Init GUI
+        gui = GUI(gbJam6)
+
+        // Create sprites for each slope
         val ttext = gbJam6.manager.get("sprites/tiles-sheet.png", Texture::class.java)
         hillSprites = arrayOf(
                 Sprite(ttext, 1 * 2 + 0, 2, 32, 32),
@@ -73,7 +82,13 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
     override fun render(delta: Float) {
 
-        frame = (frame + 1) % 60
+        if (!pause) {
+            frame += 1
+            if (frame == Def.speed1) {
+                frame = 0
+                Util.tick()
+            }
+        }
 
         camera.update()
         menuManager.update()
@@ -127,6 +142,9 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             if ((building != null && building.citizens.size < building.lBuilding.capacity) || frame > 30)
                 pointerSmiley.draw(batch)
         }
+
+        // Draw the GUI
+        gui.draw(batch, smallFont, camera.position.x)
 
         // Draw the menu
         menuManager.drawMenu(batch, smallFont)
@@ -252,4 +270,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         }
     }
 
+    override fun select() {
+        pause = !pause
+    }
 }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.LBuilding
+import com.gbjam6.city.general.Ressources
 import com.gbjam6.city.general.Util
 import com.gbjam6.city.states.City
 import java.util.*
@@ -104,6 +105,26 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetM
 
         return true
 
+    }
+
+    fun canUse(): Boolean {
+        return true
+    }
+
+    fun canRepair(): Boolean {
+        return false
+    }
+
+    fun canUpgrade(): Boolean {
+        return false
+    }
+
+    fun use() {
+
+    }
+
+    fun getProduction(): Ressources {
+        return Ressources(food = 5, research = 1)
     }
 
 }

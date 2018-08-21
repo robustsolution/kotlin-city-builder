@@ -12,7 +12,13 @@ enum class BuildingType {
 
 data class LBuilding(val type: BuildingType, val name: String, val capacity: Int, var door: Pair<Int, Int>, var s8: Pair<Int, Int>, var s16: Pair<Int, Int>)
 
+data class Ressources(var citizens: Int = 0, var food: Int = 0, var stone: Int = 0, var happiness: Int = 0, var research: Int = 0)
+
 object Def {
+
+    // GENERAL
+    val startingRessources = Ressources(happiness = 400, stone = 300)
+    val speed1 = 120
 
     // COLORS
     val color1 = Color.valueOf("000000")
@@ -23,7 +29,7 @@ object Def {
     // SIZE
     val nChunks = 50
     val menuWidth = 72f
-    val menuY = 68f
+    val menuY = 52f
 
     // MENUS
     val menus = mapOf(
