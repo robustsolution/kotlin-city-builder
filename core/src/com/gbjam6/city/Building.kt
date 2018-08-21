@@ -8,13 +8,13 @@ import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.LBuilding
 import com.gbjam6.city.general.Util
 import com.gbjam6.city.states.City
-import java.lang.Math.abs
+import java.util.*
 
-data class Citizen(val name: String)
+data class Citizen(val name: String, var building: Building)
 
 class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetManager) {
 
-    val citizens = mutableListOf<Citizen>()
+    val citizens = mutableListOf(Citizen("JP"+Random().nextInt(999), this))
 
     private var sprite = Sprite(manager.get("sprites/buildings/${lBuilding.name}.png", Texture::class.java))
     val width = sprite.width

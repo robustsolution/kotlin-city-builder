@@ -15,7 +15,7 @@ import com.gbjam6.city.logic.Hills
 import ktx.app.KtxScreen
 
 enum class States {
-    IDLE, PLACE_BUILDING, MENU
+    IDLE, PLACE_BUILDING, MENU, PLACE_CITIZEN
 }
 
 /**
@@ -168,7 +168,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     }
 
     override fun left() {
-        if (state == States.IDLE || state == States.PLACE_BUILDING) {
+        if (state == States.IDLE || state == States.PLACE_BUILDING || state == States.PLACE_CITIZEN) {
             Util.inputFreeze = 1
             if (camera.position.x > -798f + 80f) {
                 if (Util.wasPressed) {
@@ -184,7 +184,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     }
 
     override fun right() {
-        if (state == States.IDLE || state == States.PLACE_BUILDING) {
+        if (state == States.IDLE || state == States.PLACE_BUILDING || state == States.PLACE_CITIZEN) {
             Util.inputFreeze = 1
             if (camera.position.x < 798f - 80f) {
                 if (Util.wasPressed) {
@@ -211,6 +211,9 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             States.PLACE_BUILDING -> {
                 menuManager.select(camera.position, pointer.y)
             }
+            States.PLACE_CITIZEN -> {
+                menuManager.select(camera.position, pointer.y)
+            }
         }
 
     }
@@ -225,6 +228,13 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 menuManager.placingB = null
                 menuManager.updateMenu(camera.position.x)
                 States.MENU
+            }
+            States.PLACE_CITIZEN -> {
+                menuManager.placingC!!.building.citizens.add(menuManager.placingC!!)
+                menuManager.placingC = null
+                menuManager.updateMenu(camera.position.x)
+                menuManager.menus.clear()
+                States.IDLE
             }
             else -> States.IDLE
         }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector3
 import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.MenuType
+import com.gbjam6.city.general.Util
 import com.gbjam6.city.graphics.Menu
 import com.gbjam6.city.states.City
 import com.gbjam6.city.states.States
@@ -16,6 +17,7 @@ class MenuManager(private val gbJam6: GBJam6) {
 
     var menus = mutableListOf<Menu>()
     var placingB: Building? = null
+    var placingC: Citizen? = null
     private var frame = 0
 
     /**
@@ -23,7 +25,7 @@ class MenuManager(private val gbJam6: GBJam6) {
      */
     fun open(x: Float) {
         // Check if the user clicked on a building
-        val building = City.buildings.firstOrNull { it.x <= x && x <= it.x + it.width }
+        val building = Util.getBuilding(x)
 
         // Add the corresponding menu
         if (building == null) {
@@ -49,26 +51,38 @@ class MenuManager(private val gbJam6: GBJam6) {
             // A menu item is selected
             val menu = menus.last()
             when (menu.type) {
+                // TODO: Open the category menu
                 MenuType.CREATION -> {
                     placingB = Building(Def.buildings[menu.cursorPos], position.x, -16f, gbJam6.manager)
                     updateBuilding(position.x, pointerY)
                     frame = 0
                     return States.PLACE_BUILDING
                 }
+                // The user checks a building
                 MenuType.BUILDING -> {
                     when (menu.items[menu.cursorPos]) {
                         "CITIZENS" -> {
-                            val building = City.buildings.first { it.x <= position.x && position.x < it.x + it.width }
+                            val building = Util.getBuilding(position.x)!!
                             val citizens = building.citizens
-                            var names = List(citizens.size) { citizens[it].name }
-                            if (names.isEmpty()) names = arrayListOf("RETURN")
-                            menus.add(Menu(MenuType.CITIZENS, "NO CITIZENS!", position.x + 4, Def.menuY, gbJam6, names.toTypedArray()))
+                            val names = MutableList(citizens.size) { citizens[it].name }
+                            val title = if (names.isEmpty()) "NO CITIZENS!" else "CHECK&MOVE"
+                            names.add("RETURN")
+                            menus.add(Menu(MenuType.CITIZENS, title, position.x + 4, Def.menuY, gbJam6, names.toTypedArray()))
                         }
                     }
                 }
+                // The user selects a citizen
                 MenuType.CITIZENS -> {
                     when (menu.items[menu.cursorPos]) {
                         "RETURN" -> close()
+                        else -> {
+                            if (Util.housingLeft()) {
+                                val building = Util.getBuilding(position.x)!!
+                                placingC = building.citizens[menu.cursorPos]
+                                building.citizens.remove(placingC!!)
+                                return States.PLACE_CITIZEN
+                            }
+                        }
                     }
                 }
                 MenuType.CONFIRM -> {
@@ -85,6 +99,17 @@ class MenuManager(private val gbJam6: GBJam6) {
                 placingB = null
             } else {
                 return States.PLACE_BUILDING
+            }
+        } else if (City.state == States.PLACE_CITIZEN) {
+            val building = Util.getBuilding(position.x)
+            if (building != null && building.citizens.size < building.lBuilding.capacity) {
+                // We place the citizen in this building
+                placingC!!.building = building
+                building.citizens.add(placingC!!)
+                placingC = null
+                menus.clear()
+            } else {
+                return States.PLACE_CITIZEN
             }
         }
 
@@ -105,7 +130,7 @@ class MenuManager(private val gbJam6: GBJam6) {
      */
     fun drawMenu(batch: SpriteBatch, font: BitmapFont) {
         // Draw the menu
-        if (menus.any() && placingB == null) {
+        if (menus.any() && placingB == null && placingC == null) {
             menus.last().draw(batch, font)
         }
     }
