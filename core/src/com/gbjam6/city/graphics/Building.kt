@@ -1,4 +1,4 @@
-package com.gbjam6.city
+package com.gbjam6.city.graphics
 
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.Texture
@@ -6,16 +6,17 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.LBuilding
-import com.gbjam6.city.general.Ressources
+import com.gbjam6.city.logic.Ressources
 import com.gbjam6.city.general.Util
+import com.gbjam6.city.logic.Citizen
 import com.gbjam6.city.states.City
 import kotlin.math.min
 
-class Citizen(val name: String, var building: Building)
-
 class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetManager) {
 
+    var life = Def.BUILD_LIFE_TIME
     val citizens = mutableListOf<Citizen>()
+    val citizensToKill = mutableListOf<Citizen>()
 
     private var sprite = Sprite(manager.get("sprites/buildings/${lBuilding.name}.png", Texture::class.java))
     val width = sprite.width
@@ -164,4 +165,25 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetM
         return "CITIZENS : ${citizens.size}/${lBuilding.capacity}"
     }
 
+    /**
+     * Called each tick. Make citizens and the building older.
+     */
+    fun older(ressources: Ressources, buildingsToDestroy: MutableList<Building>) {
+        // Make citizens older
+        citizens.map { it.older() }
+
+        // Kill dead citizens
+        for (citizen in citizensToKill) {
+            citizens.remove(citizen)
+            if (citizen.life == 0)
+                ressources.citizens -= 1
+        }
+        citizensToKill.clear()
+
+        // Make the building older
+        life -= 1
+        if (life <= 0) {
+            buildingsToDestroy.add(this)
+        }
+    }
 }

@@ -1,8 +1,9 @@
 package com.gbjam6.city.general
 
-import com.gbjam6.city.Building
+import com.gbjam6.city.graphics.Building
 import com.gbjam6.city.MenuManager
 import com.gbjam6.city.graphics.Menu
+import com.gbjam6.city.logic.Ressources
 import com.gbjam6.city.states.City
 import com.gbjam6.city.states.States
 import java.util.*
@@ -33,11 +34,23 @@ object Util {
     }
 
     fun tick() {
-        //println("tick")
+        // println("tick")
         val ressources = Ressources()
+        val buildingsToDestroy = mutableListOf<Building>()
+
+        // Get buildings' production and make them older
         for (building in City.buildings) {
             ressources add building.getProduction()
+            building.older(ressources, buildingsToDestroy)
         }
+
+        // Remove destroyed buildings
+        for (building in buildingsToDestroy) {
+            // TODO: Enlever de city (affichage et liste) et update le nombre de citizens
+        }
+        buildingsToDestroy.clear()
+
+        // Update the ressources count
         City.ressources addLimit ressources
     }
 
@@ -87,7 +100,10 @@ object Util {
         val item = menu.items[menu.cursorPos]
 
         // Update the helper
-        MenuManager.helper.update(item, Def.descriptions[item] ?: Def.backupDesc)
+        when (menu.type) {
+            MenuType.CITIZENS -> MenuManager.helper.update(item, "TODO")
+            else -> MenuManager.helper.update(item, Def.descriptions[item] ?: Def.backupDesc)
+        }
     }
 
 }

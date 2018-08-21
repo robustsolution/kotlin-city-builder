@@ -6,7 +6,6 @@ import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.MenuType
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.g2d.BitmapFont
-import com.gbjam6.city.Building
 import com.gbjam6.city.GBJam6
 import com.gbjam6.city.states.City
 

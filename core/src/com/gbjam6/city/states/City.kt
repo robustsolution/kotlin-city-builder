@@ -10,8 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.gbjam6.city.*
 import com.gbjam6.city.general.Def
-import com.gbjam6.city.general.Ressources
+import com.gbjam6.city.logic.Ressources
 import com.gbjam6.city.general.Util
+import com.gbjam6.city.graphics.Building
 import com.gbjam6.city.graphics.GUI
 import com.gbjam6.city.logic.Hills
 import ktx.app.KtxScreen

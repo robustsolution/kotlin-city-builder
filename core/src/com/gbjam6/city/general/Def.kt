@@ -1,9 +1,7 @@
 package com.gbjam6.city.general
 
 import com.badlogic.gdx.graphics.Color
-import com.gbjam6.city.states.City
-import kotlin.math.max
-import kotlin.math.min
+import com.gbjam6.city.logic.Ressources
 
 enum class MenuType {
     CREATION, CATEGORY, BUILDING, CITIZENS, CONFIRM, IMPROVE
@@ -15,35 +13,6 @@ enum class BuildingType {
 
 data class LBuilding(val type: BuildingType, val name: String, val capacity: Int, var door: Pair<Int, Int>, var s8: Pair<Int, Int>, var s16: Pair<Int, Int>, val cost: Int)
 
-data class Ressources(var citizens: Int = 0, var food: Int = 0, var stone: Int = 0, var happiness: Int = 0, var research: Int = 0) {
-    infix fun add(ressources: Ressources) {
-        this.stone += ressources.stone
-        this.citizens += ressources.citizens
-        this.food += ressources.food
-        this.research += ressources.research
-        this.happiness += ressources.happiness
-    }
-
-    infix fun addLimit(ressources: Ressources) {
-        this add ressources
-        food = max(0, food)
-        if (food > City.limits.food && food - ressources.food <= City.limits.food) {
-            food = City.limits.food
-        }
-        if (food > City.limits.food && food - ressources.food > City.limits.food) {
-            food -= ressources.food
-        }
-        if (stone > City.limits.stone && stone - ressources.stone <= City.limits.stone) {
-            stone = City.limits.stone
-        }
-        if (stone > City.limits.stone && stone - ressources.stone > City.limits.stone) {
-            stone -= ressources.stone
-        }
-        this.happiness = min(City.limits.happiness, happiness)
-        this.research = min(this.research, City.limits.research)
-    }
-}
-
 object Def {
 
     // GENERAL
@@ -53,6 +22,8 @@ object Def {
 
     // GAME DESIGN
     var BIRTH_COST = 100
+    var LIFE_TIME = 300
+    var BUILD_LIFE_TIME = 300
 
     // COLORS
     val color1: Color = Color.valueOf("000000")

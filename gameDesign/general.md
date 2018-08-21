@@ -77,7 +77,7 @@ graph LR
 |Warehouse||Food|1 citizen|6 Foods / Citizen in / Month|Increases the maximum number of foods and stone by 200|
 |Tavern|![Tavern](../android/assets/sprites/buildings/TAVERN.png)|Happiness|2 citizens|1 Happiness / Citizen in / Month|None|
 |Tavern+||Happiness|3 citizens|1 Happiness / Citizen in / Month|None|
-|Garden||Happiness|1 citizen|1 Happiness / Citizen in / Month|Echange 50 food contre 50 happiness|
+|Garden||Happiness|1 citizen|1 Happiness / Citizen in / Month|Sell 50 food for 50 happiness|
 |Laboratory|![Laboratory](../android/assets/sprites/buildings/LABORATORY.png)|Research|2 citizens|3 Research / Citizen in / Month|None|
 |Laboratory+||Research|3 citizens|3 Research / Citizen in / Month|None|
 |Hospital||Reaserch|1 citizen|4 Research / Citizen in / Month|Citizens die 1.5 times slower. (not combinable)|
@@ -85,4 +85,4 @@ graph LR
 |Factory+||Stone|3 citizens|1 Stone / Citizen in / Month|Increases the maximum number of stones by 150|
 |Craftman||Stone|1 citizen|2 Stone / Citizen in / Month|The buildings are damaged twice less. (not combinable)|
 |Well|![Factory](../android/assets/sprites/buildings/WELL.png)|Other|None|None|Increases by 50% the effectiveness of 2 citizens who are in the 80 pixels around the well|
-|Tree||Other|None|None|Se place sur un bâtiment et empêche qu'il diminue l'efficacite des batiment au alentour|
+|Tree||Other|None|None| Stands on a building and prevents it from reducing the efficiency of buildings nearby |
