@@ -3,7 +3,6 @@ package com.gbjam6.city.graphics
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.Vector3
 import com.gbjam6.city.GBJam6
 import com.gbjam6.city.general.Def
 import com.gbjam6.city.states.City

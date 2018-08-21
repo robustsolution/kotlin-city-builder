@@ -3,14 +3,12 @@ package com.gbjam6.city
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector3
-import com.gbjam6.city.general.BuildingType
-import com.gbjam6.city.general.Def
-import com.gbjam6.city.general.MenuType
-import com.gbjam6.city.general.Util
+import com.gbjam6.city.general.*
 import com.gbjam6.city.graphics.Helper
 import com.gbjam6.city.graphics.Menu
 import com.gbjam6.city.states.City
 import com.gbjam6.city.states.States
+import java.util.*
 
 /**
  * Manages the menus' logic.
@@ -85,6 +83,16 @@ class MenuManager(private val gbJam6: GBJam6) {
                             val title = if (names.isEmpty()) "NO CITIZENS!" else "CHECK&MOVE"
                             names.add("RETURN")
                             menus.add(Menu(MenuType.CITIZENS, title, position.x + 4, Def.menuY, gbJam6, names.toTypedArray()))
+                        }
+                        "BIRTH" -> {
+                            if (menu.activated[menu.cursorPos]) {
+                                val building = Util.getBuilding(position.x)!!
+                                placingC = Citizen(Def.names.random(), building)
+                                building.citizens.add(placingC!!)
+                                City.ressources.citizens += 1
+                                City.ressources.happiness -= Def.BIRTH_COST
+                                return States.PLACE_CITIZEN
+                            }
                         }
                     }
                 }

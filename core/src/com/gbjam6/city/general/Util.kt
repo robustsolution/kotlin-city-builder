@@ -4,7 +4,12 @@ import com.gbjam6.city.Building
 import com.gbjam6.city.MenuManager
 import com.gbjam6.city.states.City
 import com.gbjam6.city.states.States
+import java.util.*
 import kotlin.math.roundToInt
+
+
+fun <T> List<T>.random(): T = this[Random().nextInt(this.size)]
+fun <T> Array<T>.random(): T = this[Random().nextInt(this.size)]
 
 object Util {
 
@@ -25,9 +30,9 @@ object Util {
     }
 
     fun tick() {
-        println("tick")
-        var ressources = Ressources(0,0,0,0,0)
-        for (building in City.buildings){
+        //println("tick")
+        val ressources = Ressources()
+        for (building in City.buildings) {
             ressources add building.getProduction()
         }
         City.ressources addLimit ressources
@@ -44,8 +49,9 @@ object Util {
     /**
      * Show a helper
      */
-    fun showIDLEHelper() {
+    fun showIDLEHelper(x: Float) {
         MenuManager.helper.visible = !MenuManager.helper.visible
+        updateHelper(x)
     }
 
     fun updateHelper(x: Float) {

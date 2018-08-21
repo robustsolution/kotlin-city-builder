@@ -67,10 +67,10 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
 
         // Draw the loading bar
         val progress = gbJam6.manager.progress
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.color = Def.color4;
-        shapeRenderer.rect(-60f, -1f, progress * 120, 2f);
-        shapeRenderer.end();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
+        shapeRenderer.color = Def.color4
+        shapeRenderer.rect(-60f, -1f, progress * 120, 2f)
+        shapeRenderer.end()
 
     }
 

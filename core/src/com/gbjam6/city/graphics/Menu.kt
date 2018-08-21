@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.gbjam6.city.Building
 import com.gbjam6.city.GBJam6
+import com.gbjam6.city.states.City
 
 /**
  * Simple list of [items].
@@ -55,6 +56,7 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
                 "USE" -> activated[i] = building.canUse()
                 "UPGRADE" -> activated[i] = building.canUpgrade()
                 "REPAIR" -> activated[i] = building.canRepair()
+                "BIRTH" -> activated[i] = City.ressources.happiness >= Def.BIRTH_COST && building.citizens.size < building.lBuilding.capacity && City.ressources.citizens < City.limits.citizens
             }
         }
     }

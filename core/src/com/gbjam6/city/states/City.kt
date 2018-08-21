@@ -84,9 +84,11 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
         if (!pause) {
             frame += 1
-            if (frame == Def.speed1) {
-                frame = 0
+            if (frame % Def.speed1 == 0) {
                 Util.tick()
+            }
+            if (frame == Def.RESET - 1) {
+                frame = 0
             }
         }
 
@@ -139,7 +141,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             pointer.draw(batch)
         } else {
             val building = Util.getBuilding(camera.position.x)
-            if ((building != null && building.citizens.size < building.lBuilding.capacity) || frame > 30)
+            if ((building != null && building.citizens.size < building.lBuilding.capacity) || frame % 60 > 30)
                 pointerSmiley.draw(batch)
         }
 
@@ -194,7 +196,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 menuManager.moveCursor(1)
             }
             States.PLACE_BUILDING -> menuManager.flip(camera.position.x, pointer.y)
-            States.IDLE -> Util.showIDLEHelper()
+            States.IDLE -> Util.showIDLEHelper(camera.position.x)
             else -> {
             }
         }
@@ -266,7 +268,6 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 States.MENU
             }
             States.PLACE_CITIZEN -> {
-                menuManager.placingC!!.building.citizens.add(menuManager.placingC!!)
                 menuManager.placingC = null
                 menuManager.updateMenu(camera.position.x)
                 menuManager.menus.clear()

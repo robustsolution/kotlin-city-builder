@@ -10,7 +10,6 @@ import com.gbjam6.city.general.Def.achievements
 import com.gbjam6.city.GBJam6
 import com.gbjam6.city.Input
 import com.gbjam6.city.general.Def
-import com.gbjam6.city.general.Util
 import ktx.app.KtxScreen
 
 /**

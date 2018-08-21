@@ -11,11 +11,11 @@ import com.gbjam6.city.general.Util
 import com.gbjam6.city.states.City
 import java.util.*
 
-data class Citizen(val name: String, var building: Building)
+class Citizen(val name: String, var building: Building)
 
 class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetManager) {
 
-    val citizens = mutableListOf(Citizen("JP" + Random().nextInt(999), this))
+    val citizens = mutableListOf<Citizen>()
 
     private var sprite = Sprite(manager.get("sprites/buildings/${lBuilding.name}.png", Texture::class.java))
     val width = sprite.width
