@@ -29,8 +29,10 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
     private lateinit var hillSprites: Array<Sprite>
     private lateinit var pointer: Sprite
+    private lateinit var pointerSmiley: Sprite
     private lateinit var font: BitmapFont
     private lateinit var smallFont: BitmapFont
+    private var frame = 0
 
     companion object {
         var hills = Hills()
@@ -48,8 +50,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
         // Initializes the pointer
         pointer = Sprite(gbJam6.manager.get("sprites/pointerUp.png", Texture::class.java))
-        pointer.x = -4f
-        pointer.y = -69f
+        pointerSmiley = Sprite(gbJam6.manager.get("sprites/pointerSmiley.png", Texture::class.java))
         updatePointer()
 
         // Creates sprites for each slope
@@ -71,6 +72,8 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     }
 
     override fun render(delta: Float) {
+
+        frame = (frame + 1) % 60
 
         camera.update()
         menuManager.update()
@@ -117,7 +120,13 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         }
 
         // Draw the pointer
-        pointer.draw(batch)
+        if (City.state != States.PLACE_CITIZEN) {
+            pointer.draw(batch)
+        } else {
+            val building = Util.getBuilding(camera.position.x)
+            if ((building != null && building.citizens.size < building.lBuilding.capacity) || frame > 30)
+                pointerSmiley.draw(batch)
+        }
 
         // Draw the menu
         menuManager.drawMenu(batch, smallFont)
@@ -146,6 +155,8 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
         // Set height to follow the slopes
         pointer.y = Util.getPixel(-87f + chunk.height + diff * chunk.slope / 32)
+        pointerSmiley.x = pointer.x
+        pointerSmiley.y = pointer.y + 1
     }
 
     override fun up() {
@@ -172,7 +183,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             Util.inputFreeze = 1
             if (camera.position.x > -798f + 80f) {
                 if (Util.wasPressed) {
-                camera.translate(-2f, 0f)
+                    camera.translate(-2f, 0f)
                 } else {
                     Util.inputFreeze = 4
                     camera.translate(-1f, 0f)
