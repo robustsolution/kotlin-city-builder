@@ -13,10 +13,10 @@ import com.gbjam6.city.GBJam6
  * Simple list of [items].
  * [items] can be initialized automatically using [Def.menus] map.
  */
-class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gbJam6: GBJam6, array: Array<String>? = null) {
+class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gbJam6: GBJam6, array: Array<String>? = null, validity: Array<Boolean>? = null) {
 
     val items: Array<String> = array ?: Def.menus[type] ?: arrayOf("RETURN")
-    val activated = Array(items.size) { true }
+    val activated = validity ?: Array(items.size) { true }
     private val height = (items.size * 9 + 19).toFloat()
     private val texture: Texture
     private val cursor = gbJam6.manager.get("sprites/smallPointerRight.png", Texture::class.java)

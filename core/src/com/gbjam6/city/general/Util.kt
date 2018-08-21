@@ -26,6 +26,11 @@ object Util {
 
     fun tick() {
         println("tick")
+        var ressources = Ressources(0,0,0,0,0)
+        for (building in City.buildings){
+            ressources add building.getProduction()
+        }
+        City.ressources addLimit ressources
     }
 
     /**
@@ -33,10 +38,7 @@ object Util {
      */
     fun placeBuilding(placingB: Building) {
         City.buildings.add(placingB)
-        update()
-    }
-
-    fun update() {
+        placingB.placed()
     }
 
     /**
@@ -60,6 +62,5 @@ object Util {
         }
 
     }
-
 
 }

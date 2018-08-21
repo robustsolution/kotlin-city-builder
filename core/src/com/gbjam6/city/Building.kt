@@ -15,7 +15,7 @@ data class Citizen(val name: String, var building: Building)
 
 class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetManager) {
 
-    val citizens = mutableListOf(Citizen("JP"+Random().nextInt(999), this))
+    val citizens = mutableListOf(Citizen("JP" + Random().nextInt(999), this))
 
     private var sprite = Sprite(manager.get("sprites/buildings/${lBuilding.name}.png", Texture::class.java))
     val width = sprite.width
@@ -123,8 +123,32 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetM
 
     }
 
+    fun placed() {
+        City.ressources.stone -= this.lBuilding.cost
+        when {
+            lBuilding.name == "FACTORY" -> City.limits.stone += 100
+            lBuilding.name == "FARM" -> City.limits.food += 100
+            lBuilding.name == "HOUSE" -> City.limits.citizens += 6
+        }
+        if (City.limits.stone > 999)
+            City.limits.stone = 999
+        if (City.limits.food > 999)
+            City.limits.food = 999
+        if (City.limits.citizens > 999)
+            City.limits.citizens = 999
+
+    }
+
+
     fun getProduction(): Ressources {
-        return Ressources(food = 5, research = 1)
+        return when {
+            lBuilding.name == "FACTORY" -> Ressources(stone = citizens.size, food = -citizens.size)
+            lBuilding.name == "FARM" -> Ressources(food = citizens.size * 3)
+            lBuilding.name == "HOUSE" -> Ressources(food = -citizens.size)
+            lBuilding.name == "TAVERN" -> Ressources(happiness = citizens.size * 1, food = -citizens.size)
+            lBuilding.name == "LABORATORY" -> Ressources(research = citizens.size * 3, food = -citizens.size)
+            else -> Ressources()
+        }
     }
 
 }

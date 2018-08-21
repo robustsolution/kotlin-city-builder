@@ -69,20 +69,20 @@ graph LR
 ## Buildings
 |Name|Picture|Type|Slot|Production|Effet|
 |:-:|:-:|:-:|:-:|:-:|:-:|
-|House|![House](../android/assets/sprites/buildings/CITIZENS1.png)|Citizen|6 citizens|1 Citizen / 100 Happiness|Increases the maximum number of citizens by 6|
+|House|![House](../android/assets/sprites/buildings/HOUSE.png)|Citizen|6 citizens|1 Citizen / 100 Happiness|Increases the maximum number of citizens by 6|
 |House+||Citizen|9 citizens|1 Citizen / 100 Happiness|Increases the maximum number of citizens by 9|
 |School||Citizen|4 citizens|None|Now citizen cost 75 Hapiness to birth|
-|Farm|![Farm](../android/assets/sprites/buildings/FOOD1.png)|Food|2 citizens|4 Foods / Citizen in / Month|Increases the maximum number of foods by 100|
+|Farm|![Farm](../android/assets/sprites/buildings/FARM.png)|Food|2 citizens|4 Foods / Citizen in / Month|Increases the maximum number of foods by 100|
 |Farm+||Food|3 citizens|4 Foods / Citizen in / Month|Increases the maximum number of foods by 150|
 |Warehouse||Food|1 citizen|6 Foods / Citizen in / Month|Increases the maximum number of foods and stone by 200|
-|Tavern|![Tavern](../android/assets/sprites/buildings/HAPPINESS1.png)|Happiness|2 citizens|1 Happiness / Citizen in / Month|None|
+|Tavern|![Tavern](../android/assets/sprites/buildings/TAVERN.png)|Happiness|2 citizens|1 Happiness / Citizen in / Month|None|
 |Tavern+||Happiness|3 citizens|1 Happiness / Citizen in / Month|None|
 |Garden||Happiness|1 citizen|1 Happiness / Citizen in / Month|Echange 50 food contre 50 happiness|
-|Laboratory|![Laboratory](../android/assets/sprites/buildings/RESEARCH1.png)|Research|2 citizens|3 Research / Citizen in / Month|None|
+|Laboratory|![Laboratory](../android/assets/sprites/buildings/LABORATORY.png)|Research|2 citizens|3 Research / Citizen in / Month|None|
 |Laboratory+||Research|3 citizens|3 Research / Citizen in / Month|None|
 |Hospital||Reaserch|1 citizen|4 Research / Citizen in / Month|Citizens die 1.5 times slower. (not combinable)|
-|Factory|![Factory](../android/assets/sprites/buildings/STONE1.png)|Stone|2 citizens|1 Stone / Citizen in / Month|Increases the maximum number of stones by 100|
+|Factory|![Factory](../android/assets/sprites/buildings/FACTORY.png)|Stone|2 citizens|1 Stone / Citizen in / Month|Increases the maximum number of stones by 100|
 |Factory+||Stone|3 citizens|1 Stone / Citizen in / Month|Increases the maximum number of stones by 150|
 |Craftman||Stone|1 citizen|2 Stone / Citizen in / Month|The buildings are damaged twice less. (not combinable)|
-|Well||Other|None|None|Increases by 50% the effectiveness of 2 citizens who are in the 80 pixels around the well|
+|Well|![Factory](../android/assets/sprites/buildings/WELL.png)|Other|None|None|Increases by 50% the effectiveness of 2 citizens who are in the 80 pixels around the well|
 |Tree||Other|None|None|Se place sur un bâtiment et empêche qu'il diminue l'efficacite des batiment au alentour|

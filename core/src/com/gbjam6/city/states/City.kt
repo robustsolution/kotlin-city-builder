@@ -43,7 +43,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         var state = States.IDLE
         val buildings = mutableListOf<Building>()
         val ressources = Def.startingRessources.copy()
-        val limits = Ressources()
+        val limits = Ressources(happiness = 9999,research = 9999)
     }
 
     override fun show() {
@@ -205,7 +205,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             Util.inputFreeze = 1
             if (camera.position.x > -798f + 80f) {
                 if (Util.wasPressed) {
-                    camera.translate(-2f, 0f)
+                    camera.translate(-3f, 0f)
                 } else {
                     Util.inputFreeze = 4
                     camera.translate(-1f, 0f)
@@ -222,7 +222,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             Util.inputFreeze = 1
             if (camera.position.x < 798f - 80f) {
                 if (Util.wasPressed) {
-                    camera.translate(2f, 0f)
+                    camera.translate(3f, 0f)
                 } else {
                     Util.inputFreeze = 4
                     camera.translate(1f, 0f)
