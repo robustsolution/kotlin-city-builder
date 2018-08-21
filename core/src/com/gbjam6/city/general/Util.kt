@@ -2,6 +2,7 @@ package com.gbjam6.city.general
 
 import com.gbjam6.city.Building
 import com.gbjam6.city.MenuManager
+import com.gbjam6.city.logic.Citizen
 import com.gbjam6.city.states.City
 import com.gbjam6.city.states.States
 import java.util.*
@@ -16,6 +17,9 @@ object Util {
     // INPUT
     var inputFreeze = 0
     var wasPressed = false
+
+    // DESTRUCTION
+    val lBuildingDestroye = mutableListOf<Building>()
 
     fun getPixel(f: Float): Float = f.roundToInt().toFloat()
 
@@ -34,7 +38,12 @@ object Util {
         val ressources = Ressources()
         for (building in City.buildings) {
             ressources add building.getProduction()
+            building.older(ressources)
         }
+        for (building in lBuildingDestroye){
+            //Enlever de city (affichage et liste) et update le nombre de citizens
+        }
+        lBuildingDestroye.clear()
         City.ressources addLimit ressources
     }
 

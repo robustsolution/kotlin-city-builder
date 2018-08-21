@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector3
 import com.gbjam6.city.general.*
 import com.gbjam6.city.graphics.Helper
 import com.gbjam6.city.graphics.Menu
+import com.gbjam6.city.logic.Citizen
 import com.gbjam6.city.states.City
 import com.gbjam6.city.states.States
 import java.util.*

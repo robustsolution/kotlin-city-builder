@@ -53,6 +53,8 @@ object Def {
 
     // GAME DESIGN
     var BIRTH_COST = 100
+    var LIFE_TIME = 300
+    var BUILD_LIFE_TIME = 300
 
     // COLORS
     val color1: Color = Color.valueOf("000000")

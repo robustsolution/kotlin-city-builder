@@ -8,14 +8,15 @@ import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.LBuilding
 import com.gbjam6.city.general.Ressources
 import com.gbjam6.city.general.Util
+import com.gbjam6.city.logic.Citizen
 import com.gbjam6.city.states.City
 import java.util.*
 
-class Citizen(val name: String, var building: Building)
-
 class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetManager) {
 
+    var life = Def.BUILD_LIFE_TIME
     val citizens = mutableListOf<Citizen>()
+    val lCitizenKill = mutableListOf<Citizen>()
 
     private var sprite = Sprite(manager.get("sprites/buildings/${lBuilding.name}.png", Texture::class.java))
     val width = sprite.width
@@ -151,4 +152,19 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetM
         }
     }
 
+    fun older(ressources: Ressources) {
+        for (citizen in citizens) {
+            citizen.older()
+        }
+        for (citizen in lCitizenKill) {
+            citizens.remove(citizen)
+            if (citizen.life == 0)
+                ressources add Ressources(citizens = -1)
+        }
+        lCitizenKill.clear()
+        life--
+        if (life <= 0) {
+            Util.lBuildingDestroye.add(this)
+        }
+    }
 }
