@@ -10,7 +10,7 @@ enum class BuildingType {
     CITIZENS, HAPPINESS, FOOD, RESEARCH, STONE, WATER
 }
 
-data class LBuilding(val type: BuildingType, val name: String, var door: Pair<Int, Int>, var s8: Pair<Int, Int>, var s16: Pair<Int, Int>)
+data class LBuilding(val type: BuildingType, val name: String, val capacity: Int, var door: Pair<Int, Int>, var s8: Pair<Int, Int>, var s16: Pair<Int, Int>)
 
 object Def {
 
@@ -28,18 +28,18 @@ object Def {
     // MENUS
     val menus = mapOf(
             MenuType.CREATION to arrayOf("CITIZEN", "HAPPINESS", "FOOD", "RESEARCH", "STONE", "WATER"),
-            MenuType.BUILDING to arrayOf("CITIZENS", "USE", "DESTROY"),
+            MenuType.BUILDING to arrayOf("CITIZENS", "USE", "UPGRADE", "REPAIR", "DESTROY"),
             MenuType.CONFIRM to arrayOf("YES", "NO")
     )
 
     // BUILDINGS
     val buildings = listOf(
-            LBuilding(BuildingType.CITIZENS, "CITIZENS1", Pair(34, 41), Pair(34, 41), Pair(24, 41)),
-            LBuilding(BuildingType.HAPPINESS, "HAPPINESS1", Pair(13, 20), Pair(13, 26), Pair(13, 39)),
-            LBuilding(BuildingType.FOOD, "FOOD1", Pair(19, 39), Pair(19, 39), Pair(19, 39)),
-            LBuilding(BuildingType.RESEARCH, "RESEARCH1", Pair(20, 28), Pair(20, 29), Pair(20, 38)),
-            LBuilding(BuildingType.STONE, "STONE1", Pair(6, 19), Pair(6, 30), Pair(6, 22)),
-            LBuilding(BuildingType.WATER, "WATER1", Pair(0, 17), Pair(0, 17), Pair(0, 17))
+            LBuilding(BuildingType.CITIZENS, "CITIZENS1", 5, Pair(34, 41), Pair(34, 41), Pair(24, 41)),
+            LBuilding(BuildingType.HAPPINESS, "HAPPINESS1", 5, Pair(13, 20), Pair(13, 26), Pair(13, 39)),
+            LBuilding(BuildingType.FOOD, "FOOD1", 5, Pair(19, 39), Pair(19, 39), Pair(19, 39)),
+            LBuilding(BuildingType.RESEARCH, "RESEARCH1", 5, Pair(20, 28), Pair(20, 29), Pair(20, 38)),
+            LBuilding(BuildingType.STONE, "STONE1", 5, Pair(6, 19), Pair(6, 30), Pair(6, 22)),
+            LBuilding(BuildingType.WATER, "WATER1", 5, Pair(0, 17), Pair(0, 17), Pair(0, 17))
     )
 
     // ACHIEVEMENTS

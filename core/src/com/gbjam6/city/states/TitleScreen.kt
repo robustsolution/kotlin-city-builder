@@ -49,9 +49,8 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
         cursorPos = 0
         frame = 0
 
-        //val myPlayer = Player(44100, Player.INTERPOLATION_MODE_NONE)
-        //val moduleOne = myPlayer.loadXM(Gdx.files.internal("music/strayed.xm").readBytes(), 0f)
-        //myPlayer.play(moduleOne, true, true, 0f, 0f)
+        // Play title screen music
+        gbJam6.player.play(gbJam6.titleMusic, true, true, 0f, 0f)
 
     }
 

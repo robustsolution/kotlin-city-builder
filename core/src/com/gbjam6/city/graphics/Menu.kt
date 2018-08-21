@@ -6,7 +6,6 @@ import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.MenuType
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.g2d.BitmapFont
-import com.gbjam6.city.Building
 import com.gbjam6.city.GBJam6
 
 /**
@@ -16,6 +15,7 @@ import com.gbjam6.city.GBJam6
 class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gbJam6: GBJam6, array: Array<String> = arrayOf()) {
 
     val items: Array<String> = Def.menus[type] ?: array
+    val activated = Array(items.size) { true }
     private val height = (items.size * 9 + 19).toFloat()
     private val texture: Texture
     private val cursor = gbJam6.manager.get("sprites/smallPointerRight.png", Texture::class.java)
@@ -36,10 +36,12 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
         batch.draw(texture, x, y - height)
 
         // Draw the title
+        font.color = Def.color4
         font.draw(batch, title, x, y - 4, Def.menuWidth, 1, false)
 
         // Draw the items
         for ((i, item) in items.withIndex()) {
+            if (activated[i]) font.color = Def.color4 else font.color = Def.color2
             font.draw(batch, item, x + 16f, y - 17 - 9f * i)
         }
 
