@@ -70,33 +70,33 @@ object Util {
      */
     fun showIDLEHelper() {
         MenuManager.helper.visible = !MenuManager.helper.visible
-        updateHelper()
     }
 
     /**
      * Updates the helper to show informations about the pointed building.
      */
-    fun updateHelper() {
-        val building = getBuilding()
-        if (building != null) {
-            // Displays informations about the building
-            MenuManager.helper.update(building.lBuilding.name, building.getDescription())
+    fun updateHelper(menus: MutableList<Menu>) {
+
+        if (City.state == States.MENU) {
+            Util.updateMenuHelper(menus)
         } else {
-            // Indicates that the selected point is empty
-            when (City.state) {
-                States.IDLE -> MenuManager.helper.update("EMPTY", "YOU CAN BUILD\nHERE!")
-                States.PLACE_CITIZEN -> MenuManager.helper.update("EMPTY", "YOU CANNOT \nPLACE THE\nCITIZEN HERE!")
-                else -> Unit
+            val building = getBuilding()
+            if (building != null) {
+                // Displays informations about the building
+                MenuManager.helper.update(building.lBuilding.name, building.getDescription())
+            } else {
+                // Indicates that the selected point is empty
+                when (City.state) {
+                    States.IDLE -> MenuManager.helper.update("EMPTY", "YOU CAN BUILD\nHERE!")
+                    States.PLACE_CITIZEN -> MenuManager.helper.update("EMPTY", "YOU CANNOT \nPLACE THE\nCITIZEN HERE!")
+                    else -> Unit
+                }
             }
         }
     }
 
-    fun openAndShowHelper() {
-        updateHelper()
-        MenuManager.helper.visible = true
-    }
-
     fun updateMenuHelper(menus: MutableList<Menu>) {
+
         // Gets the displayed menu
         val menu = menus.lastOrNull()
         menu?.let {
@@ -104,8 +104,15 @@ object Util {
 
             // Updates the helper
             when (menu.type) {
-                MenuType.CITIZENS -> MenuManager.helper.update(item, "TODO")
-                else -> MenuManager.helper.update(item, Def.descriptions[item] ?: Def.backupDesc)
+                MenuType.CITIZENS -> {
+                    val building = getBuilding()!!
+                    if (menu.cursorPos < building.citizens.size) {
+                        MenuManager.helper.update(item, building.citizens.elementAt(menu.cursorPos).getDescription())
+                    } else {
+                        MenuManager.helper.update(item, Def.getDescription("RETURN"))
+                    }
+                }
+                else -> MenuManager.helper.update(item, Def.getDescription(item))
             }
         }
     }

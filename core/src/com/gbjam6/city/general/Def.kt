@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.gbjam6.city.logic.Ressources
 
 enum class MenuType {
-    CREATION, CATEGORY, BUILDING, CITIZENS, CONFIRM, IMPROVE
+    CREATION, CATEGORY, BUILDING, CITIZENS, CONFIRM, IMPROVE, HYDRATE, ADD, REMOVE
 }
 
 enum class BuildingType {
@@ -40,8 +40,9 @@ object Def {
     // MENUS
     val menus = mapOf(
             MenuType.CREATION to arrayOf("CITIZENS", "HAPPINESS", "FOOD", "RESEARCH", "STONE", "OTHER"),
-            MenuType.BUILDING to arrayOf("CITIZENS", "UPGRADE", "REPAIR", "DESTROY"),
-            MenuType.CONFIRM to arrayOf("YES", "NO")
+            MenuType.BUILDING to arrayOf("CITIZENS", "REPAIR", "DESTROY"),
+            MenuType.CONFIRM to arrayOf("YES", "NO"),
+            MenuType.HYDRATE to arrayOf("ADD", "REMOVE", "RETURN")
     )
 
     // BUILDINGS
@@ -52,10 +53,10 @@ object Def {
             LBuilding(BuildingType.RESEARCH, "LABORATORY", 2, Pair(20, 28), Pair(20, 29), Pair(20, 38), 100),
             LBuilding(BuildingType.STONE, "FACTORY", 2, Pair(6, 19), Pair(6, 30), Pair(6, 22), 100),
             LBuilding(BuildingType.OTHER, "WELL", 0, Pair(0, 17), Pair(0, 17), Pair(0, 17), 100),
-            LBuilding(BuildingType.STONE,"CRAFTMAN",1,Pair(20,36),Pair(20,36),Pair(20,36),100)
+            LBuilding(BuildingType.STONE, "CRAFTMAN", 1, Pair(20, 36), Pair(20, 36), Pair(20, 36), 100)
     )
     val customMenus = mapOf(
-            "WELL" to arrayOf("CITIZENS", "REPAIR"),
+            "WELL" to arrayOf("HYDRATE", "REPAIR", "DESTROY"),
             "HOUSE" to arrayOf("CITIZENS", "BIRTH", "UPGRADE", "REPAIR", "DESTROY")
     )
 
@@ -79,5 +80,7 @@ object Def {
             "RETURN" to "GO BACK",
             "REPAIR" to "OCULUS\nREPARO :>"
     )
+
+    fun getDescription(name: String) = descriptions[name] ?: backupDesc
 
 }

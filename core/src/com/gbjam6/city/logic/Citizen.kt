@@ -5,6 +5,8 @@ import com.gbjam6.city.general.Def
 
 class Citizen(val name: String, var building: Building) {
     var life: Int = Def.LIFE_TIME
+    var water = false
+    var well: Building? = null
 
     fun older() {
         life -= 1
@@ -14,6 +16,12 @@ class Citizen(val name: String, var building: Building) {
     }
 
     fun getDescription(): String {
-        return "Life :\n${this.life}/${Def.LIFE_TIME}"
+        var description = "Life :\n${this.life}/${Def.LIFE_TIME}\n${this.building.lBuilding.name}"
+        if (water) description += "\nHydrate"
+        return description
+    }
+
+    override fun toString(): String {
+        return this.name
     }
 }

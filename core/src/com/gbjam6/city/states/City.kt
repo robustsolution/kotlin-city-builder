@@ -155,7 +155,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         menuManager.drawMenu(batch, smallFont)
 
         // Updates and draw the helper
-        Util.updateHelper()
+        Util.updateHelper(menuManager.menus)
         menuManager.drawHelper(batch, smallFont)
 
         batch.end()

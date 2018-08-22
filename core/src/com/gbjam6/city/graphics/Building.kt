@@ -17,6 +17,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetM
     var life = Def.BUILD_LIFE_TIME
     val citizens = mutableListOf<Citizen>()
     val citizensToKill = mutableListOf<Citizen>()
+    val wateredCitizens = mutableListOf<Citizen>()
 
     private var sprite = Sprite(manager.get("sprites/buildings/${lBuilding.name}.png", Texture::class.java))
     val width = sprite.width
@@ -162,7 +163,6 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetM
      * It will be displayed in [Helper].
      */
     fun getDescription(): String {
-        //return "Citizen(s) : \n${citizens.size}/${lBuilding.capacity}\nIntegrity : \n${this.life}/${Def.BUILD_LIFE_TIME}"
         return "Citizen(s) : \n${citizens.size}/${lBuilding.capacity}\nIntegrity : \n${this.life}/${Def.BUILD_LIFE_TIME}"
     }
 
@@ -176,6 +176,11 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetM
         // Kill dead citizens
         for (citizen in citizensToKill) {
             citizens.remove(citizen)
+            if (citizen.water) {
+                citizen.well!!.wateredCitizens.remove(citizen)
+                citizen.well = null
+                citizen.water = false
+            }
             if (citizen.life == 0)
                 ressources.citizens -= 1
         }

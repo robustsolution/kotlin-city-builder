@@ -10,6 +10,7 @@ import com.gbjam6.city.graphics.Menu
 import com.gbjam6.city.logic.Citizen
 import com.gbjam6.city.states.City
 import com.gbjam6.city.states.States
+import java.lang.Math.abs
 
 /**
  * Manages the menus' logic.
@@ -17,6 +18,7 @@ import com.gbjam6.city.states.States
 class MenuManager(private val gbJam6: GBJam6) {
 
     var menus = mutableListOf<Menu>()
+    var citizensInReach: List<Citizen>? = null
     var placingB: Building? = null
     var placingC: Citizen? = null
     private var frame = 0
@@ -26,12 +28,12 @@ class MenuManager(private val gbJam6: GBJam6) {
     }
 
     /**
-     * Called when the user selects a spot of the map.
+     * Called when the player selects a spot of the map.
      */
     fun open(): States {
         val x = City.camera.position.x
 
-        // Checks if the user clicked on a building
+        // Checks if the player clicked on a building
         val building = Util.getBuilding()
 
         // Adds the corresponding menu
@@ -59,7 +61,7 @@ class MenuManager(private val gbJam6: GBJam6) {
     }
 
     /**
-     * Called when the user selects an option from the menu.
+     * Called when the player selects an option from the menu.
      */
     fun select(pointerY: Float): States {
 
@@ -76,7 +78,7 @@ class MenuManager(private val gbJam6: GBJam6) {
 
             when (menu.type) {
 
-                // The user selects a category
+                // The player selects a category
                 MenuType.CREATION -> {
                     // Gets all buildings from selected category
                     val categoryB = Def.buildings.filter { it.type == BuildingType.valueOf(menu.items[menu.cursorPos]) }
@@ -88,12 +90,9 @@ class MenuManager(private val gbJam6: GBJam6) {
 
                     // Adds the menu
                     menus.add(Menu(MenuType.CATEGORY, menu.items[menu.cursorPos], position.x + 4f, Def.menuY, gbJam6, items.toTypedArray(), validity))
-
-                    // Updates the helper
-                    Util.updateMenuHelper(menus)
                 }
 
-                // The user chooses a building to build
+                // The player chooses a building to build
                 MenuType.CATEGORY -> {
                     if (menu.items[menu.cursorPos] == "RETURN") {
                         close()
@@ -113,7 +112,7 @@ class MenuManager(private val gbJam6: GBJam6) {
                     }
                 }
 
-                // The user checks a building
+                // The player checks a building
                 MenuType.BUILDING -> {
                     when (menu.items[menu.cursorPos]) {
 
@@ -126,9 +125,6 @@ class MenuManager(private val gbJam6: GBJam6) {
                             val title = if (names.isEmpty()) "NO CITIZENS!" else "CHECK&MOVE"
                             names.add("RETURN")
                             menus.add(Menu(MenuType.CITIZENS, title, position.x + 4, Def.menuY, gbJam6, names.toTypedArray()))
-
-                            // Updates the helper
-                            Util.updateMenuHelper(menus)
                         }
 
                         "BIRTH" -> {
@@ -142,10 +138,75 @@ class MenuManager(private val gbJam6: GBJam6) {
                                 City.ressources.happiness -= Def.BIRTH_COST
 
                                 // Opens the helper
-                                Util.openAndShowHelper()
+                                MenuManager.helper.visible = true
 
                                 return States.PLACE_CITIZEN
                             }
+                        }
+
+                        "HYDRATE" -> {
+                            val validity = arrayOf(selectedB!!.citizens.size < 2, selectedB.citizens.size > 0, true)
+                            menus.add(Menu(MenuType.HYDRATE, "ACTION", position.x + 4, Def.menuY, gbJam6, validity = validity))
+                        }
+                    }
+                }
+
+                // The player interacts with a well
+                MenuType.HYDRATE -> {
+                    when (menu.items[menu.cursorPos]) {
+                        "RETURN" -> close()
+                        "ADD" -> {
+                            // Gets citizens in range
+                            val buildings = City.buildings.filter { abs(it.x + 9 - selectedB!!.x) < 70 || abs(selectedB.x + selectedB.width - it.x - 9) < 70 }
+                            val citizens = mutableListOf<Citizen>()
+
+                            for (build in buildings)
+                                for (cit in build.citizens.filter { it.water.not() })
+                                    citizens.add(cit)
+
+                            citizensInReach = citizens
+
+                            // Adds the citizens in reach menu
+                            val names = MutableList(citizens.size) { citizens[it].name }
+                            names.add("RETURN")
+                            menus.add(Menu(MenuType.ADD, "REACHABLE", position.x + 4, Def.menuY, gbJam6, names.toTypedArray()))
+                        }
+                        "REMOVE" -> {
+                            // Shows watered citizens
+                            val citizens = selectedB!!.wateredCitizens
+                            val names = MutableList(citizens.size) { citizens[it].name }
+                            names.add("RETURN")
+                            menus.add(Menu(MenuType.REMOVE, "REMOVE", position.x + 4, Def.menuY, gbJam6, names.toTypedArray()))
+                        }
+                    }
+                }
+
+                // The player wants to link a citizen to the well
+                MenuType.ADD -> {
+                    when (menu.items[menu.cursorPos]) {
+                        "RETURN" -> close()
+                        else -> {
+                            if (menu.cursorPos < citizensInReach!!.size) {
+                                selectedB!!.wateredCitizens.add(citizensInReach!!.elementAt(menu.cursorPos))
+                                citizensInReach!!.elementAt(menu.cursorPos).water = true
+                                citizensInReach!!.elementAt(menu.cursorPos).well = selectedB
+                            }
+                            close()
+                        }
+                    }
+                }
+
+                // The player wants to unlink a citizen from the well
+                MenuType.REMOVE -> {
+                    when (menu.items[menu.cursorPos]) {
+                        "RETURN" -> close()
+                        else -> {
+                            if (menu.cursorPos < selectedB!!.wateredCitizens.size) {
+                                selectedB.wateredCitizens[menu.cursorPos].water = false
+                                selectedB.wateredCitizens[menu.cursorPos].well = null
+                                selectedB.wateredCitizens.removeAt(menu.cursorPos)
+                            }
+                            close()
                         }
                     }
                 }
@@ -160,7 +221,14 @@ class MenuManager(private val gbJam6: GBJam6) {
                                 placingC = selectedB!!.citizens[menu.cursorPos]
 
                                 // Opens the helper
-                                Util.openAndShowHelper()
+                                MenuManager.helper.visible = true
+
+                                // Remove from well
+                                if (placingC!!.water) {
+                                    placingC!!.well!!.wateredCitizens.remove(placingC!!)
+                                    placingC!!.well = null
+                                    placingC!!.water = false
+                                }
 
                                 return States.PLACE_CITIZEN
                             }

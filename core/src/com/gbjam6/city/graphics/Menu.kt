@@ -49,56 +49,57 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
         batch.draw(cursor, x + 8f, y - (cursorPos + 1) * 9f - 13)
     }
 
+    /**
+     * Called to update the menu items.
+     * Updates [activated] array and [items] for [MenuType.CITIZENS].
+     */
     fun changeValidity(building: Building?) {
         when (type) {
-            MenuType.CATEGORY -> changeCategoryMenuValidity()
-            MenuType.BUILDING -> changeBuildingMenuValidity(building!!)
-            MenuType.CITIZENS -> changeCitizensMenuValidity(building!!)
-            else -> {
+
+            // Valid items are buildings which can be constructed
+            MenuType.CATEGORY -> {
+                // Creates the LBuildings list
+                val lBuildings = Array(items.lastIndex) { i -> Def.buildings.first { it.name == items[i] } }
+
+                // Don't change the last item's validity ("RETURN")
+                for (i in 0 until items.lastIndex) {
+                    activated[i] = City.ressources.stone >= lBuildings[i].cost
+                }
             }
-        }
-    }
 
-    /**
-     * Update function for [MenuType.CREATION].
-     */
-    private fun changeCategoryMenuValidity() {
-        // Creates the LBuildings list
-        val lBuildings = Array(items.lastIndex) { i -> Def.buildings.first { it.name == items[i] } }
-
-        // Don't change the last item's validity ("RETURN")
-        for (i in 0 until items.lastIndex) {
-            activated[i] = City.ressources.stone >= lBuildings[i].cost
-        }
-    }
-
-    /**
-     * Update function for [MenuType.CITIZENS].
-     */
-    private fun changeCitizensMenuValidity(building: Building) {
-        // Checks if a citizen died
-        if (items.size - 1 != building.citizens.size) {
-            // Gets the living citizens names
-            val tempItems = MutableList(building.citizens.size) { building.citizens[it].name }
-            tempItems.add("RETURN")
-            // Updates displayed items and resets the cursor position
-            items = tempItems.toTypedArray()
-            cursorPos = 0
-        }
-
-    }
-
-    /**
-     * Update function for [MenuType.BUILDING].
-     */
-    private fun changeBuildingMenuValidity(building: Building) {
-        for ((i, item) in items.withIndex()) {
-            when (item) {
-                "USE" -> activated[i] = building.canUse()
-                "UPGRADE" -> activated[i] = building.canUpgrade()
-                "REPAIR" -> activated[i] = building.canRepair()
-                "BIRTH" -> activated[i] = City.ressources.happiness >= Def.BIRTH_COST && building.citizens.size < building.lBuilding.capacity && City.ressources.citizens < City.limits.citizens
+            // Valid items are the different possible actions on the building
+            MenuType.BUILDING -> {
+                val b = building!!
+                for ((i, item) in items.withIndex()) {
+                    when (item) {
+                        "USE" -> activated[i] = b.canUse()
+                        "UPGRADE" -> activated[i] = b.canUpgrade()
+                        "REPAIR" -> activated[i] = b.canRepair()
+                        "BIRTH" -> activated[i] = City.ressources.happiness >= Def.BIRTH_COST && b.citizens.size < b.lBuilding.capacity && City.ressources.citizens < City.limits.citizens
+                    }
+                }
             }
+
+            // Removes dead citizens
+            MenuType.CITIZENS -> {
+                val b = building!!
+                if (items.size - 1 != b.citizens.size) {
+                    // Gets the living citizens names
+                    val tempItems = MutableList(b.citizens.size) { b.citizens[it].name }
+                    tempItems.add("RETURN")
+                    // Updates displayed items and resets the cursor position
+                    items = tempItems.toTypedArray()
+                    cursorPos = 0
+                }
+            }
+
+            // TODO: Cannot add when the well is linked to its max nb of citizens
+            // TODO: Cannot remove when no citizen is linked to the well
+            MenuType.HYDRATE -> {
+
+            }
+
+            else -> Unit
         }
     }
 
