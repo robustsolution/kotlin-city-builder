@@ -76,6 +76,7 @@ object Def {
             "FOOD" to "DESC OF\nFOOD",
             "RESEARCH" to "DESC OF\nRESEARCH",
             "STONE" to "DESC OF\nSTONE",
+            "RETURN" to "GO BACK",
             "REPAIR" to "OCULUS\nREPARO :>"
     )
 

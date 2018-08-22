@@ -78,7 +78,7 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
         font.draw(batch, "ACHIEVEMENTS", -80f, -26f, 160f, 1, false)
 
         // Draw the cursor
-        batch.draw(cursor, cursorX[cursorPos], -2f - 16f * cursorPos)
+        batch.draw(cursor, cursorX[cursorPos], -1f - 16f * cursorPos)
 
         // Draw credits
         font.draw(batch, "2018 - A_Do, Le Art,\nMirionos, yopox", -80f, -47f, 160f, 1, true)

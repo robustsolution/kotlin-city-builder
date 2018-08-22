@@ -162,6 +162,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetM
      * It will be displayed in [Helper].
      */
     fun getDescription(): String {
+        //return "Citizen(s) : \n${citizens.size}/${lBuilding.capacity}\nIntegrity : \n${this.life}/${Def.BUILD_LIFE_TIME}"
         return "Citizen(s) : \n${citizens.size}/${lBuilding.capacity}\nIntegrity : \n${this.life}/${Def.BUILD_LIFE_TIME}"
     }
 

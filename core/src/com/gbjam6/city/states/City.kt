@@ -26,7 +26,6 @@ enum class States {
  */
 class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private val batch = SpriteBatch()
-    private val camera = OrthographicCamera()
     private val viewport = FitViewport(160f, 144f, camera)
     private val menuManager = MenuManager(gbJam6)
 
@@ -40,6 +39,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private var pause = false
 
     companion object {
+        val camera = OrthographicCamera()
         var hills = Hills()
         var state = States.IDLE
         val buildings = mutableListOf<Building>()
@@ -51,19 +51,19 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         super.show()
         camera.position.x = 0f
 
-        // Init fonts
+        // Inits fonts
         font = gbJam6.manager.get("fonts/skullboy.fnt", BitmapFont::class.java)
         smallFont = gbJam6.manager.get("fonts/little.fnt", BitmapFont::class.java)
 
-        // Init pointers
+        // Inits pointers
         pointer = Sprite(gbJam6.manager.get("sprites/pointerUp.png", Texture::class.java))
         pointerSmiley = Sprite(gbJam6.manager.get("sprites/pointerSmiley.png", Texture::class.java))
         updatePointer()
 
-        // Init GUI
+        // Inits GUI
         gui = GUI(gbJam6)
 
-        // Create sprites for each slope
+        // Creates sprites for each slope
         val ttext = gbJam6.manager.get("sprites/tiles-sheet.png", Texture::class.java)
         hillSprites = arrayOf(
                 Sprite(ttext, 1 * 2 + 0, 2, 32, 32),
@@ -76,7 +76,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         hillSprites[4].flip(true, false)
         hillSprites[5].flip(true, false)
 
-        // Play the city music
+        // Plays the city music
         gbJam6.player.play(gbJam6.cityMusic1, true, true, 0f, 0f)
 
     }
@@ -87,6 +87,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             frame += 1
             if (frame % Def.speed1 == 0) {
                 Util.tick()
+                menuManager.tick()
             }
             if (frame == Def.RESET - 1) {
                 frame = 0
@@ -94,29 +95,30 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         }
 
         camera.update()
-        menuManager.update()
+        menuManager.update() // Only used for blinking purposes
         batch.projectionMatrix = camera.combined
 
-        // Clear screen
+        // Clears screen
         Gdx.gl.glClearColor(Def.color4.r, Def.color4.g, Def.color4.b, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         batch.begin()
 
-        // Draw background
+        // Draws background
+        // TODO: Add a background
 
-        // Draw buildings
+        // Draws buildings
         for (building in buildings) {
             if (Math.abs(building.x - camera.position.x) < 240)
                 building.draw(batch)
         }
 
-        // Draw moving building
+        // Draws moving building
         menuManager.drawBuilding(batch)
 
-        // Draw chunks
+        // Draws chunks
         for ((i, chunk) in hills.chunks.withIndex()) {
-            // Draw 7 chunks around camera x position
+            // Draws 7 chunks around camera x position
             val x = Math.floor(camera.position.x / 32.0)
             if (i - Def.nChunks / 2 in x - 3..x + 3) {
 
@@ -137,21 +139,24 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             }
         }
 
-        // Draw the pointer
+        // Draws the pointer
         if (City.state != States.PLACE_CITIZEN) {
             pointer.draw(batch)
         } else {
-            val building = Util.getBuilding(camera.position.x)
+            val building = Util.getBuilding()
             if ((building != null && building.citizens.size < building.lBuilding.capacity) || frame % 60 > 30)
                 pointerSmiley.draw(batch)
         }
 
-        // Draw the GUI
-        gui.draw(batch, smallFont, camera.position.x)
+        // Draws the GUI
+        gui.draw(batch, smallFont)
 
-        // Draw the menu
+        // Draws the menu
         menuManager.drawMenu(batch, smallFont)
-        menuManager.drawHelper(batch, smallFont, camera.position.x)
+
+        // Updates and draw the helper
+        Util.updateHelper()
+        menuManager.drawHelper(batch, smallFont)
 
         batch.end()
 
@@ -170,12 +175,12 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private fun updatePointer() {
         pointer.x = camera.position.x - 4
 
-        // Compute difference between camera x and the current chunk x
+        // Computes difference between camera x and the current chunk x
         val n = Math.floor(camera.position.x / 32.0).toInt() + 25
         val chunk = hills.chunks[n]
         val diff = camera.position.x - (n - 25) * 32
 
-        // Set height to follow the slopes
+        // Sets height to follow the slopes
         pointer.y = Util.getPixel(-87f + chunk.height + diff * chunk.slope / 32)
         pointerSmiley.x = pointer.x
         pointerSmiley.y = pointer.y + 1
@@ -196,8 +201,8 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 Util.inputFreeze = 8
                 menuManager.moveCursor(1)
             }
-            States.PLACE_BUILDING -> menuManager.flip(camera.position.x, pointer.y)
-            States.IDLE -> Util.showIDLEHelper(camera.position.x)
+            States.PLACE_BUILDING -> menuManager.flip(pointer.y)
+            States.IDLE -> Util.showIDLEHelper()
             else -> {
             }
         }
@@ -205,7 +210,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
     override fun left() {
         if (state == States.IDLE || state == States.PLACE_BUILDING || state == States.PLACE_CITIZEN) {
-            // Move the camera
+            // Moves the camera
             Util.inputFreeze = 1
             if (camera.position.x > -798f + 80f) {
                 if (Util.wasPressed) {
@@ -217,14 +222,13 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 }
                 updatePointer()
             }
-            menuManager.updateBuilding(camera.position.x, pointer.y)
-            Util.updateHelper(camera.position.x)
+            menuManager.updateBuilding(pointer.y)
         }
     }
 
     override fun right() {
         if (state == States.IDLE || state == States.PLACE_BUILDING || state == States.PLACE_CITIZEN) {
-            // Move the camera
+            // Moves the camera
             Util.inputFreeze = 1
             if (camera.position.x < 798f - 80f) {
                 if (Util.wasPressed) {
@@ -236,20 +240,19 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 }
                 updatePointer()
             }
-            menuManager.updateBuilding(camera.position.x, pointer.y)
-            Util.updateHelper(camera.position.x)
+            menuManager.updateBuilding(pointer.y)
         }
     }
 
     override fun a() {
         state = when (state) {
-            // Open the menu
+            // Opens the menu
             States.IDLE -> {
-                menuManager.open(camera.position.x)
+                menuManager.open()
             }
-            // Select the pointed menu option or the pointed spot
+            // Selects the pointed menu option or the pointed spot
             States.MENU, States.PLACE_BUILDING, States.PLACE_CITIZEN -> {
-                menuManager.select(camera.position, pointer.y)
+                menuManager.select(pointer.y)
             }
         }
     }
@@ -258,23 +261,24 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         state = when (state) {
             States.MENU -> {
                 menuManager.close()
+                Util.updateMenuHelper(menuManager.menus)
                 if (menuManager.menus.any()) {
                     States.MENU
                 } else {
-                    // Close the helper
+                    // Closes the helper
                     MenuManager.helper.visible = false
-                    // Go back to IDLE state
+                    // Goes back to IDLE state
                     States.IDLE
                 }
             }
             States.PLACE_BUILDING -> {
                 menuManager.placingB = null
-                menuManager.updateMenu(camera.position.x)
+                menuManager.updateMenu()
                 States.MENU
             }
             States.PLACE_CITIZEN -> {
                 menuManager.placingC = null
-                menuManager.updateMenu(camera.position.x)
+                menuManager.updateMenu()
                 menuManager.menus.clear()
                 States.IDLE
             }

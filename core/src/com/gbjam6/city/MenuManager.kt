@@ -28,11 +28,13 @@ class MenuManager(private val gbJam6: GBJam6) {
     /**
      * Called when the user selects a spot of the map.
      */
-    fun open(x: Float): States {
-        // Check if the user clicked on a building
-        val building = Util.getBuilding(x)
+    fun open(): States {
+        val x = City.camera.position.x
 
-        // Add the corresponding menu
+        // Checks if the user clicked on a building
+        val building = Util.getBuilding()
+
+        // Adds the corresponding menu
         if (building == null) {
             menus.add(Menu(MenuType.CREATION, "SELECT CATEGORY", x + 4f, Def.menuY, gbJam6))
         } else {
@@ -41,7 +43,7 @@ class MenuManager(private val gbJam6: GBJam6) {
             menus.last().changeValidity(building)
         }
 
-        // Show the helper
+        // Shows the helper
         Util.updateMenuHelper(menus)
         MenuManager.helper.visible = true
 
@@ -59,10 +61,13 @@ class MenuManager(private val gbJam6: GBJam6) {
     /**
      * Called when the user selects an option from the menu.
      */
-    fun select(position: Vector3, pointerY: Float): States {
+    fun select(pointerY: Float): States {
 
-        // Get the selected building
-        val selectedB = Util.getBuilding(position.x)
+        // Gets camera position
+        val position = City.camera.position
+
+        // Gets the selected building
+        val selectedB = Util.getBuilding()
 
         if (City.state == States.MENU) {
 
@@ -73,30 +78,35 @@ class MenuManager(private val gbJam6: GBJam6) {
 
                 // The user selects a category
                 MenuType.CREATION -> {
-                    // Get all buildings from selected category
+                    // Gets all buildings from selected category
                     val categoryB = Def.buildings.filter { it.type == BuildingType.valueOf(menu.items[menu.cursorPos]) }
-                    val items = Array(categoryB.size) { categoryB[it].name }
+                    val items = MutableList(categoryB.size) { categoryB[it].name }
+                    items.add("RETURN")
 
-                    // Make building gray if the player doesn't have enough stone to build it
-                    val validity = Array(categoryB.size) { categoryB[it].cost <= City.ressources.stone }
+                    // Makes building gray if the player doesn't have enough stone to build it
+                    val validity = Array(items.size) { i -> if (i < categoryB.size) categoryB[i].cost <= City.ressources.stone else true }
 
-                    // Add the menu
-                    menus.add(Menu(MenuType.CATEGORY, menu.items[menu.cursorPos], position.x + 4f, Def.menuY, gbJam6, items, validity))
+                    // Adds the menu
+                    menus.add(Menu(MenuType.CATEGORY, menu.items[menu.cursorPos], position.x + 4f, Def.menuY, gbJam6, items.toTypedArray(), validity))
 
-                    // Update the helper
+                    // Updates the helper
                     Util.updateMenuHelper(menus)
                 }
 
                 // The user chooses a building to build
                 MenuType.CATEGORY -> {
-                    // Place the building only if it is possible
+                    if (menu.items[menu.cursorPos] == "RETURN") {
+                        close()
+                        return States.MENU
+                    }
+                    // Places the building only if it is possible
                     if (menu.activated[menu.cursorPos]) {
-                        // Create placingB
+                        // Creates placingB
                         placingB = Building(Def.buildings.first { it.name == menu.items[menu.cursorPos] }, position.x, -16f, gbJam6.manager)
-                        updateBuilding(position.x, pointerY)
+                        updateBuilding(pointerY)
                         frame = 0
 
-                        // Close the helper
+                        // Closes the helper
                         MenuManager.helper.visible = false
 
                         return States.PLACE_BUILDING
@@ -108,22 +118,22 @@ class MenuManager(private val gbJam6: GBJam6) {
                     when (menu.items[menu.cursorPos]) {
 
                         "CITIZENS" -> {
-                            // Create the list of citizens' names
+                            // Creates the list of citizens' names
                             val citizens = selectedB!!.citizens
                             val names = MutableList(citizens.size) { citizens[it].name }
 
-                            // Create menu with appropriate title
+                            // Creates menu with appropriate title
                             val title = if (names.isEmpty()) "NO CITIZENS!" else "CHECK&MOVE"
                             names.add("RETURN")
                             menus.add(Menu(MenuType.CITIZENS, title, position.x + 4, Def.menuY, gbJam6, names.toTypedArray()))
 
-                            // Update the helper
+                            // Updates the helper
                             Util.updateMenuHelper(menus)
                         }
 
                         "BIRTH" -> {
                             if (menu.activated[menu.cursorPos]) {
-                                // Create the new citizen
+                                // Creates the new citizen
                                 placingC = Citizen(Def.names.random(), selectedB!!)
                                 selectedB.citizens.add(placingC!!)
 
@@ -131,8 +141,8 @@ class MenuManager(private val gbJam6: GBJam6) {
                                 City.ressources.citizens += 1
                                 City.ressources.happiness -= Def.BIRTH_COST
 
-                                // Open the helper
-                                Util.openAndShowHelper(position.x)
+                                // Opens the helper
+                                Util.openAndShowHelper()
 
                                 return States.PLACE_CITIZEN
                             }
@@ -146,11 +156,11 @@ class MenuManager(private val gbJam6: GBJam6) {
                         "RETURN" -> close()
                         else -> {
                             if (Util.housingLeft()) {
-                                // Get the citizen to move
+                                // Gets the citizen to move
                                 placingC = selectedB!!.citizens[menu.cursorPos]
 
-                                // Open the helper
-                                Util.openAndShowHelper(position.x)
+                                // Opens the helper
+                                Util.openAndShowHelper()
 
                                 return States.PLACE_CITIZEN
                             }
@@ -176,16 +186,16 @@ class MenuManager(private val gbJam6: GBJam6) {
             }
 
         } else if (City.state == States.PLACE_CITIZEN) {
-            // Check the citizen can be placed in this building
+            // Checks the citizen can be placed in this building
             if (selectedB != null && selectedB.citizens.size < selectedB.lBuilding.capacity) {
-                // Remove placingC from its old building
+                // Removes placingC from its old building
                 placingC!!.building.citizens.remove(placingC!!)
 
-                // Place it in its new one
+                // Places it in its new one
                 placingC!!.building = selectedB
                 selectedB.citizens.add(placingC!!)
 
-                // Close the helper
+                // Closes the helper
                 MenuManager.helper.visible = false
 
                 // Go back to [States.IDLE]
@@ -209,7 +219,7 @@ class MenuManager(private val gbJam6: GBJam6) {
         val menu = menus.last()
         menu.cursorPos = (menu.cursorPos + menu.items.size + i) % menu.items.size
 
-        // Update the helper
+        // Updates the helper
         Util.updateMenuHelper(menus)
     }
 
@@ -217,7 +227,7 @@ class MenuManager(private val gbJam6: GBJam6) {
      * Draws the visible menu.
      */
     fun drawMenu(batch: SpriteBatch, font: BitmapFont) {
-        // Draw the menu
+        // Draws the menu
         if (menus.any() && placingB == null && placingC == null) {
             menus.last().draw(batch, font)
         }
@@ -234,10 +244,11 @@ class MenuManager(private val gbJam6: GBJam6) {
     }
 
     /**
-     * Move [placingB] with the camera.
+     * Moves [placingB] with the camera.
      */
-    fun updateBuilding(x: Float, y: Float) {
+    fun updateBuilding(y: Float) {
         placingB?.let {
+            val x = City.camera.position.x
             it.x = x - it.lBuilding.door.first - Math.floor((it.lBuilding.door.second - it.lBuilding.door.first) / 2.0).toFloat()
             it.y = y - 2
             it.validPos = it.isValid()
@@ -245,9 +256,10 @@ class MenuManager(private val gbJam6: GBJam6) {
     }
 
     /**
-     * Move [menus] when the camera moved (for instance during [States.PLACE_BUILDING]).
+     * Moves [menus] when the camera moved (for instance during [States.PLACE_BUILDING]).
      */
-    fun updateMenu(x: Float) {
+    fun updateMenu() {
+        val x = City.camera.position.x
         for (menu in menus)
             menu.x = x + 4
     }
@@ -255,9 +267,10 @@ class MenuManager(private val gbJam6: GBJam6) {
     /**
      * Flips [placingB].
      */
-    fun flip(x: Float, y: Float) {
+    fun flip(y: Float) {
+        val x = City.camera.position.x
         placingB?.flip()
-        updateBuilding(x, y)
+        updateBuilding(y)
     }
 
     /**
@@ -267,8 +280,18 @@ class MenuManager(private val gbJam6: GBJam6) {
         frame = (frame + 1) % 60
     }
 
-    fun drawHelper(batch: SpriteBatch, smallFont: BitmapFont, x: Float) {
+    fun drawHelper(batch: SpriteBatch, smallFont: BitmapFont) {
+        val x = City.camera.position.x
         helper.draw(batch, smallFont, x - 76f)
+    }
+
+    /**
+     * Used to update the menu when a
+     */
+    fun tick() {
+        val menu = menus.lastOrNull()
+        if (menu != null && City.state == States.MENU)
+            menu.changeValidity(Util.getBuilding())
     }
 
 }

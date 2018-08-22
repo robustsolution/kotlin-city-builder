@@ -18,15 +18,17 @@ class GUI(gbJam6: GBJam6) {
     private val research = gbJam6.manager.get("sprites/gui/Research.png", Texture::class.java)
     private val stone = gbJam6.manager.get("sprites/gui/Stone.png", Texture::class.java)
 
-    fun draw(batch: SpriteBatch, font: BitmapFont, x: Float) {
-        // Draw the ressources count
+    fun draw(batch: SpriteBatch, font: BitmapFont) {
+        val x = City.camera.position.x
+
+        // Draws the ressources count
         batch.draw(citizens, x - 80f, 56f)
         batch.draw(food, x - 80f + 32, 56f)
         batch.draw(stone, x - 80f + 2 * 32, 56f)
         batch.draw(happiness, x - 80f + 3 * 32, 56f)
         batch.draw(research, x - 80f + 4 * 32, 56f)
 
-        // Draw the ressources count
+        // Draws the ressources count
         font.color = Def.color1
         font.draw(batch, String.format("%03d", City.ressources.citizens), x - 80f + 5, 71f)
         font.draw(batch, String.format("%03d", City.ressources.food), x - 80f + 5 + 32, 71f)
@@ -37,7 +39,8 @@ class GUI(gbJam6: GBJam6) {
         font.draw(batch, String.format("%04d", City.ressources.happiness), x - 80f + 13 + 3 * 32, 68f)
         font.draw(batch, String.format("%04d", City.ressources.research), x - 80f + 12 + 4 * 32, 68f)
 
-        // Draw speed indicator
+        // Draws speed indicator
+        // TODO: Draw speed indicator
     }
 
 }

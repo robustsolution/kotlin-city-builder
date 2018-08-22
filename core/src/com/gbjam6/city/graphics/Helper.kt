@@ -5,10 +5,9 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.gbjam6.city.general.Def
-import com.gbjam6.city.general.Util
 
 /**
- * Show informations on the left side of the screen.
+ * Shows informations on the left side of the screen.
  */
 class Helper {
 
@@ -18,11 +17,11 @@ class Helper {
     var visible = false
 
     fun update(title: String, description: String) {
-        // Update Strings
+        // Updates Strings
         this.title = title
         this.description = description
 
-        // Create the background ressource
+        // Creates the background ressource
         val height = description.split("\n").size * 7 + 21
         val pixmap = Pixmap(Def.helperWidth.toInt(), height, Pixmap.Format.RGBA8888)
         pixmap.setColor(Def.color1)
@@ -34,7 +33,7 @@ class Helper {
     fun draw(batch: SpriteBatch, font: BitmapFont, x: Float) {
         if (visible) {
             texture?.let {
-                // Draw the background
+                // Draws the background
                 batch.draw(it, x, Def.menuY - it.height)
 
                 font.color = Def.color4

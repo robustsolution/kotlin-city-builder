@@ -20,7 +20,10 @@ object Util {
 
     fun getPixel(f: Float): Float = f.roundToInt().toFloat()
 
-    fun getBuilding(x: Float): Building? = City.buildings.firstOrNull { it.x <= x && x < it.x + it.width }
+    fun getBuilding(): Building? {
+        val x = City.camera.position.x
+        return City.buildings.firstOrNull { it.x <= x && x < it.x + it.width }
+    }
 
     /**
      * Returns true if at least one building can host one more citizen.
@@ -38,19 +41,19 @@ object Util {
         val ressources = Ressources()
         val buildingsToDestroy = mutableListOf<Building>()
 
-        // Get buildings' production and make them older
+        // Gets buildings' production and make them older
         for (building in City.buildings) {
             ressources add building.getProduction()
             building.older(ressources, buildingsToDestroy)
         }
 
-        // Remove destroyed buildings
+        // Removes destroyed buildings
         for (building in buildingsToDestroy) {
             // TODO: Enlever de city (affichage et liste) et update le nombre de citizens
         }
         buildingsToDestroy.clear()
 
-        // Update the ressources count
+        // Updates the ressources count
         City.ressources addLimit ressources
     }
 
@@ -63,46 +66,47 @@ object Util {
     }
 
     /**
-     * Show the helper
+     * Shows the helper
      */
-    fun showIDLEHelper(x: Float) {
+    fun showIDLEHelper() {
         MenuManager.helper.visible = !MenuManager.helper.visible
-        updateHelper(x)
+        updateHelper()
     }
 
     /**
-     * Update the helper to show informations about the pointed building.
+     * Updates the helper to show informations about the pointed building.
      */
-    fun updateHelper(x: Float) {
-        val building = getBuilding(x)
+    fun updateHelper() {
+        val building = getBuilding()
         if (building != null) {
-            // Display informations about the building
+            // Displays informations about the building
             MenuManager.helper.update(building.lBuilding.name, building.getDescription())
         } else {
-            // Indicate that the selected point is empty
-            val desc = when (City.state) {
-                States.IDLE -> "YOU CAN BUILD\nHERE!"
-                States.PLACE_CITIZEN -> "YOU CANNOT \nPLACE THE\nCITIZEN HERE!"
-                else -> Def.backupDesc
+            // Indicates that the selected point is empty
+            when (City.state) {
+                States.IDLE -> MenuManager.helper.update("EMPTY", "YOU CAN BUILD\nHERE!")
+                States.PLACE_CITIZEN -> MenuManager.helper.update("EMPTY", "YOU CANNOT \nPLACE THE\nCITIZEN HERE!")
+                else -> Unit
             }
-            MenuManager.helper.update("EMPTY", desc)
         }
     }
 
-    fun openAndShowHelper(x: Float) {
-        updateHelper(x)
+    fun openAndShowHelper() {
+        updateHelper()
         MenuManager.helper.visible = true
     }
 
     fun updateMenuHelper(menus: MutableList<Menu>) {
-        // Get the displayed menu
-        val menu = menus.last()
-        val item = menu.items[menu.cursorPos]
+        // Gets the displayed menu
+        val menu = menus.lastOrNull()
+        menu?.let {
+            val item = menu.items[menu.cursorPos]
 
-        // Update the helper
-        when (menu.type) {
-            MenuType.CITIZENS -> MenuManager.helper.update(item, "TODO")
-            else -> MenuManager.helper.update(item, Def.descriptions[item] ?: Def.backupDesc)
+            // Updates the helper
+            when (menu.type) {
+                MenuType.CITIZENS -> MenuManager.helper.update(item, "TODO")
+                else -> MenuManager.helper.update(item, Def.descriptions[item] ?: Def.backupDesc)
+            }
         }
     }
 
