@@ -40,7 +40,7 @@ object Def {
     // MENUS
     val menus = mapOf(
             MenuType.CREATION to arrayOf("CITIZENS", "HAPPINESS", "FOOD", "RESEARCH", "STONE", "OTHER"),
-            MenuType.BUILDING to arrayOf("CITIZENS", "USE", "UPGRADE", "REPAIR", "DESTROY"),
+            MenuType.BUILDING to arrayOf("CITIZENS", "UPGRADE", "REPAIR", "DESTROY"),
             MenuType.CONFIRM to arrayOf("YES", "NO")
     )
 
@@ -51,7 +51,8 @@ object Def {
             LBuilding(BuildingType.FOOD, "FARM", 2, Pair(19, 39), Pair(19, 39), Pair(19, 39), 100),
             LBuilding(BuildingType.RESEARCH, "LABORATORY", 2, Pair(20, 28), Pair(20, 29), Pair(20, 38), 100),
             LBuilding(BuildingType.STONE, "FACTORY", 2, Pair(6, 19), Pair(6, 30), Pair(6, 22), 100),
-            LBuilding(BuildingType.OTHER, "WELL", 0, Pair(0, 17), Pair(0, 17), Pair(0, 17), 100)
+            LBuilding(BuildingType.OTHER, "WELL", 0, Pair(0, 17), Pair(0, 17), Pair(0, 17), 100),
+            LBuilding(BuildingType.STONE,"CRAFTMAN",1,Pair(20,36),Pair(20,36),Pair(20,36),100)
     )
     val customMenus = mapOf(
             "WELL" to arrayOf("CITIZENS", "REPAIR"),

@@ -12,4 +12,8 @@ class Citizen(val name: String, var building: Building) {
             building.citizensToKill.add(this)
         }
     }
+
+    fun getDescription(): String {
+        return "Life :\n${this.life}/${Def.LIFE_TIME}"
+    }
 }
