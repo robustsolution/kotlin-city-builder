@@ -17,10 +17,9 @@ object Def {
 
     // GENERAL
     val startingRessources = Ressources(happiness = 400, stone = 300)
-    const val speed1 = 10
-    const val RESET: Int = 600
 
     // GAME DESIGN
+    const val SPEED = 120
     var BIRTH_COST = 100
     var LIFE_TIME = 300
     var BUILD_LIFE_TIME = 300
@@ -36,6 +35,9 @@ object Def {
     const val menuWidth = 72f
     const val menuY = 52f
     const val helperWidth = 64f
+    const val helperY = 46f
+    const val speedY = 54f
+    const val speedOffset = 4f
 
     // MENUS
     val menus = mapOf(

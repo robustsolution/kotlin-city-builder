@@ -14,6 +14,7 @@ import com.gbjam6.city.logic.Ressources
 import com.gbjam6.city.general.Util
 import com.gbjam6.city.graphics.Building
 import com.gbjam6.city.graphics.GUI
+import com.gbjam6.city.graphics.SpeedIndicator
 import com.gbjam6.city.logic.Hills
 import ktx.app.KtxScreen
 
@@ -35,6 +36,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private lateinit var gui: GUI
     private lateinit var font: BitmapFont
     private lateinit var smallFont: BitmapFont
+    private val speedIndicator = SpeedIndicator()
     private var frame = 0
     private var pause = false
 
@@ -83,14 +85,12 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
     override fun render(delta: Float) {
 
-        if (!pause) {
-            frame += 1
-            if (frame % Def.speed1 == 0) {
+        if (speedIndicator.speed > 0) {
+            frame += speedIndicator.speed
+            if (frame > Def.SPEED) {
+                frame = 0
                 Util.tick()
                 menuManager.tick()
-            }
-            if (frame == Def.RESET - 1) {
-                frame = 0
             }
         }
 
@@ -150,6 +150,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
         // Draws the GUI
         gui.draw(batch, smallFont)
+        speedIndicator.draw(batch, smallFont)
 
         // Draws the menu
         menuManager.drawMenu(batch, smallFont)
@@ -287,6 +288,6 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     }
 
     override fun select() {
-        pause = !pause
+        speedIndicator.speed = (speedIndicator.speed + 1) % 4
     }
 }
