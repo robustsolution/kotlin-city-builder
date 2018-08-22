@@ -101,7 +101,12 @@ object Util {
 
         // Update the helper
         when (menu.type) {
-            MenuType.CITIZENS -> MenuManager.helper.update(item, "TODO")
+
+            MenuType.CITIZENS -> if (menu.cursorPos < getBuilding(City.camera.position.x)!!.citizens.size) {
+                MenuManager.helper.update(item, getBuilding(City.camera.position.x)!!.citizens.elementAt(menu.cursorPos).getDescription())
+            } else {
+                MenuManager.helper.update(item,"Return")
+            }
             else -> MenuManager.helper.update(item, Def.descriptions[item] ?: Def.backupDesc)
         }
     }

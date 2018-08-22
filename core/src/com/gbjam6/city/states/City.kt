@@ -26,7 +26,6 @@ enum class States {
  */
 class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private val batch = SpriteBatch()
-    private val camera = OrthographicCamera()
     private val viewport = FitViewport(160f, 144f, camera)
     private val menuManager = MenuManager(gbJam6)
 
@@ -40,6 +39,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private var pause = false
 
     companion object {
+        val camera = OrthographicCamera()
         var hills = Hills()
         var state = States.IDLE
         val buildings = mutableListOf<Building>()

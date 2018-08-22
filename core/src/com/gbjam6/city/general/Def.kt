@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.gbjam6.city.logic.Ressources
 
 enum class MenuType {
-    CREATION, CATEGORY, BUILDING, CITIZENS, CONFIRM, IMPROVE
+    CREATION, CATEGORY, BUILDING, CITIZENS, CONFIRM, IMPROVE, HYDRATE, ADD, REMOVE
 }
 
 enum class BuildingType {
@@ -40,7 +40,7 @@ object Def {
     // MENUS
     val menus = mapOf(
             MenuType.CREATION to arrayOf("CITIZENS", "HAPPINESS", "FOOD", "RESEARCH", "STONE", "OTHER"),
-            MenuType.BUILDING to arrayOf("CITIZENS", "UPGRADE", "REPAIR", "DESTROY"),
+            MenuType.BUILDING to arrayOf("CITIZENS", "REPAIR", "DESTROY"),
             MenuType.CONFIRM to arrayOf("YES", "NO")
     )
 
@@ -55,7 +55,7 @@ object Def {
             LBuilding(BuildingType.STONE,"CRAFTMAN",1,Pair(20,36),Pair(20,36),Pair(20,36),100)
     )
     val customMenus = mapOf(
-            "WELL" to arrayOf("CITIZENS", "REPAIR"),
+            "WELL" to arrayOf("HYDRATE", "REPAIR","DESTROYE"),
             "HOUSE" to arrayOf("CITIZENS", "BIRTH", "UPGRADE", "REPAIR", "DESTROY")
     )
 
