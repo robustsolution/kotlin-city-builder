@@ -4,19 +4,21 @@ import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.gbjam6.city.MenuManager
 import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.LBuilding
 import com.gbjam6.city.logic.Ressources
 import com.gbjam6.city.general.Util
 import com.gbjam6.city.logic.Citizen
 import com.gbjam6.city.states.City
+import com.gbjam6.city.states.States
 import javax.annotation.Resource
 import javax.annotation.Resources
 import kotlin.math.min
 
 class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: AssetManager) {
 
-    var life = Def.BUILD_LIFE_TIME
+    var life = City.progress.buildlife
     val citizens = mutableListOf<Citizen>()
     val citizensToKill = mutableListOf<Citizen>()
     val wateredCitizens = mutableListOf<Citizen>()
@@ -120,14 +122,14 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     }
 
     fun canRepair(): Boolean {
-        return ((1-this.life/Def.BUILD_LIFE_TIME.toFloat())*this.lBuilding.cost+1).toInt() <= City.ressources.stone && this.life != Def.BUILD_LIFE_TIME //TODO:CHANGER Def. pa City.upgaret
+        return ((1-this.life/City.progress.buildlife.toFloat())*this.lBuilding.cost+1).toInt() <= City.ressources.stone && this.life != City.progress.buildlife
     }
 
     fun updateTexture(){
         sprite.texture = manager.get("sprites/buildings/${this.lBuilding.name}.png", Texture::class.java)
     }
     fun canUpgrade(): Boolean {
-        return (City.ressources.stone >= this.lBuilding.upgradeCost)
+        return (City.ressources.stone >= this.lBuilding.upgradeCost) && this.lBuilding.name+"+" in City.progress.tree
     }
 
     /**
@@ -144,14 +146,14 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
             "HOUSE" -> City.limits.citizens += Def.HOUSELIMIT
             "SCHOOL" -> {
                 City.limits.citizens += Def.SCHOOLLIMIT
-                Def.BIRTH_COST = Def.SCHOOLCITIZENCOST
+                City.progress.birthcost = Def.SCHOOLCITIZENCOST
             }
             "WAREHOUSE"-> {
                 City.limits.food += Def.WAREHOUSELIMIT
                 City.limits.stone += Def.WAREHOUSELIMIT
             }
-            "HOSPITAL" -> Def.LIFE_TIME = Def.HOSPITALCITIZENLIFE
-            "CRAFTMAN" -> Def.BUILD_LIFE_TIME = Def.CRAFTMANBUILDINGLIFE
+            "HOSPITAL" -> City.progress.lifetime = Def.HOSPITALCITIZENLIFE
+            "CRAFTMAN" -> City.progress.buildlife = Def.CRAFTMANBUILDINGLIFE
         }
 
         // Make sure limits don't go over 999
@@ -184,7 +186,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
      * It will be displayed in [Helper].
      */
     fun getDescription(): String {
-        var description = "Citizen(s) : \n${citizens.size}/${lBuilding.capacity}\nIntegrity : \n${this.life}/${Def.BUILD_LIFE_TIME}"
+        var description = "Citizen(s) : \n${citizens.size}/${lBuilding.capacity}\nIntegrity : \n${this.life}/${City.progress.buildlife}"
         if (this.lBuilding.name == "GARDEN")
             description += "\n Coldown :\n${this.exchangeTimer}/${Def.EXCHANGETIME}"
         return description
@@ -213,14 +215,60 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
             exchangeTimer ++
         // Make the building older
         life -= 1
+        if (life > City.progress.buildlife)
+            life = City.progress.buildlife
         if (life <= 0) {
             buildingsToDestroy.add(this)
         }
-        if (life <= Def.BUILD_LIFE_TIME*Def.DAMAGED_LIMIT_PCT && lBuilding.name in Def.destroyedRessources) {
+        if (life <= City.progress.buildlife*Def.DAMAGED_LIMIT_PCT && lBuilding.name in Def.destroyedRessources) {
             sprite.texture = manager.get("sprites/buildings/destroyed/${lBuilding.name} DESTROYED.png", Texture::class.java)
         }
     }
+    fun destroy(menuManager: MenuManager){
+        if (City.state == States.MENU && Util.getBuilding() == this){
+            menuManager.menus.clear()
+            MenuManager.helper.visible = false
+            City.state = States.IDLE
+        }
+        if (City.state == States.PLACE_CITIZEN && menuManager.placingC in this.citizens){
+            menuManager.menus.clear()
+            MenuManager.helper.visible = false
+            menuManager.placingC = null
+            City.state = States.IDLE
+        }
 
+        for (citizen in citizens){
+            if (citizen.water)
+                citizen.well!!.wateredCitizens.remove(citizen)
+        }
+        City.buildings.remove(this)
+        when (this.lBuilding.name){
+            "FACTORY" -> City.limits.stone -= Def.FACTORYLIMIT
+            "FARM" -> City.limits.food -= Def.FARMLIMIT
+            "HOUSE" -> City.limits.citizens -= Def.HOUSELIMIT
+            "SCHOOL" -> {
+                City.limits.citizens -= Def.SCHOOLLIMIT
+                if (City.buildings.filter { it.lBuilding.name == "SCHOLL" }.isEmpty())
+                    City.progress.birthcost = Def.BIRTH_COST
+            }
+            "WAREHOUSE"-> {
+                City.limits.food -= Def.WAREHOUSELIMIT
+                City.limits.stone -= Def.WAREHOUSELIMIT
+            }
+            "HOSPITAL" -> {
+                if (City.buildings.filter { it.lBuilding.name == "HOSPITAL" }.isEmpty())
+                    City.progress.lifetime = Def.LIFE_TIME
+            }
+            "CRAFTMAN" -> {
+                if (City.buildings.filter { it.lBuilding.name == "CRAFTMAN" }.isEmpty())
+                    City.progress.buildlife = Def.BUILD_LIFE_TIME
+            }
+            "FACTORY+" -> City.limits.stone -= Def.FACTORYLIMIT+Def.FACTORYPLUSLIMIT
+            "FARM+" -> City.limits.food -= Def.FARMLIMIT+Def.FARMPLUSLIMIT
+            "HOUSE+" -> City.limits.citizens -= Def.HOUSELIMIT+Def.HOUSEPLUSLIMIT
+        }
+        City.ressources.citizens -= this.citizens.size
+    }
     fun upgrade() {
         City.ressources.stone -= this.lBuilding.upgradeCost
         when (this.lBuilding.name) {

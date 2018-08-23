@@ -38,7 +38,7 @@ class Tree(gbJam6: GBJam6) {
             // Draws the description
             val selected = Def.tree[3 * x + y]
             font.color = Def.color1
-            font.draw(batch, selected.desc, leftX + 4, 62f, 152f, 1, true)
+            font.draw(batch, selected.name+" : "+selected.cost+" Hapiness\n"+selected.desc, leftX + 4, 62f, 152f, 1, true)
         }
     }
 

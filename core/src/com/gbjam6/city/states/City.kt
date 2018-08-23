@@ -23,7 +23,7 @@ enum class States {
     IDLE, PLACE_BUILDING, MENU, PLACE_CITIZEN, TREE
 }
 
-data class Progress(val tree: MutableList<String> = mutableListOf())
+data class Progress(val tree: MutableList<String> = mutableListOf(), var birthcost: Int, var lifetime: Int, var buildlife: Int)
 
 /**
  * Main game class.
@@ -50,7 +50,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         val buildings = mutableListOf<Building>()
         val ressources = Def.startingRessources.copy()
         val limits = Ressources(happiness = 9999, research = 9999)
-        val progress = Progress(mutableListOf("TREE", "WELL", "FACTORY+"))
+        val progress = Progress(mutableListOf(),Def.BIRTH_COST,Def.LIFE_TIME,Def.BUILD_LIFE_TIME)
     }
 
     override fun show() {
@@ -95,7 +95,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             frame += speedIndicator.speed
             if (frame > Def.SPEED) {
                 frame = 0
-                Util.tick()
+                Util.tick(menuManager)
                 menuManager.tick()
             }
         }
@@ -166,7 +166,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         menuManager.drawHelper(batch, smallFont)
 
         // Draw the tree
-        tree.draw(batch, font)
+        tree.draw(batch, smallFont)
 
         batch.end()
 
