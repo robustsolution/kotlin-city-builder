@@ -12,7 +12,7 @@ import ktx.app.KtxGame
 class GBJam6 : KtxGame<Screen>() {
 
     val manager = AssetManager()
-    val player = Player(48000, Player.INTERPOLATION_MODE_CUBIC)
+    val player = Player(44100, Player.INTERPOLATION_MODE_CUBIC)
     var titleMusic: Int = 0
     var cityMusic1: Int = 0
 
