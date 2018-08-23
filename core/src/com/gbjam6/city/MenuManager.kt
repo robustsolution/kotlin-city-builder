@@ -2,7 +2,6 @@ package com.gbjam6.city
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.Vector3
 import com.gbjam6.city.general.*
 import com.gbjam6.city.graphics.Building
 import com.gbjam6.city.graphics.Helper
@@ -159,6 +158,25 @@ class MenuManager(private val gbJam6: GBJam6) {
 
                         "HYDRATE" -> {
                             menus.add(Menu(MenuType.HYDRATE, "ACTION", position.x + 4, Def.menuY, gbJam6))
+                            menus.last().changeValidity()
+                        }
+
+                        "UPGRADE" -> {
+                            selectedB!!.upgrade()
+                            selectedB!!.updateTexture()
+                            menu.items = Def.customMenus[selectedB.lBuilding.name] ?: Def.menus[MenuType.BUILDING]!!
+                        }
+                        "EXCHANGE" -> {
+                            City.ressources.food -= Def.EXCHANGE_VALUE
+                            City.ressources.happiness += Def.EXCHANGE_VALUE
+                            selectedB!!.exchangeTimer = 0
+                            menus.last().changeValidity()
+                        }
+                        "REPAIR" -> {
+                            City.ressources.stone -= ((1 - selectedB!!.life / Def.BUILD_LIFE_TIME.toFloat()) * selectedB!!.lBuilding.cost + 1).toInt()
+                            if (selectedB!!.life <= Def.BUILD_LIFE_TIME * Def.DAMAGED_LIMIT_PCT)
+                                selectedB!!.updateTexture()
+                            selectedB.life = Def.BUILD_LIFE_TIME //TODO:Changer apres City.progress
                             menus.last().changeValidity()
                         }
                     }

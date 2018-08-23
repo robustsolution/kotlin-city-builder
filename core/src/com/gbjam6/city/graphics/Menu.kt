@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.MenuType
-import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.gbjam6.city.GBJam6
 import com.gbjam6.city.general.Util
@@ -71,6 +70,7 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
                         "UPGRADE" -> activated[i] = b.canUpgrade()
                         "REPAIR" -> activated[i] = b.canRepair()
                         "BIRTH" -> activated[i] = City.ressources.happiness >= Def.BIRTH_COST && b.citizens.size < b.lBuilding.capacity && City.ressources.citizens < City.limits.citizens
+                        "EXCHANGE" -> activated[i] = City.ressources.food >= Def.EXCHANGE_VALUE && building.exchangeTimer == Def.EXCHANGE_TIME
                     }
                 }
             }

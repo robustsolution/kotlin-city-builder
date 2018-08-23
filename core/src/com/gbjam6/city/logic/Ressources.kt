@@ -17,16 +17,13 @@ data class Ressources(var citizens: Int = 0, var food: Int = 0, var stone: Int =
         this add ressources
         food = max(0, food)
         if (food > City.limits.food && food - ressources.food <= City.limits.food) {
-            println("Case 1")
             food = City.limits.food
         }
         if (food > City.limits.food && food - ressources.food > City.limits.food ) {
             food -= ressources.food
-            println("Case 2")
         }
         if (food > City.limits.food && ressources.food < 0){
             food += ressources.food
-            println("Case 3")
         }
         if (stone > City.limits.stone && stone - ressources.stone <= City.limits.stone) {
             stone = City.limits.stone

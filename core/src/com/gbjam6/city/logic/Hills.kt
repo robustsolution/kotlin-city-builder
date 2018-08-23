@@ -19,7 +19,7 @@ class Hills {
         val n = Random().nextInt(heights.size)
         chunksTemp.add(Chunk(heights.elementAt(n), 0))
         chunksTemp.add(Chunk(heights.elementAt(n), 0))
-        for (i in 1..Def.nChunks-2) {
+        for (i in 1..Def.nChunks - 2) {
             chunksTemp.add(chunkChoice(chunksTemp.elementAt(i - 1), chunksTemp.elementAt(i)))
         }
         chunks = chunksTemp.toList()

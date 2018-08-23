@@ -49,6 +49,9 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         for (building in Def.destroyedRessources) {
             gbJam6.manager.load("sprites/buildings/destroyed/$building DESTROYED.png", Texture::class.java)
         }
+        for (building in Def.upgradedBuilding) {
+            gbJam6.manager.load("sprites/buildings/${building.name}.png", Texture::class.java)
+        }
 
         // GUI
         for (type in arrayOf("Citizens", "Food", "Happiness", "Research", "Stone")) {
