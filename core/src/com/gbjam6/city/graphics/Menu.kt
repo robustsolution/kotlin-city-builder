@@ -7,6 +7,7 @@ import com.gbjam6.city.general.MenuType
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.gbjam6.city.GBJam6
+import com.gbjam6.city.general.Util
 import com.gbjam6.city.states.City
 
 /**
@@ -53,7 +54,9 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
      * Called to update the menu items.
      * Updates [activated] array and [items] for [MenuType.CITIZENS].
      */
-    fun changeValidity(building: Building?) {
+    fun changeValidity() {
+        val building = Util.getBuilding()
+
         when (type) {
 
             // Valid items are buildings which can be constructed
@@ -93,10 +96,11 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
                 }
             }
 
-            // TODO: Cannot add when the well is linked to its max nb of citizens
-            // TODO: Cannot remove when no citizen is linked to the well
+            // Updates well according to watered citizens
             MenuType.HYDRATE -> {
-
+                val b = building!!
+                activated[0] = b.wateredCitizens.size < 2
+                activated[1] = b.wateredCitizens.size > 0
             }
 
             else -> Unit

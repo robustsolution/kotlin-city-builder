@@ -42,7 +42,7 @@ class MenuManager(private val gbJam6: GBJam6) {
         } else {
             val items = Def.customMenus[building.lBuilding.name] ?: Def.menus[MenuType.BUILDING]!!
             menus.add(Menu(MenuType.BUILDING, "SELECT ACTION", x + 4f, Def.menuY, gbJam6, items))
-            menus.last().changeValidity(building)
+            menus.last().changeValidity()
         }
 
         // Shows the helper
@@ -56,8 +56,10 @@ class MenuManager(private val gbJam6: GBJam6) {
      * Called to close a menu.
      */
     fun close() {
-        if (menus.any())
+        if (menus.any()) {
             menus = menus.dropLast(1).toMutableList()
+            menus.last().changeValidity()
+        }
     }
 
     /**
@@ -75,6 +77,9 @@ class MenuManager(private val gbJam6: GBJam6) {
 
             // A menu item is selected
             val menu = menus.last()
+
+            if (!menu.activated[menu.cursorPos])
+                return States.MENU
 
             when (menu.type) {
 
@@ -98,18 +103,18 @@ class MenuManager(private val gbJam6: GBJam6) {
                         close()
                         return States.MENU
                     }
-                    // Places the building only if it is possible
-                    if (menu.activated[menu.cursorPos]) {
-                        // Creates placingB
-                        placingB = Building(Def.buildings.first { it.name == menu.items[menu.cursorPos] }, position.x, -16f, gbJam6.manager)
-                        updateBuilding(pointerY)
-                        frame = 0
 
-                        // Closes the helper
-                        MenuManager.helper.visible = false
+                    // Places the building
+                    // Creates placingB
+                    placingB = Building(Def.buildings.first { it.name == menu.items[menu.cursorPos] }, position.x, -16f, gbJam6.manager)
+                    updateBuilding(pointerY)
+                    frame = 0
 
-                        return States.PLACE_BUILDING
-                    }
+                    // Closes the helper
+                    MenuManager.helper.visible = false
+
+                    return States.PLACE_BUILDING
+
                 }
 
                 // The player checks a building
@@ -128,25 +133,23 @@ class MenuManager(private val gbJam6: GBJam6) {
                         }
 
                         "BIRTH" -> {
-                            if (menu.activated[menu.cursorPos]) {
-                                // Creates the new citizen
-                                placingC = Citizen(Def.names.random(), selectedB!!)
-                                selectedB.citizens.add(placingC!!)
+                            // Creates the new citizen
+                            placingC = Citizen(Def.names.random(), selectedB!!)
+                            selectedB.citizens.add(placingC!!)
 
-                                // Updates ressources
-                                City.ressources.citizens += 1
-                                City.ressources.happiness -= Def.BIRTH_COST
+                            // Updates ressources
+                            City.ressources.citizens += 1
+                            City.ressources.happiness -= Def.BIRTH_COST
 
-                                // Opens the helper
-                                MenuManager.helper.visible = true
+                            // Opens the helper
+                            MenuManager.helper.visible = true
 
-                                return States.PLACE_CITIZEN
-                            }
+                            return States.PLACE_CITIZEN
                         }
 
                         "HYDRATE" -> {
-                            val validity = arrayOf(selectedB!!.citizens.size < 2, selectedB.citizens.size > 0, true)
-                            menus.add(Menu(MenuType.HYDRATE, "ACTION", position.x + 4, Def.menuY, gbJam6, validity = validity))
+                            menus.add(Menu(MenuType.HYDRATE, "ACTION", position.x + 4, Def.menuY, gbJam6))
+                            menus.last().changeValidity()
                         }
                     }
                 }
@@ -157,7 +160,7 @@ class MenuManager(private val gbJam6: GBJam6) {
                         "RETURN" -> close()
                         "ADD" -> {
                             // Gets citizens in range
-                            val buildings = City.buildings.filter { abs(it.x + 9 - selectedB!!.x) < 70 || abs(selectedB.x + selectedB.width - it.x - 9) < 70 }
+                            val buildings = City.buildings.filter { abs((it.x + it.width / 2) - (selectedB!!.x + 9)) < Def.WELL_RANGE }
                             val citizens = mutableListOf<Citizen>()
 
                             for (build in buildings)
@@ -359,7 +362,7 @@ class MenuManager(private val gbJam6: GBJam6) {
     fun tick() {
         val menu = menus.lastOrNull()
         if (menu != null && City.state == States.MENU)
-            menu.changeValidity(Util.getBuilding())
+            menu.changeValidity()
     }
 
 }

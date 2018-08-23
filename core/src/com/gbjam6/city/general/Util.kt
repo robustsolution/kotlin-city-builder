@@ -99,6 +99,7 @@ object Util {
 
         // Gets the displayed menu
         val menu = menus.lastOrNull()
+
         menu?.let {
             val item = menu.items[menu.cursorPos]
 

@@ -24,6 +24,8 @@ object Def {
     var LIFE_TIME = 300
     const val DAMAGED_LIMIT = 30
     var BUILD_LIFE_TIME = 300
+    val WELL_RANGE = 80
+
 
     // COLORS
     val color1: Color = Color.valueOf("000000")
