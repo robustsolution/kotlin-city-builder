@@ -113,6 +113,13 @@ object Util {
                         MenuManager.helper.update(item, Def.getDescription("RETURN"))
                     }
                 }
+                MenuType.BUILDING -> {
+                    val building = getBuilding()
+                    when (item) {
+                        "REPAIR" -> MenuManager.helper.update(item, "Integrity :\n${building!!.life}/${Def.BUILD_LIFE_TIME}\nRepair cost :\n${((1-building!!.life/Def.BUILD_LIFE_TIME.toFloat())*building!!.lBuilding.cost+1).toInt()}")
+                        else -> MenuManager.helper.update(item, Def.getDescription(item))
+                    }
+                }
                 else -> MenuManager.helper.update(item, Def.getDescription(item))
             }
         }

@@ -20,10 +20,11 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     val citizens = mutableListOf<Citizen>()
     val citizensToKill = mutableListOf<Citizen>()
     val wateredCitizens = mutableListOf<Citizen>()
+    var exchangeTimer = Def.EXCHANGETIME
 
     private var sprite = Sprite(manager.get("sprites/buildings/${lBuilding.name}.png", Texture::class.java))
     val width = sprite.width
-    val lBuilding = lBuilding.copy()
+    var lBuilding = lBuilding.copy()
     var validPos: Boolean = true
 
     /**
@@ -119,11 +120,14 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     }
 
     fun canRepair(): Boolean {
-        return false
+        return ((1-this.life/Def.BUILD_LIFE_TIME.toFloat())*this.lBuilding.cost+1).toInt() <= City.ressources.stone && this.life != Def.BUILD_LIFE_TIME //TODO:CHANGER Def. pa City.upgaret
     }
 
+    fun updateTexture(){
+        sprite.texture = manager.get("sprites/buildings/${this.lBuilding.name}.png", Texture::class.java)
+    }
     fun canUpgrade(): Boolean {
-        return false
+        return (City.ressources.stone >= this.lBuilding.upgradeCost)
     }
 
     /**
@@ -135,19 +139,19 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
 
         // Update limits
         when (lBuilding.name) {
-            "FACTORY" -> City.limits.stone += 100
-            "FARM" -> City.limits.food += 100
-            "HOUSE" -> City.limits.citizens += 6
+            "FACTORY" -> City.limits.stone += Def.FACTORYLIMIT
+            "FARM" -> City.limits.food += Def.FARMLIMIT
+            "HOUSE" -> City.limits.citizens += Def.HOUSELIMIT
             "SCHOOL" -> {
-                City.limits.citizens += 4
-                Def.BIRTH_COST = 75
+                City.limits.citizens += Def.SCHOOLLIMIT
+                Def.BIRTH_COST = Def.SCHOOLCITIZENCOST
             }
             "WAREHOUSE"-> {
-                City.limits.food += 200
-                City.limits.stone += 200
+                City.limits.food += Def.WAREHOUSELIMIT
+                City.limits.stone += Def.WAREHOUSELIMIT
             }
-            "HOSPITAL" -> Def.LIFE_TIME = 600
-            "CRAFTMAN" -> Def.BUILD_LIFE_TIME = 600
+            "HOSPITAL" -> Def.LIFE_TIME = Def.HOSPITALCITIZENLIFE
+            "CRAFTMAN" -> Def.BUILD_LIFE_TIME = Def.CRAFTMANBUILDINGLIFE
         }
 
         // Make sure limits don't go over 999
@@ -161,11 +165,11 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
      */
     fun getProduction(): Ressources {
         return when (lBuilding.name) {
-            "FACTORY" -> Ressources(stone = citizens.size, food = -citizens.size)
-            "FARM" -> Ressources(food = citizens.size * 3)
-            "HOUSE" -> Ressources(food = -citizens.size)
-            "TAVERN" -> Ressources(happiness = citizens.size * 1, food = -citizens.size)
-            "LABORATORY" -> Ressources(research = citizens.size * 3, food = -citizens.size)
+            "FACTORY","FACTORY+" -> Ressources(stone = citizens.size, food = -citizens.size)
+            "FARM","FARM+" -> Ressources(food = citizens.size * 3)
+            "HOUSE","HOUSE+" -> Ressources(food = -citizens.size)
+            "TAVERN","TAVERN+" -> Ressources(happiness = citizens.size * 1, food = -citizens.size)
+            "LABORATORY","LABORATORY+" -> Ressources(research = citizens.size * 3, food = -citizens.size)
             "SCHOOL" -> Ressources(food = -citizens.size)
             "WAREHOUSE" -> Ressources(food = citizens.size*5)
             "CRAFTMAN" -> Ressources(stone = citizens.size*2, food = -citizens.size)
@@ -180,7 +184,10 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
      * It will be displayed in [Helper].
      */
     fun getDescription(): String {
-        return "Citizen(s) : \n${citizens.size}/${lBuilding.capacity}\nIntegrity : \n${this.life}/${Def.BUILD_LIFE_TIME}"
+        var description = "Citizen(s) : \n${citizens.size}/${lBuilding.capacity}\nIntegrity : \n${this.life}/${Def.BUILD_LIFE_TIME}"
+        if (this.lBuilding.name == "GARDEN")
+            description += "\n Coldown :\n${this.exchangeTimer}/${Def.EXCHANGETIME}"
+        return description
     }
 
     /**
@@ -201,14 +208,40 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
                 ressources.citizens -= 1
         }
         citizensToKill.clear()
-
+        // Update exchangeTimer for the Garden
+        if (this.lBuilding.name == "GARDEN" && exchangeTimer<Def.EXCHANGETIME)
+            exchangeTimer ++
         // Make the building older
         life -= 1
         if (life <= 0) {
             buildingsToDestroy.add(this)
         }
-        if (life <= Def.DAMAGED_LIMIT && lBuilding.name in Def.destroyedRessources) {
+        if (life <= Def.BUILD_LIFE_TIME*Def.DAMAGED_LIMIT_PCT && lBuilding.name in Def.destroyedRessources) {
             sprite.texture = manager.get("sprites/buildings/destroyed/${lBuilding.name} DESTROYED.png", Texture::class.java)
         }
+    }
+
+    fun upgrade() {
+        City.ressources.stone -= this.lBuilding.upgradeCost
+        when (this.lBuilding.name) {
+            "HOUSE" -> {
+                this.lBuilding = Def.upgradedBuilding[0].copy()
+                City.limits.citizens += Def.HOUSEPLUSLIMIT
+            }
+            "TAVERN" -> this.lBuilding = Def.upgradedBuilding[1].copy()
+            "FARM" ->{
+                this.lBuilding = Def.upgradedBuilding[2].copy()
+                City.limits.food += Def.FARMPLUSLIMIT
+            }
+            "LABORATORY" -> this.lBuilding = Def.upgradedBuilding[3].copy()
+            "FACTORY" -> {
+                this.lBuilding = Def.upgradedBuilding[4].copy()
+                City.limits.stone += Def.FACTORYPLUSLIMIT
+            }
+        }
+        // Make sure limits don't go over 999
+        City.limits.stone = min(City.limits.stone, 999)
+        City.limits.food = min(City.limits.food, 999)
+        City.limits.citizens = min(City.limits.citizens, 999)
     }
 }

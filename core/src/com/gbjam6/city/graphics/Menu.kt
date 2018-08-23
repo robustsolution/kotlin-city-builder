@@ -79,6 +79,7 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
                         "UPGRADE" -> activated[i] = b.canUpgrade()
                         "REPAIR" -> activated[i] = b.canRepair()
                         "BIRTH" -> activated[i] = City.ressources.happiness >= Def.BIRTH_COST && b.citizens.size < b.lBuilding.capacity && City.ressources.citizens < City.limits.citizens
+                        "EXCHANGE" -> activated[i] = City.ressources.food >= Def.EXCHANGEVALUE && building.exchangeTimer == Def.EXCHANGETIME
                     }
                 }
             }
