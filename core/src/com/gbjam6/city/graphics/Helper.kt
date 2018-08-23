@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.gbjam6.city.general.Def
+import com.gbjam6.city.general.Util
 
 /**
  * Shows informations on the left side of the screen.
@@ -23,11 +24,7 @@ class Helper {
 
         // Creates the background ressource
         val height = description.split("\n").size * 7 + 21
-        val pixmap = Pixmap(Def.helperWidth.toInt(), height, Pixmap.Format.RGBA8888)
-        pixmap.setColor(Def.color1)
-        pixmap.fillRectangle(0, 0, Def.helperWidth.toInt(), height)
-        texture = Texture(pixmap)
-        pixmap.dispose()
+        texture = Util.generateRectangle(Def.helperWidth.toInt(), height, Def.color1)
     }
 
     fun draw(batch: SpriteBatch, font: BitmapFont, x: Float) {

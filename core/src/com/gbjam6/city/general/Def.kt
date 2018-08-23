@@ -4,12 +4,13 @@ import com.badlogic.gdx.graphics.Color
 import com.gbjam6.city.logic.Ressources
 
 enum class MenuType {
-    CREATION, CATEGORY, BUILDING, CITIZENS, CONFIRM, IMPROVE, HYDRATE, ADD, REMOVE
+    CREATION, CATEGORY, BUILDING, CITIZENS, CONFIRM, IMPROVE, HYDRATE, ADD, REMOVE, EXPAND
 }
 
 enum class BuildingType {
     CITIZENS, HAPPINESS, FOOD, RESEARCH, STONE, OTHER
 }
+
 
 data class LBuilding(val type: BuildingType, val name: String, val capacity: Int, var door: Pair<Int, Int>, var s8: Pair<Int, Int>, var s16: Pair<Int, Int>, val cost: Int, val upgradeCost: Int = (cost * 1.5).toInt())
 
@@ -25,23 +26,27 @@ object Def {
     const val BIRTH_COST = 100
     const val LIFE_TIME = 300
     const val DAMAGED_LIMIT_PCT = 0.30
-    const val BUILD_LIFE_TIME = 10
+    const val BUILD_LIFE_TIME = 300
     const val WELL_RANGE = 80
-    const val EXCHANGEVALUE = 100
-    const val EXCHANGETIME = 10
-    const val HOUSELIMIT = 6
-    const val HOUSEPLUSLIMIT = 3
-    const val FARMLIMIT = 100
-    const val FARMPLUSLIMIT = 50
-    const val FACTORYLIMIT = 100
-    const val FACTORYPLUSLIMIT = 50
-    const val SCHOOLLIMIT = 4
-    const val SCHOOLCITIZENCOST = 75
+    const val EXCHANGE_VALUE = 100
+    const val EXCHANGE_TIME = 10
+    const val HOUSE_LIMIT = 6
+    const val HOUSE_PLUS_LIMIT = 3
+    const val FARM_LIMIT = 100
+    const val FARM_PLUS_LIMIT = 50
+    const val FACTORY_LIMIT = 100
+    const val FACTORY_PLUS_LIMIT = 50
+    const val SCHOOL_LIMIT = 4
+    const val SCHOOL_CITIZEN_COST = 75
     const val WAREHOUSELIMIT = 200
-    const val HOSPITALCITIZENLIFE = 600
-    const val CRAFTMANBUILDINGLIFE = 600
+    const val HOSPITAL_CITIZEN_LIFE = 600
+    const val CRAFTMAN_BUILDING_LIFE = 600
     const val DESTROY_HAP_PCT = 0.5
     const val DESTROY_STN_PCT = 0.3
+    val STARTING_LIMITS = Pair(-160, 160)
+    val EXPAND_COST = arrayOf(1, 1, 1, 1)
+    const val EXPAND_SIZE: Int = 160
+
 
     // COLORS
     val color1: Color = Color.valueOf("000000")
@@ -50,7 +55,7 @@ object Def {
     val color4: Color = Color.valueOf("FFFFFF")
 
     // SIZE
-    const val nChunks = 50
+    const val nChunks = 60
     const val menuWidth = 72f
     const val menuY = 52f
     const val helperWidth = 64f
@@ -63,7 +68,8 @@ object Def {
             MenuType.CREATION to arrayOf("CITIZENS", "HAPPINESS", "FOOD", "RESEARCH", "STONE", "OTHER"),
             MenuType.BUILDING to arrayOf("CITIZENS", "REPAIR", "DESTROY"),
             MenuType.CONFIRM to arrayOf("YES", "NO"),
-            MenuType.HYDRATE to arrayOf("ADD", "REMOVE", "RETURN")
+            MenuType.HYDRATE to arrayOf("ADD", "REMOVE", "RETURN"),
+            MenuType.EXPAND to arrayOf("EXPAND", "RETURN")
     )
 
     // BUILDINGS
@@ -105,7 +111,7 @@ object Def {
             "TAVERN" to arrayOf("CITIZENS", "UPGRADE", "REPAIR", "DESTROY"),
             "LABORATORY" to arrayOf("CITIZENS", "UPGRADE", "REPAIR", "DESTROY"),
             "FACTORY" to arrayOf("CITIZENS", "UPGRADE", "REPAIR", "DESTROY"),
-            "FARM" to arrayOf("CITIZENS", "UPGRADE", "REPAIR", "DESTROYs"),
+            "FARM" to arrayOf("CITIZENS", "UPGRADE", "REPAIR", "DESTROY"),
             "GARDEN" to arrayOf("CITIZENS", "EXCHANGE", "REPAIR", "DESTROY")
     )
 
@@ -142,8 +148,8 @@ object Def {
              "Aazouf", "Abaddon", "Abalysan", "Abzalon", "Actraus", "Admimar", "Aebron", "Aegis", "Ael", "Aell", "Aelrakys", "Aeris", "Agasha", "Agathorn", "Aghars", "Agon", "Aion", "Aka", "Akarius", "Akashana", "Akilons", "Akodo Tomo", "Akyrh", "Alahel", "Alak Dül", "alamar", "Alanna", "Alark", "Alatarielle", "Albyor", "Alchys", "Aldareis", "aldarel", "Aldou", "Alejandro", "Alekshan", "Alexandre", "alge'n", "Alhvor", "Altan", "Alyana", "Amatsu", "Anamelek", "Andurill", "Anemar", "Angie", "Angus", "Angye", "Anth Rhopy", "Aquilon", "Aramil", "Aravilar", "Arcanius", "Arch Sinner", "Archaos", "Arduin Angcam", "Arkan", "Arkane", "Arkos", "Armanack", "Arnase", "Arse", "Artanis", "Artarien", "Arthis", "Arthus", "Arwen", "Ash", "Ashragor", "Asilurth", "Asterion", "Aubedorée", "Azranil", "Bakemonor", "Balafrus", "Bandidaska", "Barthelby", "Basara", "Bastior", "Bennardi", "Bilechi", "Blader", "Blaz", "Blobac", "Bortzy", "Bouch", "Brator", "Brissaud", "Brutar", "Buace", "Burrich", "Byst", "Caine", "Cal", "Calion", "Caracal", "Céléniel", "Chabi", "Charlatimus", "Cheub", "Chouartz", "Chubby", "Cixi", "Clarisse", "Claw", "Corren", "Corus", "Crim", "Crowyn", "Cuchulain", "Curios", "Cyit", "Cyol", "Cyrull", "Dain", "Dakeyras", "Dalvyn", "Damz", "Dargeun", "Darius", "Darmus", "Darniel", "Darok", "Derfenak", "Dergen", "Desmond", "Devon", "Discab", "Djaal", "Dreike", "Drew", "Driele", "Duncan", "Dunkel", "Dvalinn", "Dworkin", "Ebonit", "Eel Brodavan", "Eickos", "Eilis", "Ekke", "Elbj", "Elendil", "Elenril", "Enas", "Endel", "Enethaeron", "Entrax", "Enval", "Eol", "Epone", "Eredren", "Eregior", "Erquaël", "Erwang", "Eslhe", "Ethudian", "Evlyn", "Ewak", "Eymerich", "Eyolas", "Faenry", "Faeny", "Faeriss", "Farwander", "Faucon de lune", "Fedaykin", "Fedd", "Fenaloeth", "Fenrir", "Feusange", "Finkel", "Finraenor", "Fitz", "Foredrak", "Froston", "Froum", "Fynorel", "Gakhad", "Galenor", "Galenor", "Galfon", "Galhad", "Gallad", "Garth", "Geheimnis", "Genseric", "Georetny", "Gerd", "Gerre", "Ghorghor", "Ghorgor", "Ghylian", "Giftbestcom", "Glad", "Globac", "Gloktar", "Glorim", "Glouk", "Gnarl", "Gnock", "Goldar", "Gorons", "Gortak", "Gouelan", "Gramlot", "Graoumf", "Grimdus", "Grimmbart", "Grinlen", "Grisard", "Grisord", "Grömm", "Grouik", "Grung", "Gungir", "Hades", "Hakufu", "Halex", "Halift", "harlok", "hauoka", "Haymos", "Helkior", "Hepi", "Heras Trydo", "Hherylian", "Hiaron", "Hilarion", "Hinata", "Hoel", "HruKiru", "Iblitz", "Idefel", "Ileuad", "Incanus", "Intylzah", "Iparcos", "Iroke", "Isilwen", "Iuchi", "Iverindor", "Jaffar", "Jalil", "Jarvin", "Jerrel", "Julius", "Jushban", "Kaar", "Kabafort", "Kaizen", "Kakita", "Kalimshar", "Kamuchi", "Kara", "Karel", "Karnarok", "Kazad-dum", "Keldorn", "Kellyan", "Kendashi", "Kenllen", "Kentril", "Kerien", "Kernos", "Kev", "Khazou", "Kherylian", "Khid", "Khiguard", "Khomenor", "Khyros", "Killiam", "Krahor", "Krater", "Krog", "Kronos", "Kueyen", "Kunden", "Kushban", "Kylordan", "Kymisan", "Kyoka", "Kyrios", "Lankeshire", "Lantalasse", "Lasseyka", "Lavos", "Lee Hong", "Leo", "Lequi", "Lexynian", "Licken", "Lieween", "Ligarnes", "Lodek", "Loh", "Lordanor", "Lordar", "Lothar", "Loukae", "Ludark", "Ludoco", "Lufkin", "Luindin", "Lydae", "Lyle", "lysandir", "Mahar", "Mahyar", "Maldoror", "Maliadus", "Malkendar", "Malkiak", "Mando", "Manox", "Mansour", "Markkisil", "Marwenna", "Masika", "Meeks", "Melan", "Mespheber", "Meuarth", "Meurarh", "Mikkhaël", "Milamber", "Mililith", "Minky", "Minorard", "Miraky", "Miriantir", "Mirthor", "Moledrass", "Morcar", "Morcar", "Mordicus", "Moreau", "Morkdull", "Morwan", "Moy", "Murmure", "Musazaï", "Myranda", "Myrtil", "Mystile", "Naliah", "Narcir", "Narral", "Naskyrien", "Nekronen", "Nerath", "Netheb", "Ninik", "Nirannor", "Norhel", "Odhanan", "Odonite", "Olric", "Onirim", "Onizuka", "Orgone", "Orn", "Oronard", "Otargos", "Oxidor", "Palazar", "Percey", "Perin", "Pierral", "Pierrus", "Pinpin", "Plex", "Pockels", "Psotic", "Raeps", "Ragus", "Rahyll", "Ramius", "Randin", "Rankor", "Ranx", "Ratafia", "Raventher", "Ravny", "Reador", "Rectulo", "Redyan", "Remoon", "Rkanjar", "Roan", "Rotten", "Rumix", "Runkah", "Sahe", "Sam", "Samael", "Sandax", "Sanzo", "Scap", "Schimill", "Sedna", "Sensi", "Sentenza", "Septimus", "Sergeiski", "Serguisan", "Sethie", "Sgleurts", "Shaan", "Shad", "Shadrak", "Shaïman", "Shaniah", "Sharvira", "Sheas", "Sherinford", "Sherkan", "Shiguru", "Shinai", "Shuroan", "Silvana", "Silver", "Silvermo", "Simeus", "Sindir", "Sirhun", "Sisse", "Sivan", "Siwu", "Slucha", "Soho", "Sokar", "Sokhef", "Solkjorn", "Sombrelune", "Soolveih", "Sparkle", "Sphax", "Steomp", "Sulphe", "Sun-Tzy", "Sylicer", "Syzia", "Taïrendil", "Tahn", "Tamva", "Taranis", "Taroth", "Taybott", "Tchernopuss", "Tenser", "Tepes", "Terremer", "Thadeus", "Thanatos", "Thathane", "Tholdak", "Thoralff", "Thorin", "Thrudgar", "Thur", "Tigertat", "Tlön", "Tolunks", "Topper", "Torgrim", "Torken", "Tozogawa", "Tratore", "Treme", "Trickster", "Twinky", "Tykyuk", "Ugo", "Ungarth", "Uryen", "Usul", "Vain", "Valmyr", "Valor", "Vanion", "Varan", "Vardjlork", "Varkal", "Varyus", "Veidt", "Vendemein", "Vensu", "Victorio", "Victorius", "Victoryah", "Vilad", "Villon", "Vince", "vinciane", "Violhaine", "Vlaxonne", "Waargh", "Walcom", "Waldham", "Walosprit", "Wamaris", "Wang", "Warfen", "Watson", "Wazz", "Whysmeryll", "Willicmac", "Wismerhill", "Wodian", "Wyzzini", "Xamaris", "Xill", "Xorc", "Yamael", "Yameld", "Yaneck", "Yann", "Yataka", "Yick", "Yolian", "Yorg", "Yorl", "Yrgaël", "Yrrag", "Yukio", "Zack", "Zaf", "Zenithal", "Ziz", "Zool")
 
     // DESCRIPTIONS
-    const val backupDesc = "MISSING :-c\nADD ME IN\nDEF.DESCRIPTIONS"
-    val descriptions = mapOf(
+    private const val backupDesc = "MISSING :-c\nADD ME IN\nDEF.DESCRIPTIONS"
+    private val descriptions = mapOf(
             "CITIZENS" to "DESC OF\nCITIZENS",
             "HAPPINESS" to "DESC OF\nHAPP",
             "FOOD" to "DESC OF\nFOOD",

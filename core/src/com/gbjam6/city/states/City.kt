@@ -18,12 +18,13 @@ import com.gbjam6.city.graphics.SpeedIndicator
 import com.gbjam6.city.graphics.Tree
 import com.gbjam6.city.logic.Hills
 import ktx.app.KtxScreen
+import kotlin.math.abs
 
 enum class States {
     IDLE, PLACE_BUILDING, MENU, PLACE_CITIZEN, TREE
 }
 
-data class Progress(val tree: MutableList<String> = mutableListOf(), var birthcost: Int, var lifetime: Int, var buildlife: Int)
+data class Progress(val tree: MutableList<String> = mutableListOf(), var limits: Pair<Int, Int> = Def.STARTING_LIMITS.copy(), var birthcost: Int, var lifetime: Int, var buildlife: Int)
 
 /**
  * Main game class.
@@ -40,6 +41,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private lateinit var font: BitmapFont
     private lateinit var smallFont: BitmapFont
     private lateinit var tree: Tree
+    private val greyBg = Util.generateRectangle(120, 144, Def.color3)
     private val speedIndicator = SpeedIndicator()
     private var frame = 0
 
@@ -50,7 +52,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         val buildings = mutableListOf<Building>()
         val ressources = Def.startingRessources.copy()
         val limits = Ressources(happiness = 9999, research = 9999)
-        val progress = Progress(mutableListOf(),Def.BIRTH_COST,Def.LIFE_TIME,Def.BUILD_LIFE_TIME)
+        val progress = Progress(mutableListOf(),birthcost = Def.BIRTH_COST,lifetime = Def.LIFE_TIME,buildlife = Def.BUILD_LIFE_TIME)
     }
 
     override fun show() {
@@ -113,6 +115,12 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         // Draws background
         // TODO: Add a background
 
+        // Draws limit background
+        if (abs(camera.position.x - progress.limits.first) < 180 || abs(camera.position.x - progress.limits.second) < 180) {
+            batch.draw(greyBg, progress.limits.first - 120f, -72f)
+            batch.draw(greyBg, progress.limits.second.toFloat(), -72f)
+        }
+
         // Draws buildings
         for (building in buildings) {
             if (Math.abs(building.x - camera.position.x) < 240)
@@ -128,7 +136,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             val x = Math.floor(camera.position.x / 32.0)
             if (i - Def.nChunks / 2 in x - 3..x + 3) {
 
-                val chunkX = -800f + 32f * i
+                val chunkX = 32f * (i - Def.nChunks / 2)
                 val chunkY = -88f + chunk.height.toFloat()
 
                 batch.draw(hillSprites[0], chunkX, chunkY - 32)
@@ -186,9 +194,9 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         pointer.x = camera.position.x - 4
 
         // Computes difference between camera x and the current chunk x
-        val n = Math.floor(camera.position.x / 32.0).toInt() + 25
+        val n = Math.floor(camera.position.x / 32.0).toInt() + Def.nChunks / 2
         val chunk = hills.chunks[n]
-        val diff = camera.position.x - (n - 25) * 32
+        val diff = camera.position.x - (n - Def.nChunks / 2) * 32
 
         // Sets height to follow the slopes
         pointer.y = Util.getPixel(-87f + chunk.height + diff * chunk.slope / 32)
@@ -224,7 +232,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             States.IDLE, States.PLACE_CITIZEN, States.PLACE_BUILDING -> {
                 // Moves the camera
                 Util.inputFreeze = 1
-                if (camera.position.x > -798f + 80f) {
+                if (camera.position.x > progress.limits.first - 16) {
                     if (Util.wasPressed) {
                         camera.translate(-3f, 0f)
                     } else {
@@ -245,7 +253,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             States.IDLE, States.PLACE_BUILDING, States.PLACE_CITIZEN -> {
                 // Moves the camera
                 Util.inputFreeze = 1
-                if (camera.position.x < 798f - 80f) {
+                if (camera.position.x < progress.limits.second + 16) {
                     if (Util.wasPressed) {
                         camera.translate(3f, 0f)
                     } else {

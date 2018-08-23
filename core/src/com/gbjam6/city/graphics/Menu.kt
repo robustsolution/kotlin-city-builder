@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.MenuType
-import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.gbjam6.city.GBJam6
 import com.gbjam6.city.general.Util
@@ -19,18 +18,10 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
     var items: Array<String> = array ?: Def.menus[type] ?: arrayOf("RETURN")
     val activated = validity ?: Array(items.size) { true }
     private val height = (items.size * 9 + 19).toFloat()
-    private val texture: Texture
+    private val texture = Util.generateRectangle(Def.menuWidth.toInt(), height.toInt(), Def.color1)
     private val cursor = gbJam6.manager.get("sprites/smallPointerRight.png", Texture::class.java)
 
     var cursorPos = 0
-
-    init {
-        val pixmap = Pixmap(Def.menuWidth.toInt(), height.toInt(), Pixmap.Format.RGBA8888)
-        pixmap.setColor(Def.color1)
-        pixmap.fillRectangle(0, 0, Def.menuWidth.toInt(), height.toInt())
-        texture = Texture(pixmap)
-        pixmap.dispose()
-    }
 
     fun draw(batch: SpriteBatch, font: BitmapFont) {
         // Draws the background
@@ -78,8 +69,9 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
                         "UPGRADE" -> activated[i] = b.canUpgrade()
                         "REPAIR" -> activated[i] = b.canRepair()
                         "BIRTH" -> activated[i] = City.ressources.happiness >= City.progress.birthcost && b.citizens.size < b.lBuilding.capacity && City.ressources.citizens < City.limits.citizens
-                        "EXCHANGE" -> activated[i] = City.ressources.food >= Def.EXCHANGEVALUE && building.exchangeTimer == Def.EXCHANGETIME
+                        "EXCHANGE" -> activated[i] = City.ressources.food >= Def.EXCHANGE_VALUE && building.exchangeTimer == Def.EXCHANGE_TIME
                         "DESTROY" -> activated[i] = City.ressources.happiness >= b.lBuilding.cost*Def.DESTROY_HAP_PCT
+
                     }
                 }
             }
@@ -102,6 +94,12 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
                 val b = building!!
                 activated[0] = b.wateredCitizens.size < 2
                 activated[1] = b.wateredCitizens.size > 0
+            }
+
+            // Updates expand menu
+            MenuType.EXPAND -> {
+                val nExp = Util.expandsMade()
+                activated[0] = nExp < Def.EXPAND_COST.size && City.ressources.happiness >= Def.EXPAND_COST[nExp]
             }
 
             else -> Unit

@@ -1,5 +1,8 @@
 package com.gbjam6.city.general
 
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.Pixmap
+import com.badlogic.gdx.graphics.Texture
 import com.gbjam6.city.graphics.Building
 import com.gbjam6.city.MenuManager
 import com.gbjam6.city.graphics.Menu
@@ -7,6 +10,7 @@ import com.gbjam6.city.logic.Ressources
 import com.gbjam6.city.states.City
 import com.gbjam6.city.states.States
 import java.util.*
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 
@@ -113,6 +117,20 @@ object Util {
                         MenuManager.helper.update(item, Def.getDescription("RETURN"))
                     }
                 }
+                MenuType.EXPAND -> {
+                    val nExp = Util.expandsMade()
+                    when (menu.items[menu.cursorPos]) {
+                        "EXPAND" -> {
+                            var desc = ""
+                            if (nExp >= Def.EXPAND_COST.size) {
+                                desc = "YOU PURCHASED\nALL TERRAIN\nUPGRADES."
+                            } else {
+                                desc = "COST:\n${Def.EXPAND_COST[nExp]} HAPPINESS"
+                            }
+                            MenuManager.helper.update("EXPAND", desc)
+                        }
+                    }
+                }
                 MenuType.BUILDING -> {
                     val building = getBuilding()
                     when (item) {
@@ -136,4 +154,24 @@ object Util {
         }
     }
 
+    /**
+     * Returns a [width] * [height] rectangle [Texture] with the desired [color].
+     */
+    fun generateRectangle(width: Int, height: Int, color: Color): Texture {
+        val pixmap = Pixmap(width, height, Pixmap.Format.RGBA8888)
+        pixmap.setColor(color)
+        pixmap.fillRectangle(0, 0, width, height)
+        val texture = Texture(pixmap)
+        pixmap.dispose()
+        return texture
+    }
+
+    /**
+     * Returns the number of terrain upgrades purchased.
+     */
+    fun expandsMade(): Int {
+        val (p1, p2) = City.progress.limits
+        val (s1, s2) = Def.STARTING_LIMITS
+        return abs(p2 - p1 + s1 - s2) / 160
+    }
 }

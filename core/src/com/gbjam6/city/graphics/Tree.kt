@@ -23,7 +23,7 @@ class Tree(gbJam6: GBJam6) {
         if (City.state == States.TREE) {
             // Draws background
             val leftX = City.camera.position.x - 80
-            batch.draw(bg,  leftX, -72f)
+            batch.draw(bg, leftX, -72f)
 
             // Draws black border for unlocked perks
             for (unlocked in City.progress.tree) {

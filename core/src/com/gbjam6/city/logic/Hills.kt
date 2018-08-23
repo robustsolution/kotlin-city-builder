@@ -1,5 +1,6 @@
 package com.gbjam6.city.logic
 
+import com.gbjam6.city.general.Def
 import java.util.*
 
 data class Chunk(val height: Int, val slope: Int)
@@ -18,7 +19,7 @@ class Hills {
         val n = Random().nextInt(heights.size)
         chunksTemp.add(Chunk(heights.elementAt(n), 0))
         chunksTemp.add(Chunk(heights.elementAt(n), 0))
-        for (i in 1..48) {
+        for (i in 1..Def.nChunks - 2) {
             chunksTemp.add(chunkChoice(chunksTemp.elementAt(i - 1), chunksTemp.elementAt(i)))
         }
         chunks = chunksTemp.toList()

@@ -12,8 +12,6 @@ import com.gbjam6.city.general.Util
 import com.gbjam6.city.logic.Citizen
 import com.gbjam6.city.states.City
 import com.gbjam6.city.states.States
-import javax.annotation.Resource
-import javax.annotation.Resources
 import kotlin.math.min
 
 class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: AssetManager) {
@@ -22,7 +20,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     val citizens = mutableListOf<Citizen>()
     val citizensToKill = mutableListOf<Citizen>()
     val wateredCitizens = mutableListOf<Citizen>()
-    var exchangeTimer = Def.EXCHANGETIME
+    var exchangeTimer = Def.EXCHANGE_TIME
 
     private var sprite = Sprite(manager.get("sprites/buildings/${lBuilding.name}.png", Texture::class.java))
     val width = sprite.width
@@ -125,9 +123,10 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
         return ((1-this.life/City.progress.buildlife.toFloat())*this.lBuilding.cost+1).toInt() <= City.ressources.stone && this.life != City.progress.buildlife
     }
 
-    fun updateTexture(){
+    fun updateTexture() {
         sprite.texture = manager.get("sprites/buildings/${this.lBuilding.name}.png", Texture::class.java)
     }
+
     fun canUpgrade(): Boolean {
         return (City.ressources.stone >= this.lBuilding.upgradeCost) && this.lBuilding.name+"+" in City.progress.tree
     }
@@ -141,19 +140,19 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
 
         // Update limits
         when (lBuilding.name) {
-            "FACTORY" -> City.limits.stone += Def.FACTORYLIMIT
-            "FARM" -> City.limits.food += Def.FARMLIMIT
-            "HOUSE" -> City.limits.citizens += Def.HOUSELIMIT
+            "FACTORY" -> City.limits.stone += Def.FACTORY_LIMIT
+            "FARM" -> City.limits.food += Def.FARM_LIMIT
+            "HOUSE" -> City.limits.citizens += Def.HOUSE_LIMIT
             "SCHOOL" -> {
-                City.limits.citizens += Def.SCHOOLLIMIT
-                City.progress.birthcost = Def.SCHOOLCITIZENCOST
+                City.limits.citizens += Def.SCHOOL_LIMIT
+                City.progress.birthcost = Def.SCHOOL_CITIZEN_COST
             }
-            "WAREHOUSE"-> {
+            "WAREHOUSE" -> {
                 City.limits.food += Def.WAREHOUSELIMIT
                 City.limits.stone += Def.WAREHOUSELIMIT
             }
-            "HOSPITAL" -> City.progress.lifetime = Def.HOSPITALCITIZENLIFE
-            "CRAFTMAN" -> City.progress.buildlife = Def.CRAFTMANBUILDINGLIFE
+            "HOSPITAL" -> City.progress.lifetime = Def.HOSPITAL_CITIZEN_LIFE
+            "CRAFTMAN" -> City.progress.buildlife = Def.CRAFTMAN_BUILDING_LIFE
         }
 
         // Make sure limits don't go over 999
@@ -167,15 +166,15 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
      */
     fun getProduction(): Ressources {
         return when (lBuilding.name) {
-            "FACTORY","FACTORY+" -> Ressources(stone = citizens.size, food = -citizens.size)
-            "FARM","FARM+" -> Ressources(food = citizens.size * 3)
-            "HOUSE","HOUSE+" -> Ressources(food = -citizens.size)
-            "TAVERN","TAVERN+" -> Ressources(happiness = citizens.size * 1, food = -citizens.size)
-            "LABORATORY","LABORATORY+" -> Ressources(research = citizens.size * 3, food = -citizens.size)
+            "FACTORY", "FACTORY+" -> Ressources(stone = citizens.size, food = -citizens.size)
+            "FARM", "FARM+" -> Ressources(food = citizens.size * 3)
+            "HOUSE", "HOUSE+" -> Ressources(food = -citizens.size)
+            "TAVERN", "TAVERN+" -> Ressources(happiness = citizens.size * 1, food = -citizens.size)
+            "LABORATORY", "LABORATORY+" -> Ressources(research = citizens.size * 3, food = -citizens.size)
             "SCHOOL" -> Ressources(food = -citizens.size)
-            "WAREHOUSE" -> Ressources(food = citizens.size*5)
-            "CRAFTMAN" -> Ressources(stone = citizens.size*2, food = -citizens.size)
-            "HOSPITAL" -> Ressources(research = citizens.size*5, food = -citizens.size)
+            "WAREHOUSE" -> Ressources(food = citizens.size * 5)
+            "CRAFTMAN" -> Ressources(stone = citizens.size * 2, food = -citizens.size)
+            "HOSPITAL" -> Ressources(research = citizens.size * 5, food = -citizens.size)
             "GARDEN" -> Ressources(happiness = citizens.size, food = -citizens.size)
             else -> Ressources()
         }
@@ -188,7 +187,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     fun getDescription(): String {
         var description = "Citizen(s) : \n${citizens.size}/${lBuilding.capacity}\nIntegrity : \n${this.life}/${City.progress.buildlife}"
         if (this.lBuilding.name == "GARDEN")
-            description += "\n Coldown :\n${this.exchangeTimer}/${Def.EXCHANGETIME}"
+            description += "\n Coldown :\n${this.exchangeTimer}/${Def.EXCHANGE_TIME}"
         return description
     }
 
@@ -211,8 +210,8 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
         }
         citizensToKill.clear()
         // Update exchangeTimer for the Garden
-        if (this.lBuilding.name == "GARDEN" && exchangeTimer<Def.EXCHANGETIME)
-            exchangeTimer ++
+        if (this.lBuilding.name == "GARDEN" && exchangeTimer < Def.EXCHANGE_TIME)
+            exchangeTimer++
         // Make the building older
         life -= 1
         if (life > City.progress.buildlife)
@@ -220,6 +219,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
         if (life <= 0) {
             buildingsToDestroy.add(this)
         }
+
         if (life <= City.progress.buildlife*Def.DAMAGED_LIMIT_PCT && lBuilding.name in Def.destroyedRessources) {
             sprite.texture = manager.get("sprites/buildings/destroyed/${lBuilding.name} DESTROYED.png", Texture::class.java)
         }
@@ -243,11 +243,11 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
         }
         City.buildings.remove(this)
         when (this.lBuilding.name){
-            "FACTORY" -> City.limits.stone -= Def.FACTORYLIMIT
-            "FARM" -> City.limits.food -= Def.FARMLIMIT
-            "HOUSE" -> City.limits.citizens -= Def.HOUSELIMIT
+            "FACTORY" -> City.limits.stone -= Def.FACTORY_LIMIT
+            "FARM" -> City.limits.food -= Def.FARM_LIMIT
+            "HOUSE" -> City.limits.citizens -= Def.HOUSE_LIMIT
             "SCHOOL" -> {
-                City.limits.citizens -= Def.SCHOOLLIMIT
+                City.limits.citizens -= Def.SCHOOL_LIMIT
                 if (City.buildings.filter { it.lBuilding.name == "SCHOLL" }.isEmpty())
                     City.progress.birthcost = Def.BIRTH_COST
             }
@@ -263,9 +263,9 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
                 if (City.buildings.filter { it.lBuilding.name == "CRAFTMAN" }.isEmpty())
                     City.progress.buildlife = Def.BUILD_LIFE_TIME
             }
-            "FACTORY+" -> City.limits.stone -= Def.FACTORYLIMIT+Def.FACTORYPLUSLIMIT
-            "FARM+" -> City.limits.food -= Def.FARMLIMIT+Def.FARMPLUSLIMIT
-            "HOUSE+" -> City.limits.citizens -= Def.HOUSELIMIT+Def.HOUSEPLUSLIMIT
+            "FACTORY+" -> City.limits.stone -= Def.FACTORY_LIMIT+Def.FACTORY_PLUS_LIMIT
+            "FARM+" -> City.limits.food -= Def.FARM_LIMIT+Def.FARM_PLUS_LIMIT
+            "HOUSE+" -> City.limits.citizens -= Def.HOUSE_LIMIT+Def.HOUSE_PLUS_LIMIT
         }
         City.ressources.citizens -= this.citizens.size
     }
@@ -274,17 +274,17 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
         when (this.lBuilding.name) {
             "HOUSE" -> {
                 this.lBuilding = Def.upgradedBuilding[0].copy()
-                City.limits.citizens += Def.HOUSEPLUSLIMIT
+                City.limits.citizens += Def.HOUSE_PLUS_LIMIT
             }
             "TAVERN" -> this.lBuilding = Def.upgradedBuilding[1].copy()
-            "FARM" ->{
+            "FARM" -> {
                 this.lBuilding = Def.upgradedBuilding[2].copy()
-                City.limits.food += Def.FARMPLUSLIMIT
+                City.limits.food += Def.FARM_PLUS_LIMIT
             }
             "LABORATORY" -> this.lBuilding = Def.upgradedBuilding[3].copy()
             "FACTORY" -> {
                 this.lBuilding = Def.upgradedBuilding[4].copy()
-                City.limits.stone += Def.FACTORYPLUSLIMIT
+                City.limits.stone += Def.FACTORY_PLUS_LIMIT
             }
         }
         // Make sure limits don't go over 999
