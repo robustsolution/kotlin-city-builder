@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.gbjam6.city.*
 import com.gbjam6.city.general.Def
@@ -40,6 +41,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private lateinit var gui: GUI
     private lateinit var font: BitmapFont
     private lateinit var smallFont: BitmapFont
+    private lateinit var smallFontDark: BitmapFont
     private lateinit var tree: Tree
     private val greyBg = Util.generateRectangle(120, 144, Def.color3)
     private val speedIndicator = SpeedIndicator()
@@ -62,6 +64,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         // Inits fonts
         font = gbJam6.manager.get("fonts/skullboy.fnt", BitmapFont::class.java)
         smallFont = gbJam6.manager.get("fonts/little.fnt", BitmapFont::class.java)
+        smallFontDark = gbJam6.manager.get("fonts/littleDark.fnt", BitmapFont::class.java)
 
         // Inits pointers
         pointer = Sprite(gbJam6.manager.get("sprites/pointerUp.png", Texture::class.java))
@@ -88,6 +91,10 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         // Plays the city music
         gbJam6.player.play(gbJam6.cityMusic1, true, true, 0f, 0f)
 
+        // Sets the shader
+        ShaderProgram.pedantic = false
+        batch.shader = gbJam6.shader
+
     }
 
     override fun render(delta: Float) {
@@ -107,10 +114,19 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         batch.projectionMatrix = camera.combined
 
         // Clears screen
-        Gdx.gl.glClearColor(Def.color4.r, Def.color4.g, Def.color4.b, 1f)
+        val clearC = Def.clearColors[gbJam6.colorPalette]
+        Gdx.gl.glClearColor(clearC.r, clearC.g, clearC.b, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
+        gbJam6.colorTable.bind(1)
+        Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0)
+
+        // Prepares for drawing
+        batch.projectionMatrix = camera.combined
         batch.begin()
+
+        gbJam6.shader.setUniformi("colorTable", 1)
+        gbJam6.shader.setUniformf("paletteIndex", gbJam6.paletteIndex)
 
         // Draws background
         // TODO: Add a background
@@ -163,8 +179,8 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         }
 
         // Draws the GUI
-        gui.draw(batch, smallFont)
-        speedIndicator.draw(batch, smallFont)
+        gui.draw(batch, smallFontDark)
+        speedIndicator.draw(batch, smallFontDark)
 
         // Draws the menu
         menuManager.drawMenu(batch, smallFont)
@@ -174,7 +190,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         menuManager.drawHelper(batch, smallFont)
 
         // Draw the tree
-        tree.draw(batch, font)
+        tree.draw(batch, smallFontDark)
 
         batch.end()
 
@@ -322,5 +338,10 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
     override fun select() {
         speedIndicator.speed = (speedIndicator.speed + 1) % 4
+    }
+
+    override fun p() {
+        gbJam6.colorPalette = (gbJam6.colorPalette + 1) % Def.PALETTE_SIZE
+        gbJam6.updateShader()
     }
 }

@@ -11,6 +11,8 @@ import com.gbjam6.city.GBJam6
 import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.Util
 import ktx.app.KtxScreen
+import com.badlogic.gdx.graphics.glutils.ShaderProgram
+
 
 /**
  * Title screen class.
@@ -25,7 +27,9 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
 
     private lateinit var font: BitmapFont
     private lateinit var titleName: Texture
+    private lateinit var bg: Texture
     private lateinit var cursor: Texture
+    private lateinit var colorTable: Texture
 
     companion object {
         // Successive logo y positions
@@ -40,18 +44,23 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
     override fun show() {
         super.show()
 
-        // Getting assets
+        // Sets the shader
+        gbJam6.updateShader()
+        ShaderProgram.pedantic = false
+        batch.shader = gbJam6.shader
+
+        // Gets assets
         font = gbJam6.manager.get("fonts/skullboy.fnt", BitmapFont::class.java)
         titleName = gbJam6.manager.get("sprites/name.png", Texture::class.java)
         cursor = gbJam6.manager.get("sprites/pointerRight.png", Texture::class.java)
+        bg = gbJam6.manager.get("sprites/titleScreen.png", Texture::class.java)
 
-        // Reset
+        // Resets
         cursorPos = 0
         frame = 0
 
-        // Play title screen music
+        // Plays title screen music
         gbJam6.player.play(gbJam6.titleMusic, true, true, 0f, 0f)
-
     }
 
     override fun render(delta: Float) {
@@ -61,26 +70,36 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
 
         camera.update()
 
-        // Clear screen
-        Gdx.gl.glClearColor(Def.color2.r, Def.color2.g, Def.color2.b, 1f)
+        // Clears screen
+        val clearC = Def.clearColors[gbJam6.colorPalette]
+        Gdx.gl.glClearColor(clearC.r, clearC.g, clearC.b, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
-        // Prepare for drawing
+        gbJam6.colorTable.bind(1)
+        Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0)
+
+        // Prepares for drawing
         batch.projectionMatrix = camera.combined
         batch.begin()
 
-        // Draw the logo
+        gbJam6.shader.setUniformi("colorTable", 1)
+        gbJam6.shader.setUniformf("paletteIndex", gbJam6.paletteIndex)
+
+        // Draws the background
+        batch.draw(bg, -80f, -72f)
+
+        // Draws the logo
         batch.draw(titleName, -64f, 22f + logoY[frame])
 
-        // Draw options
+        // Draws options
         font.draw(batch, "PLAY GAME", -80f, 6f, 160f, 1, false)
         font.draw(batch, "TUTORIAL", -80f, -10f, 160f, 1, false)
         font.draw(batch, "ACHIEVEMENTS", -80f, -26f, 160f, 1, false)
 
-        // Draw the cursor
+        // Draws the cursor
         batch.draw(cursor, cursorX[cursorPos], -1f - 16f * cursorPos)
 
-        // Draw credits
+        // Draws credits
         font.draw(batch, "2018 - A_Do, Le Art,\nMirionos, yopox", -80f, -47f, 160f, 1, true)
 
         batch.end()
@@ -109,6 +128,11 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
             1 -> gbJam6.setScreen<Tutorial>()
             2 -> gbJam6.setScreen<Achievements>()
         }
+    }
+
+    override fun p() {
+        gbJam6.colorPalette = (gbJam6.colorPalette + 1) % Def.PALETTE_SIZE
+        gbJam6.updateShader()
     }
 
 }

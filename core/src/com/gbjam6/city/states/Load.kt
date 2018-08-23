@@ -27,6 +27,7 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         // Fonts
         gbJam6.manager.load("fonts/skullboy.fnt", BitmapFont::class.java)
         gbJam6.manager.load("fonts/little.fnt", BitmapFont::class.java)
+        gbJam6.manager.load("fonts/littleDark.fnt", BitmapFont::class.java)
 
         // Music
         gbJam6.titleMusic = gbJam6.player.loadXM(Gdx.files.internal("music/title.xm").readBytes(), 0f)
@@ -34,6 +35,7 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
 
         // Title screen
         gbJam6.manager.load("sprites/name.png", Texture::class.java)
+        gbJam6.manager.load("sprites/titleScreen.png", Texture::class.java)
 
         // Pointers
         gbJam6.manager.load("sprites/pointerRight.png", Texture::class.java)
@@ -62,6 +64,10 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         gbJam6.manager.load("sprites/tree/tree.png", Texture::class.java)
         gbJam6.manager.load("sprites/tree/cursor-sheet.png", Texture::class.java)
         gbJam6.manager.load("sprites/tree/unlocked.png", Texture::class.java)
+
+        // SHADER
+        gbJam6.manager.load("shaders/colorTable.png", Texture::class.java)
+
     }
 
     override fun render(delta: Float) {

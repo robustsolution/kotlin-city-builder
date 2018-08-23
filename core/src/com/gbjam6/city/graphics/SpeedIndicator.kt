@@ -10,7 +10,6 @@ class SpeedIndicator {
     var speed = 1
 
     fun draw(batch: SpriteBatch, font: BitmapFont) {
-        font.color = Def.color1
         font.draw(batch, "SPEED x$speed", City.camera.position.x - 80 + Def.speedOffset, Def.speedY)
     }
 

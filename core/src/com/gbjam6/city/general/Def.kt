@@ -44,12 +44,6 @@ object Def {
     val HOSPITAL_CITIZEN_LIFE = 600
     val CRAFTMAN_BUILDING_LIFE = 600
 
-    // COLORS
-    val color1: Color = Color.valueOf("000000")
-    val color2: Color = Color.valueOf("545454")
-    val color3: Color = Color.valueOf("A9A9A9")
-    val color4: Color = Color.valueOf("FFFFFF")
-
     // SIZE
     const val nChunks = 60
     const val menuWidth = 72f
@@ -154,5 +148,18 @@ object Def {
     )
 
     fun getDescription(name: String) = descriptions[name] ?: backupDesc
+
+    // COLORS
+    val color1: Color = Color.valueOf("000000")
+    val color2: Color = Color.valueOf("545454")
+    val color3: Color = Color.valueOf("A9A9A9")
+    val color4: Color = Color.valueOf("FFFFFF")
+    val clearColors = arrayOf(
+            Color.valueOf("ffffff"),
+            Color.valueOf("d59d9d"),
+            Color.valueOf("9bbc0f"),
+                    Color.valueOf("000000")
+    )
+    var PALETTE_SIZE = 4
 
 }

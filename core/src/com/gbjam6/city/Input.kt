@@ -35,6 +35,8 @@ interface Input {
                 Util.inputFreeze = 16; start() ; Util.wasPressed = true
             } else if (Gdx.input.isKeyPressed(Input.Keys.V) || Gdx.input.isKeyPressed(Input.Keys.TAB)) {
                 Util.inputFreeze = 16; select() ; Util.wasPressed = true
+            } else if (Gdx.input.isKeyPressed(Input.Keys.P)) {
+                Util.inputFreeze = 16; p() ; Util.wasPressed = true
             } else {
                 Util.wasPressed = false
             }
@@ -56,5 +58,7 @@ interface Input {
     fun start() {}
 
     fun select() {}
+
+    fun p() {}
 
 }

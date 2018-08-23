@@ -28,7 +28,6 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
         batch.draw(texture, x, y - height)
 
         // Draws the title
-        font.color = Def.color4
         font.draw(batch, title, x, y - 4, Def.menuWidth, 1, false)
 
         // Draws the items

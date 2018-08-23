@@ -29,7 +29,6 @@ class GUI(gbJam6: GBJam6) {
         batch.draw(research, x - 80f + 4 * 32, 56f)
 
         // Draws the ressources count
-        font.color = Def.color1
         font.draw(batch, String.format("%03d", City.ressources.citizens), x - 80f + 5, 71f)
         font.draw(batch, String.format("%03d", City.ressources.food), x - 80f + 5 + 32, 71f)
         font.draw(batch, String.format("%03d", City.ressources.stone), x - 80f + 5 + 2 * 32, 71f)

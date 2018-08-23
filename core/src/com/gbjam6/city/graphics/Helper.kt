@@ -33,7 +33,6 @@ class Helper {
                 // Draws the background
                 batch.draw(it, x, Def.helperY - it.height)
 
-                font.color = Def.color4
                 font.draw(batch, title, x, Def.helperY - 4, Def.helperWidth, 1, false)
                 font.draw(batch, description, x + 3, Def.helperY - 17)
             }
