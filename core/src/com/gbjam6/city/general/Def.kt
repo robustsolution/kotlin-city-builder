@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.gbjam6.city.logic.Ressources
 
 enum class MenuType {
-    CREATION, CATEGORY, BUILDING, CITIZENS, CONFIRM, IMPROVE, HYDRATE, ADD, REMOVE
+    CREATION, CATEGORY, BUILDING, CITIZENS, CONFIRM, IMPROVE, HYDRATE, ADD, REMOVE, EXPAND
 }
 
 enum class BuildingType {
@@ -27,6 +27,9 @@ object Def {
     const val DAMAGED_LIMIT = 30
     var BUILD_LIFE_TIME = 300
     const val WELL_RANGE = 80
+    val STARTING_LIMITS = Pair(-160, 160)
+    val EXPAND_COST = arrayOf(1, 1, 1, 1)
+    val EXPAND_SIZE: Int = 160
 
     // COLORS
     val color1: Color = Color.valueOf("000000")
@@ -35,7 +38,7 @@ object Def {
     val color4: Color = Color.valueOf("FFFFFF")
 
     // SIZE
-    const val nChunks = 50
+    const val nChunks = 60
     const val menuWidth = 72f
     const val menuY = 52f
     const val helperWidth = 64f
@@ -48,7 +51,8 @@ object Def {
             MenuType.CREATION to arrayOf("CITIZENS", "HAPPINESS", "FOOD", "RESEARCH", "STONE", "OTHER"),
             MenuType.BUILDING to arrayOf("CITIZENS", "REPAIR", "DESTROY"),
             MenuType.CONFIRM to arrayOf("YES", "NO"),
-            MenuType.HYDRATE to arrayOf("ADD", "REMOVE", "RETURN")
+            MenuType.HYDRATE to arrayOf("ADD", "REMOVE", "RETURN"),
+            MenuType.EXPAND to arrayOf("EXPAND", "RETURN")
     )
 
     // BUILDINGS
@@ -107,8 +111,8 @@ object Def {
     val names = listOf("Jean", "Pas Jean")
 
     // DESCRIPTIONS
-    const val backupDesc = "MISSING :-c\nADD ME IN\nDEF.DESCRIPTIONS"
-    val descriptions = mapOf(
+    private const val backupDesc = "MISSING :-c\nADD ME IN\nDEF.DESCRIPTIONS"
+    private val descriptions = mapOf(
             "CITIZENS" to "DESC OF\nCITIZENS",
             "HAPPINESS" to "DESC OF\nHAPP",
             "FOOD" to "DESC OF\nFOOD",

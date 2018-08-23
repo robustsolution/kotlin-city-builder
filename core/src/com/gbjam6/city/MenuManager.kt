@@ -36,13 +36,22 @@ class MenuManager(private val gbJam6: GBJam6) {
         // Checks if the player clicked on a building
         val building = Util.getBuilding()
 
-        // Adds the corresponding menu
-        if (building == null) {
-            menus.add(Menu(MenuType.CREATION, "SELECT CATEGORY", x + 4f, Def.menuY, gbJam6))
-        } else {
-            val items = Def.customMenus[building.lBuilding.name] ?: Def.menus[MenuType.BUILDING]!!
-            menus.add(Menu(MenuType.BUILDING, "SELECT ACTION", x + 4f, Def.menuY, gbJam6, items))
+        // If oob : the player may want to purchase terrain
+        if (x <= City.progress.limits.first || x >= City.progress.limits.second) {
+            // Display Expand menu
+            menus.add(Menu(MenuType.EXPAND, "OFF LIMITS", x + 4f, Def.menuY, gbJam6))
             menus.last().changeValidity()
+
+        } else {
+            // Adds the corresponding menu
+            if (building == null) {
+                menus.add(Menu(MenuType.CREATION, "SELECT CATEGORY", x + 4f, Def.menuY, gbJam6))
+            } else {
+                val items = Def.customMenus[building.lBuilding.name]
+                        ?: Def.menus[MenuType.BUILDING]!!
+                menus.add(Menu(MenuType.BUILDING, "SELECT ACTION", x + 4f, Def.menuY, gbJam6, items))
+                menus.last().changeValidity()
+            }
         }
 
         // Shows the helper
@@ -239,10 +248,34 @@ class MenuManager(private val gbJam6: GBJam6) {
                         }
                     }
                 }
+
+                MenuType.EXPAND -> {
+                    when (menu.items[menu.cursorPos]) {
+                        "RETURN" -> close()
+                        else -> {
+                            // Updates ressources count
+                            City.ressources.happiness -= Def.EXPAND_COST[Util.expandsMade()]
+
+                            // Update the terrain in the right direction
+                            if (City.camera.position.x > 0) {
+                                City.progress.limits = City.progress.limits.copy(second = City.progress.limits.second + Def.EXPAND_SIZE)
+                            } else {
+                                City.progress.limits = City.progress.limits.copy(first = City.progress.limits.first - Def.EXPAND_SIZE)
+                            }
+
+                            // Close the menu and the helper
+                            close()
+                            helper.visible = false
+                        }
+                    }
+                    return States.IDLE
+                }
+
                 MenuType.CONFIRM -> {
                 }
                 MenuType.IMPROVE -> {
                 }
+
             }
             return States.MENU
 
