@@ -15,12 +15,15 @@ import com.gbjam6.city.general.Util
 import com.gbjam6.city.graphics.Building
 import com.gbjam6.city.graphics.GUI
 import com.gbjam6.city.graphics.SpeedIndicator
+import com.gbjam6.city.graphics.Tree
 import com.gbjam6.city.logic.Hills
 import ktx.app.KtxScreen
 
 enum class States {
-    IDLE, PLACE_BUILDING, MENU, PLACE_CITIZEN
+    IDLE, PLACE_BUILDING, MENU, PLACE_CITIZEN, TREE
 }
+
+data class Progress(val tree: MutableList<String> = mutableListOf())
 
 /**
  * Main game class.
@@ -36,9 +39,9 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private lateinit var gui: GUI
     private lateinit var font: BitmapFont
     private lateinit var smallFont: BitmapFont
+    private lateinit var tree: Tree
     private val speedIndicator = SpeedIndicator()
     private var frame = 0
-    private var pause = false
 
     companion object {
         val camera = OrthographicCamera()
@@ -47,6 +50,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         val buildings = mutableListOf<Building>()
         val ressources = Def.startingRessources.copy()
         val limits = Ressources(happiness = 9999, research = 9999)
+        val progress = Progress(mutableListOf("TREE", "WELL", "FACTORY+"))
     }
 
     override fun show() {
@@ -64,6 +68,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
         // Inits GUI
         gui = GUI(gbJam6)
+        tree = Tree(gbJam6)
 
         // Creates sprites for each slope
         val ttext = gbJam6.manager.get("sprites/tiles-sheet.png", Texture::class.java)
@@ -85,6 +90,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
     override fun render(delta: Float) {
 
+        // Time based or frame based stuff
         if (speedIndicator.speed > 0) {
             frame += speedIndicator.speed
             if (frame > Def.SPEED) {
@@ -93,7 +99,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 menuManager.tick()
             }
         }
-
+        tree.frame = (tree.frame + 1) % 60
         camera.update()
         menuManager.update() // Only used for blinking purposes
         batch.projectionMatrix = camera.combined
@@ -159,6 +165,9 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         Util.updateHelper(menuManager.menus)
         menuManager.drawHelper(batch, smallFont)
 
+        // Draw the tree
+        tree.draw(batch, font)
+
         batch.end()
 
         processInputs()
@@ -193,6 +202,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 Util.inputFreeze = 8
                 menuManager.moveCursor(-1)
             }
+            States.TREE -> tree.up()
         }
     }
 
@@ -204,44 +214,50 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             }
             States.PLACE_BUILDING -> menuManager.flip(pointer.y)
             States.IDLE -> Util.showIDLEHelper()
-            else -> {
-            }
+            States.TREE -> tree.down()
+            else -> Unit
         }
     }
 
     override fun left() {
-        if (state == States.IDLE || state == States.PLACE_BUILDING || state == States.PLACE_CITIZEN) {
-            // Moves the camera
-            Util.inputFreeze = 1
-            if (camera.position.x > -798f + 80f) {
-                if (Util.wasPressed) {
-                    camera.translate(-3f, 0f)
-                } else {
-                    // Special slow first frame (for precise movements)
-                    Util.inputFreeze = 4
-                    camera.translate(-1f, 0f)
+        when (state) {
+            States.IDLE, States.PLACE_CITIZEN, States.PLACE_BUILDING -> {
+                // Moves the camera
+                Util.inputFreeze = 1
+                if (camera.position.x > -798f + 80f) {
+                    if (Util.wasPressed) {
+                        camera.translate(-3f, 0f)
+                    } else {
+                        // Special slow first frame (for precise movements)
+                        Util.inputFreeze = 4
+                        camera.translate(-1f, 0f)
+                    }
+                    updatePointer()
                 }
-                updatePointer()
+                menuManager.updateBuilding(pointer.y)
             }
-            menuManager.updateBuilding(pointer.y)
+            States.TREE -> tree.left()
         }
     }
 
     override fun right() {
-        if (state == States.IDLE || state == States.PLACE_BUILDING || state == States.PLACE_CITIZEN) {
-            // Moves the camera
-            Util.inputFreeze = 1
-            if (camera.position.x < 798f - 80f) {
-                if (Util.wasPressed) {
-                    camera.translate(3f, 0f)
-                } else {
-                    // Special slow first frame (for precise movements)
-                    Util.inputFreeze = 4
-                    camera.translate(1f, 0f)
+        when (state) {
+            States.IDLE, States.PLACE_BUILDING, States.PLACE_CITIZEN -> {
+                // Moves the camera
+                Util.inputFreeze = 1
+                if (camera.position.x < 798f - 80f) {
+                    if (Util.wasPressed) {
+                        camera.translate(3f, 0f)
+                    } else {
+                        // Special slow first frame (for precise movements)
+                        Util.inputFreeze = 4
+                        camera.translate(1f, 0f)
+                    }
+                    updatePointer()
                 }
-                updatePointer()
+                menuManager.updateBuilding(pointer.y)
             }
-            menuManager.updateBuilding(pointer.y)
+            States.TREE -> tree.right()
         }
     }
 
@@ -255,6 +271,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             States.MENU, States.PLACE_BUILDING, States.PLACE_CITIZEN -> {
                 menuManager.select(pointer.y)
             }
+            States.TREE -> tree.select()
         }
     }
 
@@ -284,6 +301,14 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 States.IDLE
             }
             else -> States.IDLE
+        }
+    }
+
+    override fun start() {
+        when (state) {
+            States.IDLE -> state = States.TREE
+            States.TREE -> state = States.IDLE
+            else -> Unit
         }
     }
 

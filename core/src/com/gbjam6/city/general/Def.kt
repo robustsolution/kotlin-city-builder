@@ -13,6 +13,8 @@ enum class BuildingType {
 
 data class LBuilding(val type: BuildingType, val name: String, val capacity: Int, var door: Pair<Int, Int>, var s8: Pair<Int, Int>, var s16: Pair<Int, Int>, val cost: Int)
 
+data class TreeUpgrade(val x: Int, val y: Int, val name: String, val cost: Int, val desc: String)
+
 object Def {
 
     // GENERAL
@@ -24,8 +26,7 @@ object Def {
     var LIFE_TIME = 300
     const val DAMAGED_LIMIT = 30
     var BUILD_LIFE_TIME = 300
-    val WELL_RANGE = 80
-
+    const val WELL_RANGE = 80
 
     // COLORS
     val color1: Color = Color.valueOf("000000")
@@ -68,6 +69,28 @@ object Def {
     val customMenus = mapOf(
             "WELL" to arrayOf("HYDRATE", "REPAIR", "DESTROY"),
             "HOUSE" to arrayOf("CITIZENS", "BIRTH", "UPGRADE", "REPAIR", "DESTROY")
+    )
+
+    // TREE
+    val xPos = Array(5) { 10 + 32 * it }
+    val yPos1 = Array(3) { 6 - 32 * it }
+    val yPos2 = Array(3) { 22 - 32 * it }
+    val tree = listOf(
+            TreeUpgrade(xPos[0], yPos1[0], "FACTORY+", 10, ""),
+            TreeUpgrade(xPos[0], yPos1[1], "TAVERN+", 10, ""),
+            TreeUpgrade(xPos[0], yPos1[2], "FARM+", 10, ""),
+            TreeUpgrade(xPos[1], yPos2[0], "WELL", 10, "PURCHASE THE WELL.\nYOU WILL NOT REGRET IT.\nTHE WELL IS AWESOME ;-)"),
+            TreeUpgrade(xPos[1], yPos2[1], "LABORATORY+", 10, ""),
+            TreeUpgrade(xPos[1], yPos2[2], "HOUSE+", 10, ""),
+            TreeUpgrade(xPos[2], yPos1[0], "CRAFTMAN", 10, ""),
+            TreeUpgrade(xPos[2], yPos1[1], "SCHOOL", 10, ""),
+            TreeUpgrade(xPos[2], yPos1[2], "WAREHOUSE", 10, ""),
+            TreeUpgrade(xPos[3], yPos2[0], "TREE", 10, ""),
+            TreeUpgrade(xPos[3], yPos2[1], "HOSPITAL", 10, ""),
+            TreeUpgrade(xPos[3], yPos2[2], "???", 10, ""),
+            TreeUpgrade(xPos[4], yPos1[0], "GARDEN", 10, ""),
+            TreeUpgrade(xPos[4], yPos1[1], "GARDEN", 10, ""),
+            TreeUpgrade(xPos[4], yPos1[2], "GARDEN", 10, "")
     )
 
     // ACHIEVEMENTS

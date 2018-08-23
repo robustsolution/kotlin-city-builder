@@ -54,6 +54,11 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         for (type in arrayOf("Citizens", "Food", "Happiness", "Research", "Stone")) {
             gbJam6.manager.load("sprites/gui/$type.png", Texture::class.java)
         }
+
+        // TREE
+        gbJam6.manager.load("sprites/tree/tree.png", Texture::class.java)
+        gbJam6.manager.load("sprites/tree/cursor-sheet.png", Texture::class.java)
+        gbJam6.manager.load("sprites/tree/unlocked.png", Texture::class.java)
     }
 
     override fun render(delta: Float) {

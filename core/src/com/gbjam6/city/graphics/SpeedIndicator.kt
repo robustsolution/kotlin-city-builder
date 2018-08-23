@@ -11,7 +11,7 @@ class SpeedIndicator {
 
     fun draw(batch: SpriteBatch, font: BitmapFont) {
         font.color = Def.color1
-        font.draw(batch, "SPD x$speed", City.camera.position.x - 80 + Def.speedOffset, Def.speedY)
+        font.draw(batch, "SPEED x$speed", City.camera.position.x - 80 + Def.speedOffset, Def.speedY)
     }
 
 }
