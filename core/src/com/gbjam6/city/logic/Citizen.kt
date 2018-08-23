@@ -2,9 +2,10 @@ package com.gbjam6.city.logic
 
 import com.gbjam6.city.graphics.Building
 import com.gbjam6.city.general.Def
+import com.gbjam6.city.states.City
 
 class Citizen(val name: String, var building: Building) {
-    var life: Int = Def.LIFE_TIME
+    var life: Int = City.progress.lifetime
     var water = false
     var well: Building? = null
 
@@ -16,7 +17,7 @@ class Citizen(val name: String, var building: Building) {
     }
 
     fun getDescription(): String {
-        var description = "Life :\n${this.life}/${Def.LIFE_TIME}\n${this.building.lBuilding.name}"
+        var description = "Life :\n${this.life}/${City.progress.lifetime}\n${this.building.lBuilding.name}"
         if (water) description += "\nHydrate"
         return description
     }

@@ -7,6 +7,7 @@ import com.gbjam6.city.graphics.Building
 import com.gbjam6.city.graphics.Helper
 import com.gbjam6.city.graphics.Menu
 import com.gbjam6.city.logic.Citizen
+import com.gbjam6.city.logic.Ressources
 import com.gbjam6.city.states.City
 import com.gbjam6.city.states.States
 import java.lang.Math.abs
@@ -96,7 +97,8 @@ class MenuManager(private val gbJam6: GBJam6) {
                 MenuType.CREATION -> {
                     // Gets all buildings from selected category
                     val categoryB = Def.buildings.filter { it.type == BuildingType.valueOf(menu.items[menu.cursorPos]) }
-                    val items = MutableList(categoryB.size) { categoryB[it].name }
+                    val buildings = categoryB.filter { it.name in Def.initAvailableBuilding || it.name in City.progress.tree }
+                    val items = MutableList(buildings.size) {buildings[it].name}
                     items.add("RETURN")
 
                     // Makes building gray if the player doesn't have enough stone to build it
@@ -121,9 +123,7 @@ class MenuManager(private val gbJam6: GBJam6) {
 
                     // Closes the helper
                     MenuManager.helper.visible = false
-
                     return States.PLACE_BUILDING
-
                 }
 
                 // The player checks a building
@@ -148,7 +148,7 @@ class MenuManager(private val gbJam6: GBJam6) {
 
                             // Updates ressources
                             City.ressources.citizens += 1
-                            City.ressources.happiness -= Def.BIRTH_COST
+                            City.ressources.happiness -= City.progress.birthcost
 
                             // Opens the helper
                             MenuManager.helper.visible = true
@@ -173,11 +173,17 @@ class MenuManager(private val gbJam6: GBJam6) {
                             menus.last().changeValidity()
                         }
                         "REPAIR" -> {
-                            City.ressources.stone -= ((1 - selectedB!!.life / Def.BUILD_LIFE_TIME.toFloat()) * selectedB!!.lBuilding.cost + 1).toInt()
-                            if (selectedB!!.life <= Def.BUILD_LIFE_TIME * Def.DAMAGED_LIMIT_PCT)
+                            City.ressources.stone -= ((1-selectedB!!.life/City.progress.buildlife.toFloat())*selectedB!!.lBuilding.cost+1).toInt()
+                            if (selectedB!!.life <= City.progress.buildlife*Def.DAMAGED_LIMIT_PCT)
                                 selectedB!!.updateTexture()
-                            selectedB.life = Def.BUILD_LIFE_TIME //TODO:Changer apres City.progress
+                            selectedB.life = City.progress.buildlife
                             menus.last().changeValidity()
+                        }
+                        "DESTROY" -> {
+                            City.ressources.addLimit (Ressources(happiness = -(selectedB!!.lBuilding.cost*Def.DESTROY_HAP_PCT).toInt()))
+                            City.ressources.addLimit (Ressources(stone = (selectedB!!.lBuilding.cost*Def.DESTROY_STN_PCT).toInt()))
+                            selectedB.destroy(this)
+                            return States.IDLE
                         }
                     }
                 }

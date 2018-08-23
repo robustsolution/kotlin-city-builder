@@ -40,7 +40,7 @@ object Util {
         return false
     }
 
-    fun tick() {
+    fun tick(menuManager: MenuManager) {
         // println("tick")
         val ressources = Ressources()
         val buildingsToDestroy = mutableListOf<Building>()
@@ -53,7 +53,7 @@ object Util {
 
         // Removes destroyed buildings
         for (building in buildingsToDestroy) {
-            // TODO: Enlever de city (affichage et liste) et update le nombre de citizens
+            building.destroy(menuManager)
         }
         buildingsToDestroy.clear()
 
@@ -134,7 +134,18 @@ object Util {
                 MenuType.BUILDING -> {
                     val building = getBuilding()
                     when (item) {
-                        "REPAIR" -> MenuManager.helper.update(item, "Integrity :\n${building!!.life}/${Def.BUILD_LIFE_TIME}\nRepair cost :\n${((1 - building!!.life / Def.BUILD_LIFE_TIME.toFloat()) * building!!.lBuilding.cost + 1).toInt()}")
+                        "UPGRADE" -> {
+                            var description =""
+                            if (building!!.canUpgrade()){
+                                description += "Cost :\n${building!!.lBuilding.upgradeCost} Stones"
+                            }else{
+                                description += "You need \n${building!!.lBuilding.upgradeCost} Stones \nand the ${building.lBuilding.name}+\nesearch"
+                            }
+                            MenuManager.helper.update(item,description)
+                        }
+
+                        "REPAIR" -> MenuManager.helper.update(item, "Integrity :\n${building!!.life}/${City.progress.buildlife}\nRepair cost :\n${((1-building!!.life/City.progress.buildlife.toFloat())*building!!.lBuilding.cost+1).toInt()}")
+                        "DESTROY" -> MenuManager.helper.update(item,"Cost :\n${building!!.lBuilding.cost*Def.DESTROY_HAP_PCT} Hapiness\nGain :\n${building!!.lBuilding.cost*Def.DESTROY_STN_PCT} Stones")
                         else -> MenuManager.helper.update(item, Def.getDescription(item))
                     }
                 }

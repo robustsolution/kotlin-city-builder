@@ -71,7 +71,7 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
         camera.update()
 
         // Clears screen
-        val clearC = Def.clearColors[gbJam6.colorPalette]
+        val clearC = Def.clearColors[gbJam6.colorPalette - 1]
         Gdx.gl.glClearColor(clearC.r, clearC.g, clearC.b, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
@@ -132,6 +132,7 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
 
     override fun p() {
         gbJam6.colorPalette = (gbJam6.colorPalette + 1) % Def.PALETTE_SIZE
+        if (gbJam6.colorPalette == 0) gbJam6.colorPalette++
         gbJam6.updateShader()
     }
 

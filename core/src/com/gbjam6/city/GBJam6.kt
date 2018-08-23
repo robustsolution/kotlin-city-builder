@@ -19,7 +19,7 @@ class GBJam6 : KtxGame<Screen>() {
     private lateinit var shaderVertIndexPalette: String
     private lateinit var shaderFragIndexPalette: String
     lateinit var colorTable: Texture
-    var colorPalette = 0
+    var colorPalette = 1
     var paletteIndex = 0f
     lateinit var shader: ShaderProgram
 

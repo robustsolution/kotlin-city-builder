@@ -25,7 +25,7 @@ enum class States {
     IDLE, PLACE_BUILDING, MENU, PLACE_CITIZEN, TREE
 }
 
-data class Progress(val tree: MutableList<String> = mutableListOf(), var limits: Pair<Int, Int> = Def.STARTING_LIMITS.copy())
+data class Progress(val tree: MutableList<String> = mutableListOf(), var limits: Pair<Int, Int> = Def.STARTING_LIMITS.copy(), var birthcost: Int, var lifetime: Int, var buildlife: Int)
 
 /**
  * Main game class.
@@ -54,7 +54,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         val buildings = mutableListOf<Building>()
         val ressources = Def.startingRessources.copy()
         val limits = Ressources(happiness = 9999, research = 9999)
-        val progress = Progress(mutableListOf("TREE", "WELL", "FACTORY+"))
+        val progress = Progress(mutableListOf(),birthcost = Def.BIRTH_COST,lifetime = Def.LIFE_TIME,buildlife = Def.BUILD_LIFE_TIME)
     }
 
     override fun show() {
@@ -104,7 +104,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             frame += speedIndicator.speed
             if (frame > Def.SPEED) {
                 frame = 0
-                Util.tick()
+                Util.tick(menuManager)
                 menuManager.tick()
             }
         }
@@ -114,7 +114,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         batch.projectionMatrix = camera.combined
 
         // Clears screen
-        val clearC = Def.clearColors[gbJam6.colorPalette]
+        val clearC = Def.clearColors[gbJam6.colorPalette - 1]
         Gdx.gl.glClearColor(clearC.r, clearC.g, clearC.b, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
@@ -342,6 +342,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
     override fun p() {
         gbJam6.colorPalette = (gbJam6.colorPalette + 1) % Def.PALETTE_SIZE
+        if (gbJam6.colorPalette == 0) gbJam6.colorPalette++
         gbJam6.updateShader()
     }
 }
