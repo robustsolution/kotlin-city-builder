@@ -12,7 +12,7 @@ import com.gbjam6.city.logic.Citizen
 import com.gbjam6.city.states.City
 import kotlin.math.min
 
-class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetManager) {
+class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: AssetManager) {
 
     var life = Def.BUILD_LIFE_TIME
     val citizens = mutableListOf<Citizen>()
@@ -190,6 +190,9 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, manager: AssetM
         life -= 1
         if (life <= 0) {
             buildingsToDestroy.add(this)
+        }
+        if (life <= Def.DAMAGED_LIMIT && lBuilding.name in Def.destroyedRessources) {
+            sprite.texture = manager.get("sprites/buildings/destroyed/${lBuilding.name} DESTROYED.png", Texture::class.java)
         }
     }
 }

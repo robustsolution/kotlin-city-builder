@@ -22,6 +22,7 @@ object Def {
     const val SPEED = 120
     var BIRTH_COST = 100
     var LIFE_TIME = 300
+    const val DAMAGED_LIMIT = 30
     var BUILD_LIFE_TIME = 300
 
     // COLORS
@@ -56,6 +57,11 @@ object Def {
             LBuilding(BuildingType.STONE, "FACTORY", 2, Pair(6, 19), Pair(6, 30), Pair(6, 22), 100),
             LBuilding(BuildingType.OTHER, "WELL", 0, Pair(0, 17), Pair(0, 17), Pair(0, 17), 100),
             LBuilding(BuildingType.STONE, "CRAFTMAN", 1, Pair(20, 36), Pair(20, 36), Pair(20, 36), 100)
+    )
+    val destroyedRessources = listOf(
+            "HOUSE", "HOUSE+", "TAVERN", "TAVERN+", "FARM", "FARM+",
+            "LABORATORY", "LABORATORY+", "FACTORY", "FACTORY+",
+            "CRAFTMAN", "HOSPITAL", "SCHOOL", "WAREHOUSE"
     )
     val customMenus = mapOf(
             "WELL" to arrayOf("HYDRATE", "REPAIR", "DESTROY"),
