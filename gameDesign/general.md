@@ -71,7 +71,7 @@ graph LR
 |:-:|:-:|:-:|:-:|:-:|:-:|
 |House|![House](../android/assets/sprites/buildings/HOUSE.png)|Citizen|6 citizens|1 Citizen / 100 Happiness|Increases the maximum number of citizens by 6|
 |House+||Citizen|9 citizens|1 Citizen / 100 Happiness|Increases the maximum number of citizens by 9|
-|School||Citizen|4 citizens|None|Now citizen cost 75 Hapiness to birth|
+|School||Citizen|4 citizens|None|Now citizen cost 75 Hapiness to birth. Increases the maximum number of citizens by 4|
 |Farm|![Farm](../android/assets/sprites/buildings/FARM.png)|Food|2 citizens|4 Foods / Citizen in / Month|Increases the maximum number of foods by 100|
 |Farm+||Food|3 citizens|4 Foods / Citizen in / Month|Increases the maximum number of foods by 150|
 |Warehouse||Food|1 citizen|6 Foods / Citizen in / Month|Increases the maximum number of foods and stone by 200|
@@ -80,7 +80,7 @@ graph LR
 |Garden||Happiness|1 citizen|1 Happiness / Citizen in / Month|Sell 50 food for 50 happiness|
 |Laboratory|![Laboratory](../android/assets/sprites/buildings/LABORATORY.png)|Research|2 citizens|3 Research / Citizen in / Month|None|
 |Laboratory+||Research|3 citizens|3 Research / Citizen in / Month|None|
-|Hospital||Reaserch|1 citizen|4 Research / Citizen in / Month|Citizens die 1.5 times slower. (not combinable)|
+|Hospital||Reaserch|1 citizen|4 Research / Citizen in / Month|Nez Citizens die 1.5 times slower. (not combinable)|
 |Factory|![Factory](../android/assets/sprites/buildings/FACTORY.png)|Stone|2 citizens|1 Stone / Citizen in / Month|Increases the maximum number of stones by 100|
 |Factory+||Stone|3 citizens|1 Stone / Citizen in / Month|Increases the maximum number of stones by 150|
 |Craftman||Stone|1 citizen|2 Stone / Citizen in / Month|The buildings are damaged twice less. (not combinable)|

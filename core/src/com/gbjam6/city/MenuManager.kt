@@ -58,7 +58,8 @@ class MenuManager(private val gbJam6: GBJam6) {
     fun close() {
         if (menus.any()) {
             menus = menus.dropLast(1).toMutableList()
-            menus.last().changeValidity()
+            if (menus.any())
+                menus.last().changeValidity()
         }
     }
 

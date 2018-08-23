@@ -10,6 +10,8 @@ import com.gbjam6.city.logic.Ressources
 import com.gbjam6.city.general.Util
 import com.gbjam6.city.logic.Citizen
 import com.gbjam6.city.states.City
+import javax.annotation.Resource
+import javax.annotation.Resources
 import kotlin.math.min
 
 class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: AssetManager) {
@@ -136,6 +138,16 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
             "FACTORY" -> City.limits.stone += 100
             "FARM" -> City.limits.food += 100
             "HOUSE" -> City.limits.citizens += 6
+            "SCHOOL" -> {
+                City.limits.citizens += 4
+                Def.BIRTH_COST = 75
+            }
+            "WAREHOUSE"-> {
+                City.limits.food += 200
+                City.limits.stone += 200
+            }
+            "HOSPITAL" -> Def.LIFE_TIME = 600
+            "CRAFTMAN" -> Def.BUILD_LIFE_TIME = 600
         }
 
         // Make sure limits don't go over 999
@@ -154,6 +166,11 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
             "HOUSE" -> Ressources(food = -citizens.size)
             "TAVERN" -> Ressources(happiness = citizens.size * 1, food = -citizens.size)
             "LABORATORY" -> Ressources(research = citizens.size * 3, food = -citizens.size)
+            "SCHOOL" -> Ressources(food = -citizens.size)
+            "WAREHOUSE" -> Ressources(food = citizens.size*5)
+            "CRAFTMAN" -> Ressources(stone = citizens.size*2, food = -citizens.size)
+            "HOSPITAL" -> Ressources(research = citizens.size*5, food = -citizens.size)
+            "GARDEN" -> Ressources(happiness = citizens.size, food = -citizens.size)
             else -> Ressources()
         }
     }
@@ -179,7 +196,6 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
             if (citizen.water) {
                 citizen.well!!.wateredCitizens.remove(citizen)
                 citizen.well = null
-                citizen.water = false
             }
             if (citizen.life == 0)
                 ressources.citizens -= 1
