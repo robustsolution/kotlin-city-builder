@@ -50,6 +50,19 @@ object Def {
     val STARTING_LIMITS = Pair(-160, 160)
     val EXPAND_COST = arrayOf(1, 1, 1, 1)
     const val EXPAND_SIZE: Int = 160
+    const val BUILDING_RANGE = 90
+    const val INTERACTION_PLUS = 0.20
+    const val INTERACTION_PLUS_PLUS = 0.40
+    const val INTERACTION_MALUS = -0.20
+    const val INTERACTION_MALUS_MALUS = -0.40
+    const val FARM_PRODUCTION = 4.0
+    const val LABORATORY_PRODUCTION = 3.0
+    const val TAVERN_PRODUCTION = 2.0
+    const val FACTORY_PRODUCTION = 2.0
+    const val HOSPITAL_PRODUCTION = 5.0
+    const val GARDEN_PRODUCTION = 2.0
+    const val CRAFTMAN_PRODUCTION = 4.0
+    const val WAREHOUSE_PRODUCTION = 6.0
 
 
     // SIZE
@@ -168,6 +181,16 @@ object Def {
             "BIRTH" to "DESC OF\nBIRTH",
             "EXCHANGE" to "DESC OF\nEXCHANGE"
     )
+    fun getTypeOrder(buildingType: BuildingType): Int{
+        return when (buildingType){
+            BuildingType.CITIZENS -> 1
+            BuildingType.HAPPINESS -> 2
+            BuildingType.FOOD -> 3
+            BuildingType.STONE -> 4
+            BuildingType.RESEARCH -> 5
+            else -> 0
+        }
+    }
 
     fun getDescription(name: String) = descriptions[name] ?: backupDesc
 

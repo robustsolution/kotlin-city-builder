@@ -34,4 +34,13 @@ data class Ressources(var citizens: Int = 0, var food: Int = 0, var stone: Int =
         this.happiness = min(City.limits.happiness, happiness)
         this.research = min(this.research, City.limits.research)
     }
+
+    override fun toString(): String{
+        when{
+            this.happiness != 0 -> return "${this.happiness} Hapiness"
+            this.stone != 0 -> return "${this.stone} Stone"
+            this.research != 0 -> return "${this.research} Research"
+            else -> return "${this.food} Food"
+        }
+    }
 }
