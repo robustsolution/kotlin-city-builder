@@ -26,7 +26,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     val buildingTree: Building? = null
     var interaction = "Interqction :\n1.0"
     var produc = "Production :\n0"
-
+    var upgrade = -1
 
     private var sprite = Sprite(manager.get("sprites/buildings/${lBuilding.name}.png", Texture::class.java))
     val width = sprite.width
@@ -126,7 +126,13 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     }
 
     fun updateTexture() {
-        sprite.texture = manager.get("sprites/buildings/${this.lBuilding.name}.png", Texture::class.java)
+        // Gets new texture
+        val up = if (upgrade >= 0) upgrade.toString() else ""
+        val newText = manager.get("sprites/buildings/${this.lBuilding.name}$up.png", Texture::class.java)
+
+        // Changes the texture and update the sprite's height
+        sprite.texture = newText
+        sprite.regionHeight = newText.height
     }
 
     fun canUpgrade(): Boolean {
@@ -227,13 +233,13 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     }
 
     /**
-     * Called each tick. Make citizens and the building older.
+     * Called each tick. Makes citizens and the building older.
      */
     fun older(ressources: Ressources, buildingsToDestroy: MutableList<Building>) {
-        // Make citizens older
+        // Makes citizens older
         citizens.map { it.older() }
 
-        // Kill dead citizens
+        // Kills dead citizens
         for (citizen in citizensToKill) {
             citizens.remove(citizen)
             if (citizen.water) {
@@ -244,10 +250,10 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
                 ressources.citizens -= 1
         }
         citizensToKill.clear()
-        // Update exchangeTimer for the Garden
+        // Updates exchangeTimer for the Garden
         if (this.lBuilding.name == "GARDEN" && exchangeTimer < Def.EXCHANGE_TIME)
             exchangeTimer++
-        // Make the building older
+        // Makes the building older
         life -= 1
         if (life > City.progress.buildlife)
             life = City.progress.buildlife
@@ -259,6 +265,10 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
             sprite.texture = manager.get("sprites/buildings/destroyed/${lBuilding.name} DESTROYED.png", Texture::class.java)
         }
     }
+
+    /**
+     * Called to remove this building from [City.buildings].
+     */
 
     fun destroy(menuManager: MenuManager) {
         if (City.state == States.MENU && Util.getBuilding() == this) {
@@ -277,6 +287,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
             if (citizen.water)
                 citizen.well!!.wateredCitizens.remove(citizen)
         }
+
         City.buildings.remove(this)
         when (this.lBuilding.name) {
             "FACTORY" -> City.limits.stone -= Def.FACTORY_LIMIT
@@ -324,9 +335,12 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
                 City.limits.stone += Def.FACTORY_PLUS_LIMIT
             }
         }
-        // Make sure limits don't go over 999
+        // Makes sure limits don't go over 999
         City.limits.stone = min(City.limits.stone, 999)
         City.limits.food = min(City.limits.food, 999)
         City.limits.citizens = min(City.limits.citizens, 999)
+
+        // Starts the animation
+        upgrade = 0
     }
 }

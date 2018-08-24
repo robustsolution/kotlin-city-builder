@@ -28,10 +28,13 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         gbJam6.manager.load("fonts/skullboy.fnt", BitmapFont::class.java)
         gbJam6.manager.load("fonts/little.fnt", BitmapFont::class.java)
         gbJam6.manager.load("fonts/littleDark.fnt", BitmapFont::class.java)
+        gbJam6.manager.load("fonts/littleDisabled.fnt", BitmapFont::class.java)
 
         // Music
         gbJam6.titleMusic = gbJam6.player.loadXM(Gdx.files.internal("music/title.xm").readBytes(), 0f)
         gbJam6.cityMusic1 = gbJam6.player.loadXM(Gdx.files.internal("music/city1.xm").readBytes(), 0f)
+        gbJam6.cityMusic2 = gbJam6.player.loadXM(Gdx.files.internal("music/city2.xm").readBytes(), 0f)
+        gbJam6.cityMusic3 = gbJam6.player.loadXM(Gdx.files.internal("music/city3.xm").readBytes(), 0f)
 
         // Title screen
         gbJam6.manager.load("sprites/name.png", Texture::class.java)
@@ -52,7 +55,9 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
             gbJam6.manager.load("sprites/buildings/destroyed/$building DESTROYED.png", Texture::class.java)
         }
         for (building in Def.upgradedBuilding) {
-            gbJam6.manager.load("sprites/buildings/${building.name}.png", Texture::class.java)
+            gbJam6.manager.load("sprites/buildings/${building.name}0.png", Texture::class.java)
+            gbJam6.manager.load("sprites/buildings/${building.name}1.png", Texture::class.java)
+            gbJam6.manager.load("sprites/buildings/${building.name}2.png", Texture::class.java)
         }
 
         // GUI
@@ -73,6 +78,7 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
     override fun render(delta: Float) {
 
         if (gbJam6.manager.update()) {
+            gbJam6.setMusic("BOOT")
             gbJam6.setScreen<TitleScreen>()
         }
 

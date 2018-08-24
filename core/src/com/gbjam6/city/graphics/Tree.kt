@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.gbjam6.city.GBJam6
 import com.gbjam6.city.general.Def
+import com.gbjam6.city.general.Util
 import com.gbjam6.city.states.City
 import com.gbjam6.city.states.States
 
@@ -65,7 +66,7 @@ class Tree(gbJam6: GBJam6) {
         val selected = Def.tree[3 * x + y]
 
         // Buys the item if it's not already purchases and if the player has enough research.
-        if (selected.cost <= City.ressources.research && selected.name !in City.progress.tree) {
+        if (selected.cost <= City.ressources.research && selected.name !in City.progress.tree && Util.canUnlock(selected.name)) {
             City.ressources.research -= selected.cost
             City.progress.tree.add(selected.name)
         }

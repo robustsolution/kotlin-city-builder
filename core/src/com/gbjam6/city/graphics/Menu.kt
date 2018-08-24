@@ -17,13 +17,13 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
 
     var items: Array<String> = array ?: Def.menus[type] ?: arrayOf("RETURN")
     val activated = validity ?: Array(items.size) { true }
-    private val height = (items.size * 9 + 19).toFloat()
-    private val texture = Util.generateRectangle(Def.menuWidth.toInt(), height.toInt(), Def.color1)
+    private var height = (items.size * 9 + 19).toFloat()
+    private var texture = Util.generateRectangle(Def.menuWidth.toInt(), height.toInt(), Def.color1)
     private val cursor = gbJam6.manager.get("sprites/smallPointerRight.png", Texture::class.java)
 
     var cursorPos = 0
 
-    fun draw(batch: SpriteBatch, font: BitmapFont) {
+    fun draw(batch: SpriteBatch, font: BitmapFont, fontDisabled: BitmapFont) {
         // Draws the background
         batch.draw(texture, x, y - height)
 
@@ -32,8 +32,11 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
 
         // Draws the items
         for ((i, item) in items.withIndex()) {
-            if (activated[i]) font.color = Def.color4 else font.color = Def.color2
-            font.draw(batch, item, x + 16f, y - 17 - 9f * i)
+            if (activated[i]) {
+                font.draw(batch, item, x + 16f, y - 17 - 9f * i)
+            } else {
+                fontDisabled.draw(batch, item, x + 16f, y - 17 - 9f * i)
+            }
         }
 
         // Draws the cursor
@@ -69,7 +72,7 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
                         "REPAIR" -> activated[i] = b.canRepair()
                         "BIRTH" -> activated[i] = City.ressources.happiness >= City.progress.birthcost && b.citizens.size < b.lBuilding.capacity && City.ressources.citizens < City.limits.citizens
                         "EXCHANGE" -> activated[i] = City.ressources.food >= Def.EXCHANGE_VALUE && building.exchangeTimer == Def.EXCHANGE_TIME
-                        "DESTROY" -> activated[i] = City.ressources.happiness >= b.lBuilding.cost*Def.DESTROY_HAP_PCT
+                        "DESTROY" -> activated[i] = City.ressources.happiness >= b.lBuilding.cost * Def.DESTROY_HAP_PCT
 
                     }
                 }
@@ -103,6 +106,10 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
 
             else -> Unit
         }
+
+        // Updates the background
+        height = (items.size * 9 + 19).toFloat()
+        texture = Util.generateRectangle(Def.menuWidth.toInt(), height.toInt(), Def.color1)
     }
 
 }

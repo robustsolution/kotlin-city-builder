@@ -41,6 +41,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private lateinit var gui: GUI
     private lateinit var font: BitmapFont
     private lateinit var smallFont: BitmapFont
+    private lateinit var smallFontDisabled: BitmapFont
     private lateinit var smallFontDark: BitmapFont
     private lateinit var tree: Tree
     private val greyBg = Util.generateRectangle(120, 144, Def.color3)
@@ -64,6 +65,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         // Inits fonts
         font = gbJam6.manager.get("fonts/skullboy.fnt", BitmapFont::class.java)
         smallFont = gbJam6.manager.get("fonts/little.fnt", BitmapFont::class.java)
+        smallFontDisabled = gbJam6.manager.get("fonts/littleDisabled.fnt", BitmapFont::class.java)
         smallFontDark = gbJam6.manager.get("fonts/littleDark.fnt", BitmapFont::class.java)
 
         // Inits pointers
@@ -87,9 +89,6 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         )
         hillSprites[4].flip(true, false)
         hillSprites[5].flip(true, false)
-
-        // Plays the city music
-        gbJam6.player.play(gbJam6.cityMusic1, true, true, 0f, 0f)
 
         // Sets the shader
         ShaderProgram.pedantic = false
@@ -183,7 +182,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         speedIndicator.draw(batch, smallFontDark)
 
         // Draws the menu
-        menuManager.drawMenu(batch, smallFont)
+        menuManager.drawMenu(batch, smallFont, smallFontDisabled)
 
         // Updates and draw the helper
         Util.updateHelper(menuManager.menus)

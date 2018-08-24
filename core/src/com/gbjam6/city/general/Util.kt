@@ -59,6 +59,13 @@ object Util {
 
         // Updates the ressources count
         City.ressources addLimit ressources
+
+        // Updates the upgraded building animation
+        City.buildings.map {
+            if (it.upgrade in 0..1) {
+                it.upgrade++; it.updateTexture()
+            }
+        }
     }
 
     /**
@@ -135,17 +142,17 @@ object Util {
                     val building = getBuilding()
                     when (item) {
                         "UPGRADE" -> {
-                            var description =""
-                            if (building!!.canUpgrade()){
+                            var description = ""
+                            if (building!!.canUpgrade()) {
                                 description += "Cost :\n${building!!.lBuilding.upgradeCost} Stones"
-                            }else{
+                            } else {
                                 description += "You need \n${building!!.lBuilding.upgradeCost} Stones \nand the ${building.lBuilding.name}+\nesearch"
                             }
-                            MenuManager.helper.update(item,description)
+                            MenuManager.helper.update(item, description)
                         }
 
-                        "REPAIR" -> MenuManager.helper.update(item, "Integrity :\n${building!!.life}/${City.progress.buildlife}\nRepair cost :\n${((1-building!!.life/City.progress.buildlife.toFloat())*building!!.lBuilding.cost+1).toInt()}")
-                        "DESTROY" -> MenuManager.helper.update(item,"Cost :\n${building!!.lBuilding.cost*Def.DESTROY_HAP_PCT} Hapiness\nGain :\n${building!!.lBuilding.cost*Def.DESTROY_STN_PCT} Stones")
+                        "REPAIR" -> MenuManager.helper.update(item, "Integrity :\n${building!!.life}/${City.progress.buildlife}\nRepair cost :\n${((1 - building!!.life / City.progress.buildlife.toFloat()) * building!!.lBuilding.cost + 1).toInt()}")
+                        "DESTROY" -> MenuManager.helper.update(item, "Cost :\n${building!!.lBuilding.cost * Def.DESTROY_HAP_PCT} Hapiness\nGain :\n${building!!.lBuilding.cost * Def.DESTROY_STN_PCT} Stones")
                         else -> MenuManager.helper.update(item, Def.getDescription(item))
                     }
                 }
@@ -173,5 +180,17 @@ object Util {
         val (p1, p2) = City.progress.limits
         val (s1, s2) = Def.STARTING_LIMITS
         return abs(p2 - p1 + s1 - s2) / 160
+    }
+
+    /**
+     * Returns true if the requirements to unlock the research are met.
+     */
+    fun canUnlock(perk: String): Boolean {
+        val requirements = Def.treeRequirements[perk] ?: arrayOf()
+        var unlockable = true
+        for (requirement in requirements) {
+            unlockable = unlockable && requirement in City.progress.tree
+        }
+        return unlockable
     }
 }
