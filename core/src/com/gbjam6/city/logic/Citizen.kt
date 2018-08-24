@@ -4,10 +4,11 @@ import com.gbjam6.city.graphics.Building
 import com.gbjam6.city.general.Def
 import com.gbjam6.city.states.City
 
-class Citizen(val name: String, var building: Building, val parent: Citizen? = null) {
+class Citizen(val name: String, var building: Building) {
     var life: Int = City.progress.lifetime
     var water = false
     var well: Building? = null
+    var parent: Citizen? = null
 
     fun older() {
         life -= 1
@@ -19,6 +20,7 @@ class Citizen(val name: String, var building: Building, val parent: Citizen? = n
     fun getDescription(): String {
         var description = "Life :\n${this.life}/${City.progress.lifetime}\n${this.building.lBuilding.name}"
         if (water) description += "\nHydrate"
+        if (parent != null) description += "\nParent :\n${parent!!.name}"
         description += "\nProductivity :\n"+this.getProductivity()
         return description
     }

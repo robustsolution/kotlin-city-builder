@@ -139,20 +139,23 @@ object Def {
             TreeUpgrade(xPos[2], yPos1[2], "WAREHOUSE", 250, "Unlocks the Warehouse.\nIncreases food and stone storage by 200."),
             TreeUpgrade(xPos[3], yPos2[0], "TREE", 300, ""),
             TreeUpgrade(xPos[3], yPos2[1], "HOSPITAL", 300, "Unlocks the Hospital.\nDoubles your Citizens's lifetime."),
-            TreeUpgrade(xPos[3], yPos2[2], "???", 300, ""),
+            TreeUpgrade(xPos[3], yPos2[2], "PARENTING", 300, "New born citizens have a parent from the house and receive a bonus of production if he works with him"),
             TreeUpgrade(xPos[4], yPos1[0], "GARDEN", 400, "Unlocks the Garden.\nExchanges 50 Food against 50 Happiness."),
             TreeUpgrade(xPos[4], yPos1[1], "??", 400, ""),
-            TreeUpgrade(xPos[4], yPos1[2], "?", 400, "")
+            TreeUpgrade(xPos[4], yPos1[2], "EXPAND", 400, "Allow you to expand 2 more time")
     )
     val treeRequirements = mapOf(
             "WELL" to arrayOf("FACTORY+"),
             "LABORATORY+" to arrayOf("FACTORY+", "TAVERN+"),
             "HOUSE+" to arrayOf("TAVERN+", "FARM+"),
             "CRAFTMAN" to arrayOf("FACTORY+"),
-            "SCHOOL" to arrayOf("HOUSE+", "FACTORY+"),
+            "SCHOOL" to arrayOf("HOUSE+", "LABORATORY+"),
             "TREE" to arrayOf("WELL"),
-            "GARDEN" to arrayOf("TREE"),
-            "HOSPITAL" to arrayOf("CRAFTMAN", "LABORATORY+")
+            "GARDEN" to arrayOf("TREE", "CRAFTMAN"),
+            "HOSPITAL" to arrayOf("LABORATORY+"),
+            "WAREHOUSE" to arrayOf("FARM+"),
+            "PARENTING" to arrayOf("SCHOOL"),
+            "EXPAND" to arrayOf("WAREHOUSE")
     )
 
     // ACHIEVEMENTS

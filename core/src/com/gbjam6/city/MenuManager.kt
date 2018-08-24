@@ -144,6 +144,8 @@ class MenuManager(private val gbJam6: GBJam6) {
                         "BIRTH" -> {
                             // Creates the new citizen
                             placingC = Citizen(Def.names.random(), selectedB!!)
+                            if ("PARENTING" in City.progress.tree && selectedB!!.citizens.size > 0)
+                                placingC!!.parent = selectedB!!.citizens.first()
                             selectedB.citizens.add(placingC!!)
 
                             // Updates ressources
