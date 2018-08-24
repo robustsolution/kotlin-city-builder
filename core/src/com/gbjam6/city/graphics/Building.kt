@@ -30,6 +30,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     var produc = "Production :\n0"
     var upgrade = -1
     var damaged = false
+    var citizensInReach: List<Citizen>? = null
 
     private var sprite = Sprite(manager.get("sprites/buildings/${lBuilding.name}.png", Texture::class.java))
     val width = sprite.width
