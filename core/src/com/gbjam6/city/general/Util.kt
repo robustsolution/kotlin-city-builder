@@ -90,6 +90,10 @@ object Util {
             }
             City.starvingtick = 0
         }
+
+        //Game Over
+        if (City.buildings.filter { it.lBuilding.type == BuildingType.STONE }.isEmpty() && City.ressources.stone < Def.buildings[4].cost || City.ressources.citizens == 0 && City.ressources.happiness < City.progress.birthcost && City.ressources.food < Def.EXCHANGE_VALUE)
+            println("Game Over")
     }
 
     /**
