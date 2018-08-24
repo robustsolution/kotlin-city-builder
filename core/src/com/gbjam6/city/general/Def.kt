@@ -23,15 +23,15 @@ data class TreeUpgrade(val x: Int, val y: Int, val name: String, val cost: Int, 
 object Def {
 
     // GENERAL
-    val startingRessources = Ressources(food = 200, happiness = 900, stone = 900, research = 9000)
+    val startingRessources = Ressources(food = 100, happiness = 500, stone = 500)
 
     // GAME DESIGN
-    const val SPEED = 90
+    const val SPEED = 100
     const val BIRTH_COST = 100
     const val LIFE_TIME = 300
     const val DAMAGED_LIMIT_PCT = 0.30
     const val BUILD_LIFE_TIME = 300
-    const val WELL_RANGE = 80
+    const val WELL_RANGE = 90
     const val EXCHANGE_VALUE = 100
     const val EXCHANGE_TIME = 10
     const val HOUSE_LIMIT = 6
@@ -47,8 +47,8 @@ object Def {
     const val CRAFTMAN_BUILDING_LIFE = 600
     const val DESTROY_HAP_PCT = 0.5
     const val DESTROY_STN_PCT = 0.3
-    val STARTING_LIMITS = Pair(-160, 160)
-    val EXPAND_COST = arrayOf(1, 1, 1, 1, 1, 1)
+    val STARTING_LIMITS = Pair(-192, 192)
+    val EXPAND_COST = arrayOf(100, 200, 300, 400, 500, 600)
     const val EXPAND_SIZE: Int = 160
     const val BUILDING_RANGE = 90
     const val INTERACTION_PLUS = 2
@@ -56,10 +56,10 @@ object Def {
     const val INTERACTION_MALUS = -2
     const val INTERACTION_MALUS_MALUS = -4
     const val FARM_PRODUCTION = 4.0
-    const val LABORATORY_PRODUCTION = 3.0
+    const val LABORATORY_PRODUCTION = 2.0
     const val TAVERN_PRODUCTION = 2.0
     const val FACTORY_PRODUCTION = 2.0
-    const val HOSPITAL_PRODUCTION = 5.0
+    const val HOSPITAL_PRODUCTION = 3.0
     const val GARDEN_PRODUCTION = 2.0
     const val CRAFTMAN_PRODUCTION = 4.0
     const val WAREHOUSE_PRODUCTION = 6.0
@@ -67,7 +67,7 @@ object Def {
 
 
     // SIZE
-    const val nChunks = 80
+    const val nChunks = 82
     const val menuWidth = 72f
     const val menuY = 50f
     const val helperWidth = 64f
@@ -213,7 +213,7 @@ object Def {
             "GARDEN" to "Cost :\n${Def.buildings[8].cost} Stones\nBUY HAPPINESS\nWITH FOOD",
             "HOSPITAL" to "Cost :\n${Def.buildings[9].cost} Stones\nIMPROVES\nCITIZENS\nLIFE-TIME",
             "SCHOOL" to "Cost :\n${Def.buildings[10].cost} Stones\nDECREASES\nBIRTH COST\nAND INCREASES\nPOPULATION",
-            "TREE" to "Cost :\n${Def.buildings[10].cost} Stones\nMAKE INTERACTION\nABOVE 1"
+            "TREE" to "Cost :\n${Def.buildings[11].cost} Happiness\nMAKE INTERACTION\nABOVE 1"
     )
 
     fun getTypeOrder(buildingType: BuildingType): Int {

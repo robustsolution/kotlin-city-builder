@@ -180,8 +180,12 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
      * Called when the player places the building.
      */
     fun onPlaced() {
-        // Update stones count
-        City.ressources.stone -= this.lBuilding.cost
+        // Update stones / hapiness count
+        if (this.lBuilding.decoration){
+            City.ressources.happiness -= this.lBuilding.cost
+        }else{
+            City.ressources.stone -= this.lBuilding.cost
+        }
 
         // Update limits
         when (lBuilding.name) {
