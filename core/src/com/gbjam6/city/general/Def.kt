@@ -177,12 +177,13 @@ object Def {
     // DESCRIPTIONS
     private const val backupDesc = "MISSING :-c\nADD ME IN\nDEF.DESCRIPTIONS"
     private val descriptions = mapOf(
-            "CITIZENS" to "DESC OF\nCITIZENS",
-            "HAPPINESS" to "DESC OF\nHAPP",
-            "FOOD" to "DESC OF\nFOOD",
-            "RESEARCH" to "DESC OF\nRESEARCH",
-            "STONE" to "DESC OF\nSTONE",
+            "CITIZENS" to "Change of\nbuilding a\ncitizen",
+            "HAPPINESS" to "Happiness is\nthe ressource\nwhich allows\ncitizens's birth\nand expansion",
+            "FOOD" to "Food is the\nressource\nconsumed by\nevery citizen",
+            "RESEARCH" to "Research is\nthe ressource\nwhich lets\nyou obtain\nimprovements",
+            "STONE" to "Stone is the\nressource which\nlets you build\nnew buildings",
             "RETURN" to "GO BACK",
+            "OTHER" to "OTHER BUILDING",
             "EXCHANGE" to "EXCHANGE\n${Def.EXCHANGE_VALUE} FOOD\nAGAINST\n${Def.EXCHANGE_VALUE} HAPPINESS"
     )
     fun getTypeOrder(buildingType: BuildingType): Int{

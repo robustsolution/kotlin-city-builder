@@ -18,7 +18,6 @@ import java.lang.Math.abs
 class MenuManager(private val gbJam6: GBJam6) {
 
     var menus = mutableListOf<Menu>()
-    var citizensInReach: List<Citizen>? = null
     var placingB: Building? = null
     var placingC: Citizen? = null
     private var frame = 0
@@ -204,7 +203,7 @@ class MenuManager(private val gbJam6: GBJam6) {
                                 for (cit in build.citizens.filter { it.water.not() })
                                     citizens.add(cit)
 
-                            citizensInReach = citizens
+                            selectedB!!.citizensInReach = citizens
 
                             // Adds the citizens in reach menu
                             val names = MutableList(citizens.size) { citizens[it].name }
@@ -226,10 +225,10 @@ class MenuManager(private val gbJam6: GBJam6) {
                     when (menu.items[menu.cursorPos]) {
                         "RETURN" -> close()
                         else -> {
-                            if (menu.cursorPos < citizensInReach!!.size) {
-                                selectedB!!.wateredCitizens.add(citizensInReach!!.elementAt(menu.cursorPos))
-                                citizensInReach!!.elementAt(menu.cursorPos).water = true
-                                citizensInReach!!.elementAt(menu.cursorPos).well = selectedB
+                            if (menu.cursorPos < selectedB!!.citizensInReach!!.size) {
+                                selectedB!!.wateredCitizens.add(selectedB.citizensInReach!!.elementAt(menu.cursorPos))
+                                selectedB.citizensInReach!!.elementAt(menu.cursorPos).water = true
+                                selectedB.citizensInReach!!.elementAt(menu.cursorPos).well = selectedB
                             }
                             close()
                         }

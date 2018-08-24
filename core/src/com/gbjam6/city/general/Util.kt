@@ -184,6 +184,22 @@ object Util {
 
                     }
                 }
+                MenuType.ADD -> {
+                    val building = getBuilding()!!
+                    if (menu.cursorPos < building.citizensInReach!!.size) {
+                        MenuManager.helper.update(item, building.citizensInReach!!.elementAt(menu.cursorPos).getDescription())
+                    } else {
+                        MenuManager.helper.update(item, Def.getDescription("RETURN"))
+                    }
+                }
+                MenuType.REMOVE -> {
+                    val building = getBuilding()!!
+                    if (menu.cursorPos < building.wateredCitizens!!.size) {
+                        MenuManager.helper.update(item, building.wateredCitizens!!.elementAt(menu.cursorPos).getDescription())
+                    } else {
+                        MenuManager.helper.update(item, Def.getDescription("RETURN"))
+                    }
+                }
                 else -> MenuManager.helper.update(item, Def.getDescription(item))
             }
         }
