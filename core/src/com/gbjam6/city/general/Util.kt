@@ -75,7 +75,6 @@ object Util {
         if (City.ressources.food == 0) {
             GBJam6.playSFX(SFX.NO_FOOD)
             City.starvingtick ++
-            println(City.starvingtick)
         }else{
             City.starvingtick = 0
         }
@@ -87,7 +86,6 @@ object Util {
                     citizens.add(citizen)
             if (citizens.size >0){
                 val citizen = citizens.random()
-                println(citizen.name)
                 citizen.building.citizensToKill.add(citizen)
             }
             City.starvingtick = 0
@@ -181,7 +179,9 @@ object Util {
 
                         "REPAIR" -> MenuManager.helper.update(item, "Integrity :\n${building!!.life}/${City.progress.buildlife}\nRepair cost :\n${((1 - building.life / City.progress.buildlife.toFloat()) * building.lBuilding.cost + 1).toInt()}")
                         "DESTROY" -> MenuManager.helper.update(item, "Cost :\n${building!!.lBuilding.cost * Def.DESTROY_HAP_PCT} Hapiness\nGain :\n${building.lBuilding.cost * Def.DESTROY_STN_PCT} Stones")
+                        "BIRTH" -> MenuManager.helper.update(item, "BIRTH A\nCITIZEN FOR\n${City.progress.birthcost} FOOD")
                         else -> MenuManager.helper.update(item, Def.getDescription(item))
+
                     }
                 }
                 else -> MenuManager.helper.update(item, Def.getDescription(item))

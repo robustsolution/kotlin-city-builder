@@ -46,7 +46,6 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private lateinit var smallFontDark: BitmapFont
     private lateinit var tree: Tree
     private val greyBg = Util.generateRectangle(120, 144, Def.color3)
-    private val speedIndicator = SpeedIndicator()
     private var frame = 0
 
     companion object {
@@ -58,6 +57,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         val limits = Ressources(happiness = 9999, research = 9999)
         val progress = Progress(mutableListOf(), birthcost = Def.BIRTH_COST, lifetime = Def.LIFE_TIME, buildlife = Def.BUILD_LIFE_TIME)
         var starvingtick = 0
+        val speedIndicator = SpeedIndicator()
     }
 
     override fun show() {
@@ -361,7 +361,11 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     }
 
     override fun select() {
-        speedIndicator.speed = (speedIndicator.speed + 1) % 4
+        if ("HARD MODE" in City.progress.tree){
+            speedIndicator.speed = 4 + (speedIndicator.speed + 1) % 4
+        } else{
+            speedIndicator.speed = (speedIndicator.speed + 1) % 4
+        }
     }
 
     override fun p() {

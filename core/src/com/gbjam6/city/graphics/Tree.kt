@@ -68,6 +68,8 @@ class Tree(val gbJam6: GBJam6) {
 
         // Buys the item if it's not already purchases and if the player has enough research.
         if (selected.cost <= City.ressources.research && selected.name !in City.progress.tree && Util.canUnlock(selected.name)) {
+            if (selected.name == "HARD MODE")
+                City.speedIndicator.speed = 4
             City.ressources.research -= selected.cost
             City.progress.tree.add(selected.name)
             GBJam6.playSFX(SFX.EXPAND)

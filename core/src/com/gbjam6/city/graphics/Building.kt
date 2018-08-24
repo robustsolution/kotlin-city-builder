@@ -200,10 +200,10 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
         return ressource
     }
 
-    private fun getInteraction(): Double {
+    private fun getInteraction(): Float {
         val buildings = City.buildings.filter { Math.abs((it.x + it.width / 2) - (this.x + this.width / 2)) < Def.BUILDING_RANGE && it.lBuilding.type != BuildingType.OTHER}
         val types = MutableList(buildings.size) { buildings[it].lBuilding.type }
-        var interaction = 1.toDouble()
+        var interaction = 10
         val typeValue = Def.getTypeOrder(this.lBuilding.type)
         for (type in types){
             val order=(typeValue-Def.getTypeOrder(type)+5)%5
@@ -215,8 +215,8 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
                 else -> interaction += 0
             }
         }
-        this.interaction = "Interaction :\n$interaction"
-        return interaction
+        this.interaction = "Interaction :\n$interaction."
+        return interaction.toFloat()/10
     }
 
     /**
