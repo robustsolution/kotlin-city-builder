@@ -25,7 +25,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     val wateredCitizens = mutableListOf<Citizen>()
     var exchangeTimer = Def.EXCHANGE_TIME
     var tree = false
-    val buildingTree: Building? = null
+    var buildingTree: Building? = null
     var altFrame = 0
     var interaction = "Interqction :\n1.0"
     var produc = "Production :\n0"
@@ -176,8 +176,12 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
      * Called when the player places the building.
      */
     fun onPlaced() {
-        // Update stones count
-        City.ressources.stone -= this.lBuilding.cost
+        // Update stones / hapiness count
+        if (this.lBuilding.decoration){
+            City.ressources.happiness -= this.lBuilding.cost
+        }else{
+            City.ressources.stone -= this.lBuilding.cost
+        }
 
         // Update limits
         when (lBuilding.name) {
@@ -319,6 +323,9 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
             MenuManager.helper.visible = false
             menuManager.placingC = null
             City.state = States.IDLE
+        }
+        if (this.buildingTree != null) {
+            City.decorations.remove(this.buildingTree!!)
         }
 
         for (citizen in citizens) {

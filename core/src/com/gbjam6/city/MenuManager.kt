@@ -323,8 +323,13 @@ class MenuManager(private val gbJam6: GBJam6) {
             if (placingB!!.validPos) {
                 Util.placeBuilding(placingB!!)
                 menus.clear()
+                if (City.decorations.filter { it.x >= placingB!!.x && it.x <= placingB!!.x + placingB!!.width }.isNotEmpty()) {
+                    placingB!!.tree = true
+                    placingB!!.buildingTree = City.decorations.filter { it.x >= placingB!!.x && it.x <= placingB!!.x + placingB!!.width }.first()
+                }
                 placingB = null
                 GBJam6.playSFX(SFX.BUILD)
+
             } else {
                 return States.PLACE_BUILDING
             }
@@ -334,6 +339,11 @@ class MenuManager(private val gbJam6: GBJam6) {
             // The building is placed
             if (placingB!!.validPos) {
                 Util.placeBuilding(placingB!!)
+                if (Util.getBuilding() != null) {
+                    val building = Util.getBuilding()
+                    building!!.tree = true
+                    building!!.buildingTree = placingB
+                }
                 menus.clear()
                 placingB = null
                 GBJam6.playSFX(SFX.BUILD)
