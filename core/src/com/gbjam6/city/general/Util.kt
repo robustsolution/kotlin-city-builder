@@ -172,7 +172,7 @@ object Util {
                             if (building!!.canUpgrade()) {
                                 description += "Cost :\n${building.lBuilding.upgradeCost} Stones"
                             } else {
-                                description += "You need \n${building.lBuilding.upgradeCost} Stones \nand the ${building.lBuilding.name}+\nesearch"
+                                description += "You need \n${building.lBuilding.upgradeCost} Stones \nand the\n${building.lBuilding.name}+\nResearch"
                             }
                             MenuManager.helper.update(item, description)
                         }

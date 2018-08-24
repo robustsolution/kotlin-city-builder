@@ -24,7 +24,7 @@ data class TreeUpgrade(val x: Int, val y: Int, val name: String, val cost: Int, 
 object Def {
 
     // GENERAL
-    val startingRessources = Ressources(food = 200, happiness = 900, stone = 900, research = 2000)
+    val startingRessources = Ressources(food = 200, happiness = 900, stone = 900, research = 9000)
 
     // GAME DESIGN
     const val SPEED = 90
@@ -142,7 +142,7 @@ object Def {
             TreeUpgrade(xPos[2], yPos1[0], "CRAFTMAN", 400, "Unlocks the Craftman.\nDoubles building's integrity when constructed."),
             TreeUpgrade(xPos[2], yPos1[1], "SCHOOL", 400, "Unlocks the School.\nBirth costs 75 Hapiness when constructed."),
             TreeUpgrade(xPos[2], yPos1[2], "WAREHOUSE", 400, "Unlocks the Warehouse.\nIncreases food and stone storage by 200."),
-            TreeUpgrade(xPos[3], yPos2[0], "TREE", 600, ""),
+            TreeUpgrade(xPos[3], yPos2[0], "TREE", 600, "Unlocks the Tree.\nThe building whewe it's placed don't receive negative interaction from other buildings"),
             TreeUpgrade(xPos[3], yPos2[1], "HOSPITAL", 600, "Unlocks the Hospital.\nDoubles your Citizens's lifetime."),
             TreeUpgrade(xPos[3], yPos2[2], "PARENTING", 600, "New born citizens have a parent from the house and receive a bonus of production if he works with him"),
             TreeUpgrade(xPos[4], yPos1[0], "GARDEN", 800, "Unlocks the Garden.\nExchanges 50 Food against 50 Happiness."),
@@ -178,7 +178,22 @@ object Def {
             "STONE" to "Stone is the\nressource which\nlets you build\nnew buildings",
             "RETURN" to "GO BACK",
             "OTHER" to "OTHER BUILDING",
-            "EXCHANGE" to "EXCHANGE\n${Def.EXCHANGE_VALUE} FOOD\nAGAINST\n${Def.EXCHANGE_VALUE} HAPPINESS"
+            "EXCHANGE" to "EXCHANGE\n${Def.EXCHANGE_VALUE} FOOD\nAGAINST\n${Def.EXCHANGE_VALUE} HAPPINESS",
+            "ADD" to "HYDRATE A\nNEW CITIZEN",
+            "REMOVE" to "DEHYDRATE A\nCITIZEN",
+            "HYDRATE" to "MANAGE\nHYDRATION",
+            "HOUSE" to "Cost :\n${Def.buildings[0].cost} Stones\nBIRTH CITIZENS\nAND INCREASES\nPOPULATION",
+            "TAVERN" to "Cost :\n${Def.buildings[1].cost} Stones\nPROVIDES\nHAPPINESS",
+            "FARM" to "Cost :\n${Def.buildings[2].cost} Stones\nPROVIDES FOOD\nAND STORAGE",
+            "LABORATORY" to "Cost :\n${Def.buildings[3].cost} Stones\nPROVIDES\nRESEARCH",
+            "FACTORY" to "Cost :\n${Def.buildings[4].cost} Stones\nPROVIDES STONE\nAND STORAGE",
+            "WELL" to "Cost :\n${Def.buildings[5].cost} Stones\nBUFF THE\nPRODUCTIVITY\nOF CITIZENS",
+            "CRAFTMAN" to "Cost :\n${Def.buildings[6].cost} Stones\nIMPROVES\nBUILDING\nINTEGRITY",
+            "WAREHOUSE" to "Cost :\n${Def.buildings[7].cost} Stones\nIMPROVES FOOD\nAND STONE\nSTORAGE",
+            "GARDEN" to "Cost :\n${Def.buildings[8].cost} Stones\nBUY HAPPINESS\nWITH FOOD",
+            "HOSPITAL" to "Cost :\n${Def.buildings[9].cost} Stones\nIMPROVES\nCITIZENS\nLIFE-TIME",
+            "SCHOOL" to "Cost :\n${Def.buildings[10].cost} Stones\nDECREASES\nBIRTH COST\nAND INCREASES\nPOPULATION",
+            "TREE" to "Cost :\n${Def.buildings[10].cost} Stones\nMAKE INTERACTION\nABOVE 1"
     )
     fun getTypeOrder(buildingType: BuildingType): Int{
         return when (buildingType){
