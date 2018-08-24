@@ -90,9 +90,6 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         hillSprites[4].flip(true, false)
         hillSprites[5].flip(true, false)
 
-        // Plays the city music
-        gbJam6.player.play(gbJam6.cityMusic1, true, true, 0f, 0f)
-
         // Sets the shader
         ShaderProgram.pedantic = false
         batch.shader = gbJam6.shader

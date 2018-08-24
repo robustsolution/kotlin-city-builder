@@ -98,7 +98,7 @@ class MenuManager(private val gbJam6: GBJam6) {
                     // Gets all buildings from selected category
                     val categoryB = Def.buildings.filter { it.type == BuildingType.valueOf(menu.items[menu.cursorPos]) }
                     val buildings = categoryB.filter { it.name in Def.initAvailableBuilding || it.name in City.progress.tree }
-                    val items = MutableList(buildings.size) {buildings[it].name}
+                    val items = MutableList(buildings.size) { buildings[it].name }
                     items.add("RETURN")
 
                     // Makes building gray if the player doesn't have enough stone to build it
@@ -163,7 +163,7 @@ class MenuManager(private val gbJam6: GBJam6) {
 
                         "UPGRADE" -> {
                             selectedB!!.upgrade()
-                            selectedB!!.updateTexture()
+                            selectedB.updateTexture()
                             menu.items = Def.customMenus[selectedB.lBuilding.name] ?: Def.menus[MenuType.BUILDING]!!
                         }
                         "EXCHANGE" -> {
@@ -173,15 +173,15 @@ class MenuManager(private val gbJam6: GBJam6) {
                             menus.last().changeValidity()
                         }
                         "REPAIR" -> {
-                            City.ressources.stone -= ((1-selectedB!!.life/City.progress.buildlife.toFloat())*selectedB!!.lBuilding.cost+1).toInt()
-                            if (selectedB!!.life <= City.progress.buildlife*Def.DAMAGED_LIMIT_PCT)
-                                selectedB!!.updateTexture()
+                            City.ressources.stone -= ((1 - selectedB!!.life / City.progress.buildlife.toFloat()) * selectedB.lBuilding.cost + 1).toInt()
+                            if (selectedB.life <= City.progress.buildlife * Def.DAMAGED_LIMIT_PCT)
+                                selectedB.updateTexture()
                             selectedB.life = City.progress.buildlife
                             menus.last().changeValidity()
                         }
                         "DESTROY" -> {
-                            City.ressources.addLimit (Ressources(happiness = -(selectedB!!.lBuilding.cost*Def.DESTROY_HAP_PCT).toInt()))
-                            City.ressources.addLimit (Ressources(stone = (selectedB!!.lBuilding.cost*Def.DESTROY_STN_PCT).toInt()))
+                            City.ressources.addLimit(Ressources(happiness = -(selectedB!!.lBuilding.cost * Def.DESTROY_HAP_PCT).toInt()))
+                            City.ressources.addLimit(Ressources(stone = (selectedB.lBuilding.cost * Def.DESTROY_STN_PCT).toInt()))
                             selectedB.destroy(this)
                             return States.IDLE
                         }
@@ -285,6 +285,12 @@ class MenuManager(private val gbJam6: GBJam6) {
                                 City.progress.limits = City.progress.limits.copy(second = City.progress.limits.second + Def.EXPAND_SIZE)
                             } else {
                                 City.progress.limits = City.progress.limits.copy(first = City.progress.limits.first - Def.EXPAND_SIZE)
+                            }
+
+                            // Changes the music
+                            when (Util.expandsMade()) {
+                                1 -> gbJam6.setMusic("MEDIUM CITY")
+                                3 -> gbJam6.setMusic("BIG CITY")
                             }
 
                             // Close the menu and the helper

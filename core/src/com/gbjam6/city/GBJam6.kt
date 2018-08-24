@@ -23,9 +23,11 @@ class GBJam6 : KtxGame<Screen>() {
     var paletteIndex = 0f
     lateinit var shader: ShaderProgram
 
-    val player = Player(44100, Player.INTERPOLATION_MODE_CUBIC)
+    val player = Player(48000, Player.INTERPOLATION_MODE_CUBIC)
     var titleMusic: Int = 0
     var cityMusic1: Int = 0
+    var cityMusic2: Int = 0
+    var cityMusic3: Int = 0
 
     override fun create() {
 
@@ -49,6 +51,20 @@ class GBJam6 : KtxGame<Screen>() {
         paletteIndex = (colorPalette + 0.5f) / colorTable.height
 
         shader = ShaderProgram(shaderVertIndexPalette, shaderFragIndexPalette)
+    }
+
+    fun setMusic(music: String) {
+
+        when (music) {
+            "BOOT" -> player.play(titleMusic, true, true,
+                    0f, 0f)
+            "SMALL CITY" -> player.play(cityMusic1, true, true,
+                    1f, 1f)
+            "MEDIUM CITY" -> player.play(cityMusic2, true, true,
+                    1f, 1f)
+            "BIG CITY" -> player.play(cityMusic3, true, true,
+                    1f, 1f)
+        }
     }
 
 }

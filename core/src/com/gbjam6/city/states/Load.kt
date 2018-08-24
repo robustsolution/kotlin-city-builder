@@ -33,6 +33,8 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         // Music
         gbJam6.titleMusic = gbJam6.player.loadXM(Gdx.files.internal("music/title.xm").readBytes(), 0f)
         gbJam6.cityMusic1 = gbJam6.player.loadXM(Gdx.files.internal("music/city1.xm").readBytes(), 0f)
+        gbJam6.cityMusic2 = gbJam6.player.loadXM(Gdx.files.internal("music/city2.xm").readBytes(), 0f)
+        gbJam6.cityMusic3 = gbJam6.player.loadXM(Gdx.files.internal("music/city3.xm").readBytes(), 0f)
 
         // Title screen
         gbJam6.manager.load("sprites/name.png", Texture::class.java)
@@ -76,6 +78,7 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
     override fun render(delta: Float) {
 
         if (gbJam6.manager.update()) {
+            gbJam6.setMusic("BOOT")
             gbJam6.setScreen<TitleScreen>()
         }
 
