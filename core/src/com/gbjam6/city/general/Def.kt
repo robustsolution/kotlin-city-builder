@@ -2,6 +2,7 @@ package com.gbjam6.city.general
 
 import com.badlogic.gdx.graphics.Color
 import com.gbjam6.city.logic.Ressources
+import com.gbjam6.city.states.City
 
 enum class MenuType {
     CREATION, CATEGORY, BUILDING, CITIZENS, CONFIRM, IMPROVE, HYDRATE, ADD, REMOVE, EXPAND
@@ -130,6 +131,16 @@ object Def {
             TreeUpgrade(xPos[4], yPos1[1], "??", 400, ""),
             TreeUpgrade(xPos[4], yPos1[2], "?", 400, "")
     )
+    val treeRequirements = mapOf(
+            "WELL" to arrayOf("FACTORY+"),
+            "LABORATORY+" to arrayOf("FACTORY+", "TAVERN+"),
+            "HOUSE+" to arrayOf("TAVERN+", "FARM+"),
+            "CRAFTMAN" to arrayOf("FACTORY+"),
+            "SCHOOL" to arrayOf("HOUSE+", "FACTORY+"),
+            "TREE" to arrayOf("WELL"),
+            "GARDEN" to arrayOf("TREE"),
+            "HOSPITAL" to arrayOf("CRAFTMAN", "LABORATORY+")
+    )
 
     // ACHIEVEMENTS
     val achievements = listOf(
@@ -169,6 +180,6 @@ object Def {
             Color.valueOf("d59d9d"),  // yopox br
             Color.valueOf("c3a38a") // nyx8
     )
-    var PALETTE_SIZE = 7
+    var PALETTE_SIZE = 6
 
 }

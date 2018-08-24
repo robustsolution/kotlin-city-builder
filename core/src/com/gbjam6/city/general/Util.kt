@@ -181,4 +181,16 @@ object Util {
         val (s1, s2) = Def.STARTING_LIMITS
         return abs(p2 - p1 + s1 - s2) / 160
     }
+
+    /**
+     * Returns true if the requirements to unlock the research are met.
+     */
+    fun canUnlock(perk: String): Boolean {
+        val requirements = Def.treeRequirements[perk] ?: arrayOf()
+        var unlockable = true
+        for (requirement in requirements) {
+            unlockable = unlockable && requirement in City.progress.tree
+        }
+        return unlockable
+    }
 }
