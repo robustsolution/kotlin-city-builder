@@ -36,11 +36,12 @@ data class Ressources(var citizens: Int = 0, var food: Int = 0, var stone: Int =
     }
 
     override fun toString(): String{
-        when{
-            this.happiness != 0 -> return "${this.happiness} Hapiness"
-            this.stone != 0 -> return "${this.stone} Stone"
-            this.research != 0 -> return "${this.research} Research"
-            else -> return "${this.food} Food"
+        return when{
+            this.happiness != 0 -> "${this.happiness} Hapiness"
+            this.stone != 0 -> "${this.stone} Stone"
+            this.research != 0 -> "${this.research} Research"
+            this.food > 0 -> "${this.food} Food"
+            else -> "Nothing"
         }
     }
 }

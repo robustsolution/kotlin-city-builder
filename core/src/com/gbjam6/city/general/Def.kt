@@ -2,6 +2,7 @@ package com.gbjam6.city.general
 
 import com.badlogic.gdx.graphics.Color
 import com.gbjam6.city.logic.Ressources
+import com.gbjam6.city.states.City
 
 enum class MenuType {
     CREATION, CATEGORY, BUILDING, CITIZENS, CONFIRM, IMPROVE, HYDRATE, ADD, REMOVE, EXPAND
@@ -51,10 +52,10 @@ object Def {
     val EXPAND_COST = arrayOf(1, 1, 1, 1,1,1)
     const val EXPAND_SIZE: Int = 160
     const val BUILDING_RANGE = 90
-    const val INTERACTION_PLUS = 0.20
-    const val INTERACTION_PLUS_PLUS = 0.40
-    const val INTERACTION_MALUS = -0.20
-    const val INTERACTION_MALUS_MALUS = -0.40
+    const val INTERACTION_PLUS = 2
+    const val INTERACTION_PLUS_PLUS = 4
+    const val INTERACTION_MALUS = -2
+    const val INTERACTION_MALUS_MALUS = -4
     const val FARM_PRODUCTION = 4.0
     const val LABORATORY_PRODUCTION = 3.0
     const val TAVERN_PRODUCTION = 2.0
@@ -64,7 +65,6 @@ object Def {
     const val CRAFTMAN_PRODUCTION = 4.0
     const val WAREHOUSE_PRODUCTION = 6.0
     const val STARVING_KILL_TICK = 10
-    const val HARD_MODE = 3
 
 
     // SIZE
@@ -183,9 +183,7 @@ object Def {
             "RESEARCH" to "DESC OF\nRESEARCH",
             "STONE" to "DESC OF\nSTONE",
             "RETURN" to "GO BACK",
-            "REPAIR" to "OCULUS\nREPARO :>",
-            "BIRTH" to "DESC OF\nBIRTH",
-            "EXCHANGE" to "DESC OF\nEXCHANGE"
+            "EXCHANGE" to "EXCHANGE\n${Def.EXCHANGE_VALUE} FOOD\nAGAINST\n${Def.EXCHANGE_VALUE} HAPPINESS"
     )
     fun getTypeOrder(buildingType: BuildingType): Int{
         return when (buildingType){

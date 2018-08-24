@@ -179,7 +179,9 @@ object Util {
 
                         "REPAIR" -> MenuManager.helper.update(item, "Integrity :\n${building!!.life}/${City.progress.buildlife}\nRepair cost :\n${((1 - building.life / City.progress.buildlife.toFloat()) * building.lBuilding.cost + 1).toInt()}")
                         "DESTROY" -> MenuManager.helper.update(item, "Cost :\n${building!!.lBuilding.cost * Def.DESTROY_HAP_PCT} Hapiness\nGain :\n${building.lBuilding.cost * Def.DESTROY_STN_PCT} Stones")
+                        "BIRTH" -> MenuManager.helper.update(item, "BIRTH A\nCITIZEN FOR\n${City.progress.birthcost} FOOD")
                         else -> MenuManager.helper.update(item, Def.getDescription(item))
+
                     }
                 }
                 else -> MenuManager.helper.update(item, Def.getDescription(item))
