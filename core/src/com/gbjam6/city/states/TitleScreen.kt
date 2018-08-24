@@ -35,7 +35,7 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
         // Successive logo y positions
         private val logoY = Array(128) { Util.getPixel(2 * Math.sin(it * Math.PI / 64).toFloat()) }
         // Successive cursor x positions
-        private val cursorX = listOf(-37f - 8f, -33f - 8f, -46f - 8f)
+        private val cursorX = listOf(-37f - 8f, -33f - 8f, -40f - 8f)
     }
 
     private var frame = 0
@@ -87,18 +87,18 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
         batch.draw(bg, -80f, -72f)
 
         // Draws the logo
-        batch.draw(titleName, -64f, 22f + logoY[frame])
+        batch.draw(titleName, -70f, 12f + logoY[frame])
 
         // Draws options
-        font.draw(batch, "PLAY GAME", -80f, 6f, 160f, 1, false)
-        font.draw(batch, "TUTORIAL", -80f, -10f, 160f, 1, false)
-        font.draw(batch, "ACHIEVEMENTS", -80f, -26f, 160f, 1, false)
+        font.draw(batch, "PLAY GAME", -80f, 0f, 160f, 1, false)
+        font.draw(batch, "TUTORIAL", -80f, -16f, 160f, 1, false)
+        font.draw(batch, "SOUND TEST", -80f, -32f, 160f, 1, false)
 
         // Draws the cursor
-        batch.draw(cursor, cursorX[cursorPos], -1f - 16f * cursorPos)
+        batch.draw(cursor, cursorX[cursorPos], -7f - 16f * cursorPos)
 
         // Draws credits
-        font.draw(batch, "2018 - A_Do, Le Art,\nMirionos, yopox", -80f, -47f, 160f, 1, true)
+        font.draw(batch, "2018 - A_Do, Le Art,\nMirionos, yopox", -80f, -49f, 160f, 1, true)
 
         batch.end()
 
@@ -127,7 +127,7 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
                 gbJam6.setScreen<City>()
             }
             1 -> gbJam6.setScreen<Tutorial>()
-            2 -> gbJam6.setScreen<Achievements>()
+            2 -> gbJam6.setScreen<SoundTest>()
         }
     }
 

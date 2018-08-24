@@ -115,12 +115,12 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         val progress = gbJam6.manager.progress
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
         shapeRenderer.color = Def.color4
-        shapeRenderer.rect(-60f, -1f - 16f, progress * 120, 2f)
+        shapeRenderer.rect(-60f, -1f - 32f, progress * 120, 2f)
         shapeRenderer.end()
 
         batch.projectionMatrix = camera.combined
         batch.begin()
-        font.draw(batch, "PUBLIC DOMAIN\nLICENSED BY NO ONE", -80f, -32f, 160f, 1, true)
+        font.draw(batch, "PUBLIC DOMAIN\nLICENSED BY NO ONE", -80f, -48f, 160f, 1, true)
         batch.end()
 
     }
