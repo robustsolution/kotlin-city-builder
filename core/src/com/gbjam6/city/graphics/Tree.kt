@@ -6,11 +6,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.gbjam6.city.GBJam6
 import com.gbjam6.city.general.Def
+import com.gbjam6.city.general.SFX
 import com.gbjam6.city.general.Util
 import com.gbjam6.city.states.City
 import com.gbjam6.city.states.States
 
-class Tree(gbJam6: GBJam6) {
+class Tree(val gbJam6: GBJam6) {
 
     private val bg = gbJam6.manager.get("sprites/tree/tree.png", Texture::class.java)
     private val cursor = TextureRegion(gbJam6.manager.get("sprites/tree/cursor-sheet.png", Texture::class.java), 2, 2, 16, 16)
@@ -69,6 +70,7 @@ class Tree(gbJam6: GBJam6) {
         if (selected.cost <= City.ressources.research && selected.name !in City.progress.tree && Util.canUnlock(selected.name)) {
             City.ressources.research -= selected.cost
             City.progress.tree.add(selected.name)
+            GBJam6.playSFX(SFX.EXPAND)
         }
 
         return States.TREE

@@ -4,9 +4,11 @@ import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.gbjam6.city.GBJam6
 import com.gbjam6.city.MenuManager
 import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.LBuilding
+import com.gbjam6.city.general.SFX
 import com.gbjam6.city.logic.Ressources
 import com.gbjam6.city.general.Util
 import com.gbjam6.city.logic.Citizen
@@ -22,6 +24,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     val wateredCitizens = mutableListOf<Citizen>()
     var exchangeTimer = Def.EXCHANGE_TIME
     var upgrade = -1
+    var damaged = false
 
     private var sprite = Sprite(manager.get("sprites/buildings/${lBuilding.name}.png", Texture::class.java))
     val width = sprite.width
@@ -211,6 +214,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
             if (citizen.life == 0)
                 ressources.citizens -= 1
         }
+        if (citizensToKill.any()) GBJam6.playSFX(SFX.DIE)
         citizensToKill.clear()
         // Updates exchangeTimer for the Garden
         if (this.lBuilding.name == "GARDEN" && exchangeTimer < Def.EXCHANGE_TIME)
@@ -225,6 +229,10 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
 
         if (life <= City.progress.buildlife * Def.DAMAGED_LIMIT_PCT && lBuilding.name in Def.destroyedRessources) {
             sprite.texture = manager.get("sprites/buildings/destroyed/${lBuilding.name} DESTROYED.png", Texture::class.java)
+            if (!damaged) {
+                damaged = true
+                GBJam6.playSFX(SFX.DESTROYED)
+            }
         }
     }
 
