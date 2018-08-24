@@ -46,6 +46,7 @@ class GBJam6 : KtxGame<Screen>() {
         shaderFragIndexPalette = Gdx.files.internal("shaders/indexpalette.frag").readString()
 
         // Add the different states
+        addScreen(Preload(this))
         addScreen(Load(this))
         addScreen(TitleScreen(this))
         addScreen(City(this))
@@ -53,7 +54,7 @@ class GBJam6 : KtxGame<Screen>() {
         addScreen(Achievements(this))
 
         // Start loading screen
-        setScreen<Load>()
+        setScreen<Preload>()
 
     }
 

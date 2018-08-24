@@ -232,5 +232,7 @@ object Util {
         GBJam6.sfxMap[SFX.NO_FOOD] = gbJam6.manager.get("sfx/noFood.wav", Sound::class.java)
         GBJam6.sfxMap[SFX.PLACE_CITIZEN] = gbJam6.manager.get("sfx/placeCitizen.wav", Sound::class.java)
         GBJam6.sfxMap[SFX.SELECT] = gbJam6.manager.get("sfx/select.wav", Sound::class.java)
+        GBJam6.sfxMap[SFX.DISABLED] = gbJam6.manager.get("sfx/disabled.wav", Sound::class.java)
+        GBJam6.sfxMap[SFX.RETURN] = gbJam6.manager.get("sfx/b.wav", Sound::class.java)
     }
 }

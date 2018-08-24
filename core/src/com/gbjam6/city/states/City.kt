@@ -56,7 +56,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         val buildings = mutableListOf<Building>()
         val ressources = Def.startingRessources.copy()
         val limits = Ressources(happiness = 9999, research = 9999)
-        val progress = Progress(mutableListOf(),birthcost = Def.BIRTH_COST,lifetime = Def.LIFE_TIME,buildlife = Def.BUILD_LIFE_TIME)
+        val progress = Progress(mutableListOf(), birthcost = Def.BIRTH_COST, lifetime = Def.LIFE_TIME, buildlife = Def.BUILD_LIFE_TIME)
         var starvingtick = 0
     }
 
@@ -295,7 +295,11 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             }
             // Selects the pointed menu option or the pointed spot
             States.MENU, States.PLACE_BUILDING, States.PLACE_CITIZEN -> {
-                GBJam6.playSFX(SFX.SELECT)
+                if (state == States.MENU && !menuManager.menus.last().activated[menuManager.menus.last().cursorPos]) {
+                    GBJam6.playSFX(SFX.DISABLED)
+                } else {
+                    GBJam6.playSFX(SFX.SELECT)
+                }
                 menuManager.select(pointer.y)
             }
             States.TREE -> tree.select()
@@ -305,6 +309,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     override fun b() {
         state = when (state) {
             States.MENU -> {
+                GBJam6.playSFX(SFX.RETURN)
                 menuManager.close()
                 Util.updateMenuHelper(menuManager.menus)
                 if (menuManager.menus.any()) {
@@ -317,14 +322,24 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 }
             }
             States.PLACE_BUILDING -> {
+                GBJam6.playSFX(SFX.RETURN)
                 menuManager.placingB = null
                 menuManager.updateMenu()
+                // Closes the helper
+                MenuManager.helper.visible = false
                 States.MENU
             }
             States.PLACE_CITIZEN -> {
+                GBJam6.playSFX(SFX.RETURN)
                 menuManager.placingC = null
                 menuManager.updateMenu()
                 menuManager.menus.clear()
+                // Closes the helper
+                MenuManager.helper.visible = false
+                States.IDLE
+            }
+            States.TREE -> {
+                GBJam6.playSFX(SFX.RETURN)
                 States.IDLE
             }
             else -> States.IDLE
@@ -333,8 +348,14 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
     override fun start() {
         when (state) {
-            States.IDLE -> state = States.TREE
-            States.TREE -> state = States.IDLE
+            States.IDLE -> {
+                GBJam6.playSFX(SFX.SELECT)
+                state = States.TREE
+            }
+            States.TREE -> {
+                GBJam6.playSFX(SFX.RETURN)
+                state = States.IDLE
+            }
             else -> Unit
         }
     }

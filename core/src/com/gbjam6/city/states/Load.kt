@@ -9,6 +9,7 @@ import com.gbjam6.city.GBJam6
 import ktx.app.KtxScreen
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.Util
@@ -18,16 +19,22 @@ import com.gbjam6.city.general.Util
  */
 class Load(private val gbJam6: GBJam6) : KtxScreen {
     private val shapeRenderer = ShapeRenderer()
+    private val batch = SpriteBatch()
     private val camera = OrthographicCamera()
     private val viewport = FitViewport(160f, 144f, camera)
+
+    private lateinit var font: BitmapFont
+    //private lateinit var bg
 
     override fun show() {
         super.show()
 
+        //bg = gbJam6.manager.get()
+        font = gbJam6.manager.get("fonts/skullboy.fnt", BitmapFont::class.java)
+
         shapeRenderer.projectionMatrix = camera.combined
 
         // Fonts
-        gbJam6.manager.load("fonts/skullboy.fnt", BitmapFont::class.java)
         gbJam6.manager.load("fonts/little.fnt", BitmapFont::class.java)
         gbJam6.manager.load("fonts/littleDark.fnt", BitmapFont::class.java)
         gbJam6.manager.load("fonts/littleDisabled.fnt", BitmapFont::class.java)
@@ -85,6 +92,8 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         gbJam6.manager.load("sfx/collapse.wav", Sound::class.java)
         gbJam6.manager.load("sfx/expand.wav", Sound::class.java)
         gbJam6.manager.load("sfx/noFood.wav", Sound::class.java)
+        gbJam6.manager.load("sfx/disabled.wav", Sound::class.java)
+        gbJam6.manager.load("sfx/b.wav", Sound::class.java)
 
     }
 
@@ -106,8 +115,13 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         val progress = gbJam6.manager.progress
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
         shapeRenderer.color = Def.color4
-        shapeRenderer.rect(-60f, -1f, progress * 120, 2f)
+        shapeRenderer.rect(-60f, -1f - 16f, progress * 120, 2f)
         shapeRenderer.end()
+
+        batch.projectionMatrix = camera.combined
+        batch.begin()
+        font.draw(batch, "PUBLIC DOMAIN\nLICENSED BY NO ONE", -80f, -32f, 160f, 1, true)
+        batch.end()
 
     }
 
