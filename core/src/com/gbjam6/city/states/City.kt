@@ -16,7 +16,6 @@ import com.gbjam6.city.logic.Ressources
 import com.gbjam6.city.general.Util
 import com.gbjam6.city.graphics.Building
 import com.gbjam6.city.graphics.GUI
-import com.gbjam6.city.graphics.SpeedIndicator
 import com.gbjam6.city.graphics.Tree
 import com.gbjam6.city.logic.Hills
 import ktx.app.KtxScreen
@@ -57,7 +56,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         val limits = Ressources(happiness = 9999, research = 9999)
         val progress = Progress(mutableListOf(), birthcost = Def.BIRTH_COST, lifetime = Def.LIFE_TIME, buildlife = Def.BUILD_LIFE_TIME)
         var starvingtick = 0
-        val speedIndicator = SpeedIndicator()
+        var speed = 1
     }
 
     override fun show() {
@@ -101,8 +100,8 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     override fun render(delta: Float) {
 
         // Time based or frame based stuff
-        if (speedIndicator.speed > 0) {
-            frame += speedIndicator.speed
+        if (speed > 0) {
+            frame += speed
             if (frame > Def.SPEED) {
                 frame = 0
                 Util.tick(menuManager)
@@ -181,7 +180,6 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
         // Draws the GUI
         gui.draw(batch, smallFontDark)
-        speedIndicator.draw(batch, smallFontDark)
 
         // Draws the menu
         menuManager.drawMenu(batch, smallFont, smallFontDisabled)
@@ -228,6 +226,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 menuManager.moveCursor(-1)
             }
             States.TREE -> tree.up()
+            States.IDLE -> gui.visible = !gui.visible
         }
     }
 
@@ -291,6 +290,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
             // Opens the menu
             States.IDLE -> {
                 GBJam6.playSFX(SFX.SELECT)
+                gui.visible = true
                 menuManager.open()
             }
             // Selects the pointed menu option or the pointed spot
@@ -362,9 +362,9 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
     override fun select() {
         if ("HARD MODE" in City.progress.tree){
-            speedIndicator.speed = 4 + (speedIndicator.speed + 1) % 4
+            speed = 4 + (speed + 1) % 4
         } else{
-            speedIndicator.speed = (speedIndicator.speed + 1) % 4
+            speed = (speed + 1) % 4
         }
     }
 
