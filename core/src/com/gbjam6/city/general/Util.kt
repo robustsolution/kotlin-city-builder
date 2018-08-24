@@ -4,6 +4,7 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.Sprite
 import com.gbjam6.city.GBJam6
 import com.gbjam6.city.graphics.Building
 import com.gbjam6.city.MenuManager
@@ -116,19 +117,25 @@ object Util {
      */
     fun updateHelper(menus: MutableList<Menu>) {
 
-        if (City.state == States.MENU) {
-            Util.updateMenuHelper(menus)
+        if (City.tutorial.active) {
+            MenuManager.helper.visible = true
+            MenuManager.helper.update("TUTORIAL", City.tutorial.progression[0].description)
         } else {
-            val building = getBuilding()
-            if (building != null) {
-                // Displays informations about the building
-                MenuManager.helper.update(building.lBuilding.name, building.getDescription())
+
+            if (City.state == States.MENU) {
+                Util.updateMenuHelper(menus)
             } else {
-                // Indicates that the selected point is empty
-                when (City.state) {
-                    States.PLACE_CITIZEN -> MenuManager.helper.update("EMPTY", "YOU CANNOT \nPLACE THE\nCITIZEN HERE!")
-                    States.IDLE -> MenuManager.helper.update("EMPTY", "YOU CAN BUILD\nHERE!")
-                    States.PLACE_DECORATION -> MenuManager.helper.update("EMPTY", "YOU CAN\nDECORATE\nHERE!")
+                val building = getBuilding()
+                if (building != null) {
+                    // Displays informations about the building
+                    MenuManager.helper.update(building.lBuilding.name, building.getDescription())
+                } else {
+                    // Indicates that the selected point is empty
+                    when (City.state) {
+                        States.PLACE_CITIZEN -> MenuManager.helper.update("EMPTY", "YOU CANNOT \nPLACE THE\nCITIZEN HERE!")
+                        States.IDLE -> MenuManager.helper.update("EMPTY", "YOU CAN BUILD\nHERE!")
+                        States.PLACE_DECORATION -> MenuManager.helper.update("EMPTY", "YOU CAN\nDECORATE\nHERE!")
+                    }
                 }
             }
         }
@@ -168,7 +175,7 @@ object Util {
                         }
                     }
                 }
-                MenuType.BUILDING -> {
+                MenuType.CONSTRUCTION -> {
                     val building = getBuilding()
                     when (item) {
                         "UPGRADE" -> {
@@ -254,5 +261,22 @@ object Util {
         GBJam6.sfxMap[SFX.SELECT] = gbJam6.manager.get("sfx/select.wav", Sound::class.java)
         GBJam6.sfxMap[SFX.DISABLED] = gbJam6.manager.get("sfx/disabled.wav", Sound::class.java)
         GBJam6.sfxMap[SFX.RETURN] = gbJam6.manager.get("sfx/b.wav", Sound::class.java)
+    }
+
+    /**
+     * Updates the pointer according to the slope.
+     */
+    fun updatePointer(pointer: Sprite, pointerSmiley: Sprite) {
+        pointer.x = City.camera.position.x - 4
+
+        // Computes difference between camera x and the current chunk x
+        val n = Math.floor(City.camera.position.x / 32.0).toInt() + Def.nChunks / 2
+        val chunk = City.hills.chunks[n]
+        val diff = City.camera.position.x - (n - Def.nChunks / 2) * 32
+
+        // Sets height to follow the slopes
+        pointer.y = Util.getPixel(-87f + chunk.height + diff * chunk.slope / 32)
+        pointerSmiley.x = pointer.x
+        pointerSmiley.y = pointer.y + 1
     }
 }

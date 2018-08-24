@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.MenuType
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.gbjam6.city.ACTION
 import com.gbjam6.city.GBJam6
 import com.gbjam6.city.general.Util
 import com.gbjam6.city.states.City
@@ -16,7 +17,7 @@ import com.gbjam6.city.states.City
 class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gbJam6: GBJam6, array: Array<String>? = null, validity: Array<Boolean>? = null) {
 
     var items: Array<String> = array ?: Def.menus[type] ?: arrayOf("RETURN")
-    val activated = validity ?: Array(items.size) { true }
+    var activated = validity ?: Array(items.size) { true }
     private var height = (items.size * 9 + 19).toFloat()
     private var texture = Util.generateRectangle(Def.menuWidth.toInt(), height.toInt(), Def.color1)
     private val cursor = gbJam6.manager.get("sprites/smallPointerRight.png", Texture::class.java)
@@ -48,67 +49,71 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
      * Updates [activated] array and [items] for [MenuType.CITIZENS].
      */
     fun changeValidity() {
-        val building = Util.getBuilding()
+        if (City.tutorial.active) {
+            City.tutorial.changeValidity(this)
+        } else {
+            val building = Util.getBuilding()
 
-        when (type) {
+            when (type) {
 
-            // Valid items are buildings which can be constructed
-            MenuType.CATEGORY -> {
-                // Creates the LBuildings list
-                val lBuildings = Array(items.lastIndex) { i -> Def.buildings.first { it.name == items[i] } }
+                // Valid items are buildings which can be constructed
+                MenuType.CATEGORY -> {
+                    // Creates the LBuildings list
+                    val lBuildings = Array(items.lastIndex) { i -> Def.buildings.first { it.name == items[i] } }
 
-                // Don't change the last item's validity ("RETURN")
-                for (i in 0 until items.lastIndex) {
-                    activated[i] = City.ressources.stone >= lBuildings[i].cost
-                }
-            }
-
-            // Valid items are the different possible actions on the building
-            MenuType.BUILDING -> {
-                val b = building!!
-                for ((i, item) in items.withIndex()) {
-                    when (item) {
-                        "UPGRADE" -> activated[i] = b.canUpgrade()
-                        "REPAIR" -> activated[i] = b.canRepair()
-                        "BIRTH" -> activated[i] = City.ressources.happiness >= City.progress.birthcost && b.citizens.size < b.lBuilding.capacity && City.ressources.citizens < City.limits.citizens
-                        "EXCHANGE" -> activated[i] = City.ressources.food >= Def.EXCHANGE_VALUE && building.exchangeTimer == Def.EXCHANGE_TIME
-                        "DESTROY" -> activated[i] = City.ressources.happiness >= b.lBuilding.cost * Def.DESTROY_HAP_PCT
-
+                    // Don't change the last item's validity ("RETURN")
+                    for (i in 0 until items.lastIndex) {
+                        activated[i] = City.ressources.stone >= lBuildings[i].cost
                     }
                 }
-            }
 
-            // Removes dead citizens
-            MenuType.CITIZENS -> {
-                val b = building!!
-                if (items.size - 1 != b.citizens.size) {
-                    // Gets the living citizens names
-                    val tempItems = MutableList(b.citizens.size) { b.citizens[it].name }
-                    tempItems.add("RETURN")
-                    // Updates displayed items and resets the cursor position
-                    items = tempItems.toTypedArray()
-                    cursorPos = 0
+                // Valid items are the different possible actions on the building
+                MenuType.CONSTRUCTION -> {
+                    val b = building!!
+                    for ((i, item) in items.withIndex()) {
+                        when (item) {
+                            "UPGRADE" -> activated[i] = b.canUpgrade()
+                            "REPAIR" -> activated[i] = b.canRepair()
+                            "BIRTH" -> activated[i] = City.ressources.happiness >= City.progress.birthcost && b.citizens.size < b.lBuilding.capacity && City.ressources.citizens < City.limits.citizens
+                            "EXCHANGE" -> activated[i] = City.ressources.food >= Def.EXCHANGE_VALUE && building.exchangeTimer == Def.EXCHANGE_TIME
+                            "DESTROY" -> activated[i] = City.ressources.happiness >= b.lBuilding.cost * Def.DESTROY_HAP_PCT
+
+                        }
+                    }
                 }
-            }
 
-            // Updates well according to watered citizens
-            MenuType.HYDRATE -> {
-                val b = building!!
-                activated[0] = b.wateredCitizens.size < 2
-                activated[1] = b.wateredCitizens.size > 0
-            }
-
-            // Updates expand menu
-            MenuType.EXPAND -> {
-                val nExp = Util.expandsMade()
-                if ("EXPAND" in City.progress.tree){
-                    activated[0] = nExp < Def.EXPAND_COST.size && City.ressources.happiness >= Def.EXPAND_COST[nExp]
-                }else{
-                    activated[0] = nExp < Def.EXPAND_COST.size-2 && City.ressources.happiness >= Def.EXPAND_COST[nExp]
+                // Removes dead citizens
+                MenuType.CITIZENS -> {
+                    val b = building!!
+                    if (items.size - 1 != b.citizens.size) {
+                        // Gets the living citizens names
+                        val tempItems = MutableList(b.citizens.size) { b.citizens[it].name }
+                        tempItems.add("RETURN")
+                        // Updates displayed items and resets the cursor position
+                        items = tempItems.toTypedArray()
+                        cursorPos = 0
+                    }
                 }
-            }
 
-            else -> Unit
+                // Updates well according to watered citizens
+                MenuType.HYDRATE -> {
+                    val b = building!!
+                    activated[0] = b.wateredCitizens.size < 2
+                    activated[1] = b.wateredCitizens.size > 0
+                }
+
+                // Updates expand menu
+                MenuType.EXPAND -> {
+                    val nExp = Util.expandsMade()
+                    if ("EXPAND" in City.progress.tree) {
+                        activated[0] = nExp < Def.EXPAND_COST.size && City.ressources.happiness >= Def.EXPAND_COST[nExp]
+                    } else {
+                        activated[0] = nExp < Def.EXPAND_COST.size - 2 && City.ressources.happiness >= Def.EXPAND_COST[nExp]
+                    }
+                }
+
+                else -> Unit
+            }
         }
 
         // Updates the background
