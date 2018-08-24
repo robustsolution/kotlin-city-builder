@@ -333,8 +333,8 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 GBJam6.playSFX(SFX.RETURN)
                 menuManager.placingB = null
                 menuManager.updateMenu()
-                // Closes the helper
-                MenuManager.helper.visible = false
+                // Opens the helper
+                MenuManager.helper.visible = true
                 States.MENU
             }
             States.PLACE_CITIZEN -> {

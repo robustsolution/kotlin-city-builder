@@ -78,6 +78,13 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
         // Special case for decorations
         if (lBuilding.decoration) {
             val collision = City.decorations.firstOrNull { if (x < it.x) it.x - x <= width else x - it.x <= it.width }
+
+            // NO OOB
+            val pos = lBuilding.door.first + Math.floor((lBuilding.door.second - lBuilding.door.first) / 2.0).toFloat()
+            if (City.camera.position.x - pos < City.progress.limits.first || City.camera.position.x + (width - pos) > City.progress.limits.second) {
+                return false
+            }
+
             return collision == null
         }
 

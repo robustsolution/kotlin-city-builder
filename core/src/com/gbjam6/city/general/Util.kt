@@ -126,9 +126,9 @@ object Util {
             } else {
                 // Indicates that the selected point is empty
                 when (City.state) {
-                    States.IDLE -> MenuManager.helper.update("EMPTY", "YOU CAN BUILD\nHERE!")
                     States.PLACE_CITIZEN -> MenuManager.helper.update("EMPTY", "YOU CANNOT \nPLACE THE\nCITIZEN HERE!")
-                    else -> Unit
+                    States.IDLE -> MenuManager.helper.update("EMPTY", "YOU CAN BUILD\nHERE!")
+                    States.PLACE_DECORATION -> MenuManager.helper.update("EMPTY", "YOU CAN\nDECORATE\nHERE!")
                 }
             }
         }

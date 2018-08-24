@@ -121,10 +121,10 @@ class MenuManager(private val gbJam6: GBJam6) {
                     frame = 0
 
                     // Closes the helper
-                    MenuManager.helper.visible = false
                     if (placingB!!.lBuilding.decoration) {
                         return States.PLACE_DECORATION
                     } else {
+                        MenuManager.helper.visible = false
                         return States.PLACE_BUILDING
                     }
                 }
