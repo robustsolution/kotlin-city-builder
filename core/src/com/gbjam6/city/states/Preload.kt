@@ -24,7 +24,7 @@ class Preload(private val gbJam6: GBJam6) : KtxScreen {
 
         // Fonts
         gbJam6.manager.load("fonts/skullboy.fnt", BitmapFont::class.java)
-        //manager.load("sprites/loadingScreen.png", Texture::class.java)
+        gbJam6.manager.load("sprites/loading.png", Texture::class.java)
 
     }
 

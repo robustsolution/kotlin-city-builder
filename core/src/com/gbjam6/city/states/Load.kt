@@ -24,15 +24,13 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
     private val viewport = FitViewport(160f, 144f, camera)
 
     private lateinit var font: BitmapFont
-    //private lateinit var bg
+    private lateinit var bg: Texture
 
     override fun show() {
         super.show()
 
-        //bg = gbJam6.manager.get()
+        bg = gbJam6.manager.get("sprites/loading.png", Texture::class.java)
         font = gbJam6.manager.get("fonts/skullboy.fnt", BitmapFont::class.java)
-
-        shapeRenderer.projectionMatrix = camera.combined
 
         // Fonts
         gbJam6.manager.load("fonts/little.fnt", BitmapFont::class.java)
@@ -110,21 +108,26 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         }
 
         camera.update()
+        batch.projectionMatrix = camera.combined
+        shapeRenderer.projectionMatrix = camera.combined
 
         // Clear screen
         Gdx.gl.glClearColor(Def.color2.r, Def.color2.g, Def.color2.b, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
+        batch.begin()
+        batch.draw(bg, -80f, -72f)
+        batch.end()
+
         // Draw the loading bar
         val progress = gbJam6.manager.progress
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
         shapeRenderer.color = Def.color4
-        shapeRenderer.rect(-60f, -1f - 32f, progress * 120, 2f)
+        shapeRenderer.rect(-60f, -48f, progress * 120, 2f)
         shapeRenderer.end()
 
-        batch.projectionMatrix = camera.combined
         batch.begin()
-        font.draw(batch, "PUBLIC DOMAIN\nLICENSED BY NO ONE", -80f, -48f, 160f, 1, true)
+        font.draw(batch, "PUBLIC DOMAIN\nLICENSED BY NO ONE", -80f, -51f, 160f, 1, true)
         batch.end()
 
     }
