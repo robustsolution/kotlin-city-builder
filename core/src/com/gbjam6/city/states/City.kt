@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.gbjam6.city.*
 import com.gbjam6.city.general.Def
+import com.gbjam6.city.general.SFX
 import com.gbjam6.city.logic.Ressources
 import com.gbjam6.city.general.Util
 import com.gbjam6.city.graphics.Building
@@ -288,10 +289,12 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         state = when (state) {
             // Opens the menu
             States.IDLE -> {
+                GBJam6.playSFX(SFX.SELECT)
                 menuManager.open()
             }
             // Selects the pointed menu option or the pointed spot
             States.MENU, States.PLACE_BUILDING, States.PLACE_CITIZEN -> {
+                GBJam6.playSFX(SFX.SELECT)
                 menuManager.select(pointer.y)
             }
             States.TREE -> tree.select()

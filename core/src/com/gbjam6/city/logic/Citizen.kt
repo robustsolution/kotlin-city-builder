@@ -1,5 +1,6 @@
 package com.gbjam6.city.logic
 
+import com.gbjam6.city.GBJam6
 import com.gbjam6.city.graphics.Building
 import com.gbjam6.city.general.Def
 import com.gbjam6.city.states.City

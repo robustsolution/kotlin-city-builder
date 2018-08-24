@@ -179,6 +179,7 @@ class MenuManager(private val gbJam6: GBJam6) {
                             if (selectedB.life <= City.progress.buildlife * Def.DAMAGED_LIMIT_PCT)
                                 selectedB.updateTexture()
                             selectedB.life = City.progress.buildlife
+                            selectedB.damaged = false
                             menus.last().changeValidity()
                         }
                         "DESTROY" -> {
@@ -295,6 +296,8 @@ class MenuManager(private val gbJam6: GBJam6) {
                                 3 -> gbJam6.setMusic("BIG CITY")
                             }
 
+                            GBJam6.playSFX(SFX.EXPAND)
+
                             // Close the menu and the helper
                             close()
                             helper.visible = false
@@ -318,6 +321,7 @@ class MenuManager(private val gbJam6: GBJam6) {
                 Util.placeBuilding(placingB!!)
                 menus.clear()
                 placingB = null
+                GBJam6.playSFX(SFX.BUILD)
             } else {
                 return States.PLACE_BUILDING
             }
@@ -339,6 +343,8 @@ class MenuManager(private val gbJam6: GBJam6) {
                 placingC = null
                 menus.clear()
 
+                GBJam6.playSFX(SFX.PLACE_CITIZEN)
+
             } else {
                 // The citizen cannot be placed in [selectedB]
                 return States.PLACE_CITIZEN
@@ -358,6 +364,9 @@ class MenuManager(private val gbJam6: GBJam6) {
 
         // Updates the helper
         Util.updateMenuHelper(menus)
+
+        // Plat SFX
+        GBJam6.playSFX(SFX.SWIPE)
     }
 
     /**

@@ -2,7 +2,6 @@ package com.gbjam6.city.general
 
 import com.badlogic.gdx.graphics.Color
 import com.gbjam6.city.logic.Ressources
-import com.gbjam6.city.states.City
 
 enum class MenuType {
     CREATION, CATEGORY, BUILDING, CITIZENS, CONFIRM, IMPROVE, HYDRATE, ADD, REMOVE, EXPAND
@@ -10,6 +9,10 @@ enum class MenuType {
 
 enum class BuildingType {
     CITIZENS, HAPPINESS, FOOD, RESEARCH, STONE, OTHER
+}
+
+enum class SFX {
+    SWIPE, SELECT, BUILD, PLACE_CITIZEN, DIE, DESTROYED, COLLAPSE, EXPAND, NO_FOOD
 }
 
 
@@ -203,7 +206,7 @@ object Def {
             Color.valueOf("ffffff"), // GBPocket
             Color.valueOf("9bbc0f"), // GB green
             Color.valueOf("92d3ff"), // NES Blue
-            Color.valueOf("d59d9d"),  // yopox br
+            Color.valueOf("d59d9d"), // yopox br
             Color.valueOf("c3a38a") // nyx8
     )
     var PALETTE_SIZE = 6

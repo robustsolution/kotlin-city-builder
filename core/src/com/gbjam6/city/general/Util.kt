@@ -1,8 +1,10 @@
 package com.gbjam6.city.general
 
+import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
+import com.gbjam6.city.GBJam6
 import com.gbjam6.city.graphics.Building
 import com.gbjam6.city.MenuManager
 import com.gbjam6.city.graphics.Menu
@@ -54,6 +56,7 @@ object Util {
         // Removes destroyed buildings
         for (building in buildingsToDestroy) {
             building.destroy(menuManager)
+            GBJam6.playSFX(SFX.COLLAPSE)
         }
         buildingsToDestroy.clear()
 
@@ -65,6 +68,11 @@ object Util {
             if (it.upgrade in 0..1) {
                 it.upgrade++; it.updateTexture()
             }
+        }
+
+        // No food
+        if (City.ressources.food == 0) {
+            GBJam6.playSFX(SFX.NO_FOOD)
         }
     }
 
@@ -144,15 +152,15 @@ object Util {
                         "UPGRADE" -> {
                             var description = ""
                             if (building!!.canUpgrade()) {
-                                description += "Cost :\n${building!!.lBuilding.upgradeCost} Stones"
+                                description += "Cost :\n${building.lBuilding.upgradeCost} Stones"
                             } else {
-                                description += "You need \n${building!!.lBuilding.upgradeCost} Stones \nand the ${building.lBuilding.name}+\nesearch"
+                                description += "You need \n${building.lBuilding.upgradeCost} Stones \nand the ${building.lBuilding.name}+\nesearch"
                             }
                             MenuManager.helper.update(item, description)
                         }
 
-                        "REPAIR" -> MenuManager.helper.update(item, "Integrity :\n${building!!.life}/${City.progress.buildlife}\nRepair cost :\n${((1 - building!!.life / City.progress.buildlife.toFloat()) * building!!.lBuilding.cost + 1).toInt()}")
-                        "DESTROY" -> MenuManager.helper.update(item, "Cost :\n${building!!.lBuilding.cost * Def.DESTROY_HAP_PCT} Hapiness\nGain :\n${building!!.lBuilding.cost * Def.DESTROY_STN_PCT} Stones")
+                        "REPAIR" -> MenuManager.helper.update(item, "Integrity :\n${building!!.life}/${City.progress.buildlife}\nRepair cost :\n${((1 - building.life / City.progress.buildlife.toFloat()) * building.lBuilding.cost + 1).toInt()}")
+                        "DESTROY" -> MenuManager.helper.update(item, "Cost :\n${building!!.lBuilding.cost * Def.DESTROY_HAP_PCT} Hapiness\nGain :\n${building.lBuilding.cost * Def.DESTROY_STN_PCT} Stones")
                         else -> MenuManager.helper.update(item, Def.getDescription(item))
                     }
                 }
@@ -192,5 +200,17 @@ object Util {
             unlockable = unlockable && requirement in City.progress.tree
         }
         return unlockable
+    }
+
+    fun createSounds(gbJam6: GBJam6) {
+        GBJam6.sfxMap[SFX.BUILD] = gbJam6.manager.get("sfx/build.wav", Sound::class.java)
+        GBJam6.sfxMap[SFX.SWIPE] = gbJam6.manager.get("sfx/swipe.wav", Sound::class.java)
+        GBJam6.sfxMap[SFX.COLLAPSE] = gbJam6.manager.get("sfx/collapse.wav", Sound::class.java)
+        GBJam6.sfxMap[SFX.DESTROYED] = gbJam6.manager.get("sfx/destroyed.wav", Sound::class.java)
+        GBJam6.sfxMap[SFX.DIE] = gbJam6.manager.get("sfx/die.wav", Sound::class.java)
+        GBJam6.sfxMap[SFX.EXPAND] = gbJam6.manager.get("sfx/expand.wav", Sound::class.java)
+        GBJam6.sfxMap[SFX.NO_FOOD] = gbJam6.manager.get("sfx/noFood.wav", Sound::class.java)
+        GBJam6.sfxMap[SFX.PLACE_CITIZEN] = gbJam6.manager.get("sfx/placeCitizen.wav", Sound::class.java)
+        GBJam6.sfxMap[SFX.SELECT] = gbJam6.manager.get("sfx/select.wav", Sound::class.java)
     }
 }

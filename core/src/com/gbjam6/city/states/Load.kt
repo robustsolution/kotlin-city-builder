@@ -1,6 +1,7 @@
 package com.gbjam6.city.states
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.utils.viewport.FitViewport
@@ -10,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.gbjam6.city.general.Def
+import com.gbjam6.city.general.Util
 
 /**
  * Loading screen with a loading bar.
@@ -73,11 +75,23 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         // SHADER
         gbJam6.manager.load("shaders/colorTable.png", Texture::class.java)
 
+        // GFX
+        gbJam6.manager.load("sfx/swipe.wav", Sound::class.java)
+        gbJam6.manager.load("sfx/select.wav", Sound::class.java)
+        gbJam6.manager.load("sfx/build.wav", Sound::class.java)
+        gbJam6.manager.load("sfx/placeCitizen.wav", Sound::class.java)
+        gbJam6.manager.load("sfx/die.wav", Sound::class.java)
+        gbJam6.manager.load("sfx/destroyed.wav", Sound::class.java)
+        gbJam6.manager.load("sfx/collapse.wav", Sound::class.java)
+        gbJam6.manager.load("sfx/expand.wav", Sound::class.java)
+        gbJam6.manager.load("sfx/noFood.wav", Sound::class.java)
+
     }
 
     override fun render(delta: Float) {
 
         if (gbJam6.manager.update()) {
+            Util.createSounds(gbJam6)
             gbJam6.setMusic("BOOT")
             gbJam6.setScreen<TitleScreen>()
         }
