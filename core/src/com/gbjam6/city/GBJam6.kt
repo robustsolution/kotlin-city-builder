@@ -5,7 +5,6 @@ import com.badlogic.gdx.Screen
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.gbjam6.city.general.SFX
 import com.gbjam6.city.states.*
@@ -46,14 +45,15 @@ class GBJam6 : KtxGame<Screen>() {
         shaderFragIndexPalette = Gdx.files.internal("shaders/indexpalette.frag").readString()
 
         // Add the different states
+        addScreen(Preload(this))
         addScreen(Load(this))
         addScreen(TitleScreen(this))
         addScreen(City(this))
         addScreen(Tutorial(this))
-        addScreen(Achievements(this))
+        addScreen(SoundTest(this))
 
         // Start loading screen
-        setScreen<Load>()
+        setScreen<Preload>()
 
     }
 
@@ -69,12 +69,14 @@ class GBJam6 : KtxGame<Screen>() {
         when (music) {
             "BOOT" -> player.play(titleMusic, true, true,
                     0f, 0f)
+            "TITLE" -> player.play(titleMusic, true, true,
+                    1f, 0.1f)
             "SMALL CITY" -> player.play(cityMusic1, true, true,
-                    1f, 1f)
+                    1f, 0.1f)
             "MEDIUM CITY" -> player.play(cityMusic2, true, true,
-                    1f, 1f)
+                    1f, 0.1f)
             "BIG CITY" -> player.play(cityMusic3, true, true,
-                    1f, 1f)
+                    1f, 0.1f)
         }
     }
 

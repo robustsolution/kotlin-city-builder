@@ -13,7 +13,7 @@ enum class BuildingType {
 }
 
 enum class SFX {
-    SWIPE, SELECT, BUILD, PLACE_CITIZEN, DIE, DESTROYED, COLLAPSE, EXPAND, NO_FOOD
+    SWIPE, SELECT, BUILD, PLACE_CITIZEN, DIE, DESTROYED, COLLAPSE, EXPAND, NO_FOOD, DISABLED, RETURN
 }
 
 
@@ -162,12 +162,6 @@ object Def {
             "PARENTING" to arrayOf("SCHOOL"),
             "EXPAND" to arrayOf("WAREHOUSE"),
             "HARD MODE" to arrayOf("HOSPITAL","PARENTING")
-    )
-
-    // ACHIEVEMENTS
-    val achievements = listOf(
-            Triple("ACH1", "Do this n times.", false),
-            Triple("ACH2", "Do that n times.", false)
     )
 
     // NAMES
