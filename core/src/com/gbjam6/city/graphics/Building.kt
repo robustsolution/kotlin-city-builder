@@ -21,6 +21,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     val citizensToKill = mutableListOf<Citizen>()
     val wateredCitizens = mutableListOf<Citizen>()
     var exchangeTimer = Def.EXCHANGE_TIME
+    var upgrade = -1
 
     private var sprite = Sprite(manager.get("sprites/buildings/${lBuilding.name}.png", Texture::class.java))
     val width = sprite.width
@@ -115,17 +116,14 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
 
     }
 
-    fun canUse(): Boolean {
-        return true
-    }
-
     fun canRepair(): Boolean {
         return ((1 - this.life / City.progress.buildlife.toFloat()) * this.lBuilding.cost + 1).toInt() <= City.ressources.stone && this.life != City.progress.buildlife
     }
 
     fun updateTexture() {
         // Gets new texture
-        val newText = manager.get("sprites/buildings/${this.lBuilding.name}.png", Texture::class.java)
+        val up = if (upgrade >= 0) upgrade.toString() else ""
+        val newText = manager.get("sprites/buildings/upgrades/${this.lBuilding.name}$up.png", Texture::class.java)
 
         // Changes the texture and update the sprite's height
         sprite.texture = newText
@@ -298,9 +296,12 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
                 City.limits.stone += Def.FACTORY_PLUS_LIMIT
             }
         }
-        // Make sure limits don't go over 999
+        // Makes sure limits don't go over 999
         City.limits.stone = min(City.limits.stone, 999)
         City.limits.food = min(City.limits.food, 999)
         City.limits.citizens = min(City.limits.citizens, 999)
+
+        // Starts the animation
+        upgrade = 0
     }
 }
