@@ -26,7 +26,7 @@ object Def {
     val startingRessources = Ressources(food = 200, happiness = 900, stone = 900, research = 2000)
 
     // GAME DESIGN
-    const val SPEED = 120
+    const val SPEED = 90
     const val BIRTH_COST = 100
     const val LIFE_TIME = 300
     const val DAMAGED_LIMIT_PCT = 0.30
@@ -64,6 +64,7 @@ object Def {
     const val CRAFTMAN_PRODUCTION = 4.0
     const val WAREHOUSE_PRODUCTION = 6.0
     const val STARVING_KILL_TICK = 10
+    const val HARD_MODE = 3
 
 
     // SIZE
@@ -94,7 +95,7 @@ object Def {
             LBuilding(BuildingType.OTHER, "WELL", 0, Pair(0, 17), Pair(0, 17), Pair(0, 17), 100),
             LBuilding(BuildingType.STONE, "CRAFTMAN", 1, Pair(20, 36), Pair(20, 36), Pair(20, 36), 100),
             LBuilding(BuildingType.FOOD, "WAREHOUSE", 1, Pair(24, 51), Pair(24, 51), Pair(24, 51), 200),
-            LBuilding(BuildingType.HAPPINESS, "GARDEN", 1, Pair(0, 54), Pair(5, 49), Pair(4, 49), 200),
+            LBuilding(BuildingType.HAPPINESS, "GARDEN", 1, Pair(21, 35), Pair(0, 55), Pair(0, 55), 200),
             LBuilding(BuildingType.RESEARCH, "HOSPITAL", 1, Pair(20, 43), Pair(20, 54), Pair(20, 64), 200),
             LBuilding(BuildingType.CITIZENS, "SCHOOL", 4, Pair(67, 79), Pair(31, 79), Pair(21, 79), 200)
     )
@@ -132,21 +133,21 @@ object Def {
     val yPos1 = Array(3) { 6 - 32 * it }
     val yPos2 = Array(3) { 22 - 32 * it }
     val tree = listOf(
-            TreeUpgrade(xPos[0], yPos1[0], "FACTORY+", 150, "Factory becomes upgradable.\n(+1 Citizen & +50 Storage)"),
-            TreeUpgrade(xPos[0], yPos1[1], "TAVERN+", 150, "Tavern becomes upgradable.\n(+1 Citizen)"),
-            TreeUpgrade(xPos[0], yPos1[2], "FARM+", 150, "Farm becomes upgradable.\n(+1 Citizen & +50 Storage)"),
+            TreeUpgrade(xPos[0], yPos1[0], "FACTORY+", 100, "Factory becomes upgradable.\n(+1 Citizen & +50 Storage)"),
+            TreeUpgrade(xPos[0], yPos1[1], "TAVERN+", 100, "Tavern becomes upgradable.\n(+1 Citizen)"),
+            TreeUpgrade(xPos[0], yPos1[2], "FARM+", 100, "Farm becomes upgradable.\n(+1 Citizen & +50 Storage)"),
             TreeUpgrade(xPos[1], yPos2[0], "WELL", 200, "Unlocks the Well.\nIt hydrates citizens and increases their production."),
             TreeUpgrade(xPos[1], yPos2[1], "LABORATORY+", 200, "Laboratory becomes upgradable.\n(+1 Citizen)"),
             TreeUpgrade(xPos[1], yPos2[2], "HOUSE+", 200, "House becomes upgradable.\n (+3 Citizens & +3 Population)"),
-            TreeUpgrade(xPos[2], yPos1[0], "CRAFTMAN", 250, "Unlocks the Craftman.\nDoubles building's integrity when constructed."),
-            TreeUpgrade(xPos[2], yPos1[1], "SCHOOL", 250, "Unlocks the School.\nBirth costs 75 Hapiness when constructed."),
-            TreeUpgrade(xPos[2], yPos1[2], "WAREHOUSE", 250, "Unlocks the Warehouse.\nIncreases food and stone storage by 200."),
-            TreeUpgrade(xPos[3], yPos2[0], "TREE", 300, ""),
-            TreeUpgrade(xPos[3], yPos2[1], "HOSPITAL", 300, "Unlocks the Hospital.\nDoubles your Citizens's lifetime."),
-            TreeUpgrade(xPos[3], yPos2[2], "PARENTING", 300, "New born citizens have a parent from the house and receive a bonus of production if he works with him"),
-            TreeUpgrade(xPos[4], yPos1[0], "GARDEN", 400, "Unlocks the Garden.\nExchanges 50 Food against 50 Happiness."),
-            TreeUpgrade(xPos[4], yPos1[1], "??", 400, ""),
-            TreeUpgrade(xPos[4], yPos1[2], "EXPAND", 400, "Allow you to expand 2 more time")
+            TreeUpgrade(xPos[2], yPos1[0], "CRAFTMAN", 400, "Unlocks the Craftman.\nDoubles building's integrity when constructed."),
+            TreeUpgrade(xPos[2], yPos1[1], "SCHOOL", 400, "Unlocks the School.\nBirth costs 75 Hapiness when constructed."),
+            TreeUpgrade(xPos[2], yPos1[2], "WAREHOUSE", 400, "Unlocks the Warehouse.\nIncreases food and stone storage by 200."),
+            TreeUpgrade(xPos[3], yPos2[0], "TREE", 600, ""),
+            TreeUpgrade(xPos[3], yPos2[1], "HOSPITAL", 600, "Unlocks the Hospital.\nDoubles your Citizens's lifetime."),
+            TreeUpgrade(xPos[3], yPos2[2], "PARENTING", 600, "New born citizens have a parent from the house and receive a bonus of production if he works with him"),
+            TreeUpgrade(xPos[4], yPos1[0], "GARDEN", 800, "Unlocks the Garden.\nExchanges 50 Food against 50 Happiness."),
+            TreeUpgrade(xPos[4], yPos1[1], "HARD MODE", 800, "\nBETTER, FASTER, STRONGER"),
+            TreeUpgrade(xPos[4], yPos1[2], "EXPAND", 800, "Allow you to expand 2 more time")
     )
     val treeRequirements = mapOf(
             "WELL" to arrayOf("FACTORY+"),
@@ -159,7 +160,8 @@ object Def {
             "HOSPITAL" to arrayOf("LABORATORY+"),
             "WAREHOUSE" to arrayOf("FARM+"),
             "PARENTING" to arrayOf("SCHOOL"),
-            "EXPAND" to arrayOf("WAREHOUSE")
+            "EXPAND" to arrayOf("WAREHOUSE"),
+            "HARD MODE" to arrayOf("HOSPITAL","PARENTING")
     )
 
     // ACHIEVEMENTS

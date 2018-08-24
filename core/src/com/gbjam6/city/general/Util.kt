@@ -75,7 +75,6 @@ object Util {
         if (City.ressources.food == 0) {
             GBJam6.playSFX(SFX.NO_FOOD)
             City.starvingtick ++
-            println(City.starvingtick)
         }else{
             City.starvingtick = 0
         }
@@ -87,7 +86,6 @@ object Util {
                     citizens.add(citizen)
             if (citizens.size >0){
                 val citizen = citizens.random()
-                println(citizen.name)
                 citizen.building.citizensToKill.add(citizen)
             }
             City.starvingtick = 0
