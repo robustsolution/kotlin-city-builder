@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color
 import com.gbjam6.city.logic.Ressources
 
 enum class MenuType {
-    CREATION, CATEGORY, BUILDING, CITIZENS, CONFIRM, IMPROVE, HYDRATE, ADD, REMOVE, EXPAND
+    CREATION, CATEGORY, CONSTRUCTION, CITIZENS, CONFIRM, IMPROVE, HYDRATE, ADD, REMOVE, EXPAND
 }
 
 enum class BuildingType {
@@ -78,7 +78,7 @@ object Def {
     // MENUS
     val menus = mapOf(
             MenuType.CREATION to arrayOf("CITIZENS", "HAPPINESS", "FOOD", "RESEARCH", "STONE", "OTHER"),
-            MenuType.BUILDING to arrayOf("CITIZENS", "REPAIR", "DESTROY"),
+            MenuType.CONSTRUCTION to arrayOf("CITIZENS", "REPAIR", "DESTROY"),
             MenuType.CONFIRM to arrayOf("YES", "NO"),
             MenuType.HYDRATE to arrayOf("ADD", "REMOVE", "RETURN"),
             MenuType.EXPAND to arrayOf("EXPAND", "RETURN")
@@ -197,7 +197,7 @@ object Def {
             "RESEARCH" to "Stone is the\nressource which\nallows you\nbuilding new\nbuildings",
             "STONE" to "Stone is the\nressource which\nlets you build\nnew buildings",
             "RETURN" to "GO BACK",
-            "OTHER" to "OTHER BUILDING",
+            "OTHER" to "OTHER CONSTRUCTION",
             "EXCHANGE" to "EXCHANGE\n${Def.EXCHANGE_VALUE} FOOD\nAGAINST\n${Def.EXCHANGE_VALUE} HAPPINESS",
             "ADD" to "HYDRATE A\nNEW CITIZEN",
             "REMOVE" to "DEHYDRATE A\nCITIZEN",
@@ -208,7 +208,7 @@ object Def {
             "LABORATORY" to "Cost :\n${Def.buildings[3].cost} Stones\nPROVIDES\nRESEARCH",
             "FACTORY" to "Cost :\n${Def.buildings[4].cost} Stones\nPROVIDES STONE\nAND STORAGE",
             "WELL" to "Cost :\n${Def.buildings[5].cost} Stones\nBUFF THE\nPRODUCTIVITY\nOF CITIZENS",
-            "CRAFTMAN" to "Cost :\n${Def.buildings[6].cost} Stones\nIMPROVES\nBUILDING\nINTEGRITY",
+            "CRAFTMAN" to "Cost :\n${Def.buildings[6].cost} Stones\nIMPROVES\nCONSTRUCTION\nINTEGRITY",
             "WAREHOUSE" to "Cost :\n${Def.buildings[7].cost} Stones\nIMPROVES FOOD\nAND STONE\nSTORAGE",
             "GARDEN" to "Cost :\n${Def.buildings[8].cost} Stones\nBUY HAPPINESS\nWITH FOOD",
             "HOSPITAL" to "Cost :\n${Def.buildings[9].cost} Stones\nIMPROVES\nCITIZENS\nLIFE-TIME",

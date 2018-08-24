@@ -19,6 +19,7 @@ import com.gbjam6.city.graphics.GUI
 import com.gbjam6.city.graphics.Tree
 import com.gbjam6.city.logic.Hills
 import ktx.app.KtxScreen
+import javax.swing.Action
 import kotlin.math.abs
 
 enum class States {
@@ -58,6 +59,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         val progress = Progress(mutableListOf(), birthcost = Def.BIRTH_COST, lifetime = Def.LIFE_TIME, buildlife = Def.BUILD_LIFE_TIME)
         var starvingtick = 0
         var speed = 1
+        val tutorial = Tutorial()
     }
 
     override fun show() {
@@ -73,7 +75,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         // Inits pointers
         pointer = Sprite(gbJam6.manager.get("sprites/pointerUp.png", Texture::class.java))
         pointerSmiley = Sprite(gbJam6.manager.get("sprites/pointerSmiley.png", Texture::class.java))
-        updatePointer()
+        Util.updatePointer(pointer, pointerSmiley)
 
         // Inits GUI
         gui = GUI(gbJam6)
@@ -102,11 +104,13 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
         // Time based or frame based stuff
         if (speed > 0) {
-            frame += speed
+            if (!tutorial.active || tutorial.active && tutorial.progression[0].action == ACTION.WAIT)
+                frame += speed
             if (frame > Def.SPEED) {
                 frame = 0
                 Util.tick(menuManager)
                 menuManager.tick()
+                tutorial.tick()
             }
         }
         tree.frame = (tree.frame + 1) % 60
@@ -212,167 +216,183 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         viewport.update(width, height)
     }
 
-    private fun updatePointer() {
-        pointer.x = camera.position.x - 4
-
-        // Computes difference between camera x and the current chunk x
-        val n = Math.floor(camera.position.x / 32.0).toInt() + Def.nChunks / 2
-        val chunk = hills.chunks[n]
-        val diff = camera.position.x - (n - Def.nChunks / 2) * 32
-
-        // Sets height to follow the slopes
-        pointer.y = Util.getPixel(-87f + chunk.height + diff * chunk.slope / 32)
-        pointerSmiley.x = pointer.x
-        pointerSmiley.y = pointer.y + 1
-    }
-
     override fun up() {
-        when (state) {
-            States.MENU -> {
-                Util.inputFreeze = 8
-                menuManager.moveCursor(-1)
+        if (tutorial.active) {
+            tutorial.up(menuManager)
+        } else {
+            when (state) {
+                States.MENU -> {
+                    Util.inputFreeze = 8
+                    menuManager.moveCursor(-1)
+                }
+                States.TREE -> tree.up()
+                States.IDLE -> gui.visible = !gui.visible
             }
-            States.TREE -> tree.up()
-            States.IDLE -> gui.visible = !gui.visible
         }
     }
 
     override fun down() {
-        when (state) {
-            States.MENU -> {
-                Util.inputFreeze = 8
-                menuManager.moveCursor(1)
+        if (tutorial.active) {
+            tutorial.down(menuManager)
+        } else {
+            when (state) {
+                States.MENU -> {
+                    Util.inputFreeze = 8
+                    menuManager.moveCursor(1)
+                }
+                States.PLACE_BUILDING -> menuManager.flip(pointer.y)
+                States.PLACE_DECORATION -> menuManager.switchDecoration()
+                States.IDLE -> Util.showIDLEHelper()
+                States.TREE -> tree.down()
+                else -> Unit
             }
-            States.PLACE_BUILDING -> menuManager.flip(pointer.y)
-            States.PLACE_DECORATION -> menuManager.switchDecoration()
-            States.IDLE -> Util.showIDLEHelper()
-            States.TREE -> tree.down()
-            else -> Unit
         }
     }
 
     override fun left() {
-        when (state) {
-            States.IDLE, States.PLACE_CITIZEN, States.PLACE_BUILDING, States.PLACE_DECORATION -> {
-                // Moves the camera
-                Util.inputFreeze = 1
-                if (camera.position.x > progress.limits.first - 16) {
-                    if (Util.wasPressed) {
-                        camera.translate(-3f, 0f)
-                    } else {
-                        // Special slow first frame (for precise movements)
-                        Util.inputFreeze = 4
-                        camera.translate(-1f, 0f)
+        if (tutorial.active) {
+            tutorial.left(pointer, pointerSmiley, menuManager)
+        } else {
+            when (state) {
+                States.IDLE, States.PLACE_CITIZEN, States.PLACE_BUILDING, States.PLACE_DECORATION -> {
+                    // Moves the camera
+                    Util.inputFreeze = 1
+                    if (camera.position.x > progress.limits.first - 16) {
+                        if (Util.wasPressed) {
+                            camera.translate(-3f, 0f)
+                        } else {
+                            // Special slow first frame (for precise movements)
+                            Util.inputFreeze = 4
+                            camera.translate(-1f, 0f)
+                        }
+                        Util.updatePointer(pointer, pointerSmiley)
                     }
-                    updatePointer()
+                    menuManager.updateBuilding(pointer.y)
                 }
-                menuManager.updateBuilding(pointer.y)
+                States.TREE -> tree.left()
             }
-            States.TREE -> tree.left()
         }
     }
 
     override fun right() {
-        when (state) {
-            States.IDLE, States.PLACE_BUILDING, States.PLACE_CITIZEN, States.PLACE_DECORATION -> {
-                // Moves the camera
-                Util.inputFreeze = 1
-                if (camera.position.x < progress.limits.second + 16) {
-                    if (Util.wasPressed) {
-                        camera.translate(3f, 0f)
-                    } else {
-                        // Special slow first frame (for precise movements)
-                        Util.inputFreeze = 4
-                        camera.translate(1f, 0f)
+        if (tutorial.active) {
+            tutorial.right(pointer, pointerSmiley, menuManager)
+        } else {
+            when (state) {
+                States.IDLE, States.PLACE_BUILDING, States.PLACE_CITIZEN, States.PLACE_DECORATION -> {
+                    // Moves the camera
+                    Util.inputFreeze = 1
+                    if (camera.position.x < progress.limits.second + 16) {
+                        if (Util.wasPressed) {
+                            camera.translate(3f, 0f)
+                        } else {
+                            // Special slow first frame (for precise movements)
+                            Util.inputFreeze = 4
+                            camera.translate(1f, 0f)
+                        }
+                        Util.updatePointer(pointer, pointerSmiley)
                     }
-                    updatePointer()
+                    menuManager.updateBuilding(pointer.y)
                 }
-                menuManager.updateBuilding(pointer.y)
+                States.TREE -> tree.right()
             }
-            States.TREE -> tree.right()
         }
     }
 
     override fun a() {
-        state = when (state) {
-            // Opens the menu
-            States.IDLE -> {
-                GBJam6.playSFX(SFX.SELECT)
-                gui.visible = true
-                menuManager.open()
-            }
-            // Selects the pointed menu option or the pointed spot
-            States.MENU, States.PLACE_BUILDING, States.PLACE_CITIZEN, States.PLACE_DECORATION -> {
-                if (state == States.MENU && !menuManager.menus.last().activated[menuManager.menus.last().cursorPos]) {
-                    GBJam6.playSFX(SFX.DISABLED)
-                } else {
+        if (tutorial.active) {
+            tutorial.a(menuManager, pointer)
+        } else {
+            state = when (state) {
+                // Opens the menu
+                States.IDLE -> {
                     GBJam6.playSFX(SFX.SELECT)
+                    gui.visible = true
+                    menuManager.open()
                 }
-                menuManager.select(pointer.y)
+                // Selects the pointed menu option or the pointed spot
+                States.MENU, States.PLACE_BUILDING, States.PLACE_CITIZEN, States.PLACE_DECORATION -> {
+                    if (state == States.MENU && !menuManager.menus.last().activated[menuManager.menus.last().cursorPos]) {
+                        GBJam6.playSFX(SFX.DISABLED)
+                    } else {
+                        GBJam6.playSFX(SFX.SELECT)
+                    }
+                    menuManager.select(pointer.y)
+                }
+                States.TREE -> tree.select()
             }
-            States.TREE -> tree.select()
         }
     }
 
     override fun b() {
-        state = when (state) {
-            States.MENU -> {
-                GBJam6.playSFX(SFX.RETURN)
-                menuManager.close()
-                Util.updateMenuHelper(menuManager.menus)
-                if (menuManager.menus.any()) {
+        if (!tutorial.active) {
+            state = when (state) {
+                States.MENU -> {
+                    GBJam6.playSFX(SFX.RETURN)
+                    menuManager.close()
+                    Util.updateMenuHelper(menuManager.menus)
+                    if (menuManager.menus.any()) {
+                        States.MENU
+                    } else {
+                        // Closes the helper
+                        MenuManager.helper.visible = false
+                        // Goes back to IDLE state
+                        States.IDLE
+                    }
+                }
+                States.PLACE_BUILDING, States.PLACE_DECORATION -> {
+                    GBJam6.playSFX(SFX.RETURN)
+                    menuManager.placingB = null
+                    menuManager.updateMenu()
+                    // Opens the helper
+                    MenuManager.helper.visible = true
                     States.MENU
-                } else {
+                }
+                States.PLACE_CITIZEN -> {
+                    GBJam6.playSFX(SFX.RETURN)
+                    menuManager.placingC = null
+                    menuManager.updateMenu()
+                    menuManager.menus.clear()
                     // Closes the helper
                     MenuManager.helper.visible = false
-                    // Goes back to IDLE state
                     States.IDLE
                 }
+                States.TREE -> {
+                    GBJam6.playSFX(SFX.RETURN)
+                    States.IDLE
+                }
+                else -> States.IDLE
             }
-            States.PLACE_BUILDING, States.PLACE_DECORATION -> {
-                GBJam6.playSFX(SFX.RETURN)
-                menuManager.placingB = null
-                menuManager.updateMenu()
-                // Opens the helper
-                MenuManager.helper.visible = true
-                States.MENU
-            }
-            States.PLACE_CITIZEN -> {
-                GBJam6.playSFX(SFX.RETURN)
-                menuManager.placingC = null
-                menuManager.updateMenu()
-                menuManager.menus.clear()
-                // Closes the helper
-                MenuManager.helper.visible = false
-                States.IDLE
-            }
-            States.TREE -> {
-                GBJam6.playSFX(SFX.RETURN)
-                States.IDLE
-            }
-            else -> States.IDLE
         }
     }
 
     override fun start() {
-        when (state) {
-            States.IDLE -> {
-                GBJam6.playSFX(SFX.SELECT)
-                state = States.TREE
+        if (tutorial.active) {
+            tutorial.start()
+        } else {
+            when (state) {
+                States.IDLE -> {
+                    GBJam6.playSFX(SFX.SELECT)
+                    state = States.TREE
+                }
+                States.TREE -> {
+                    GBJam6.playSFX(SFX.RETURN)
+                    state = States.IDLE
+                }
+                else -> Unit
             }
-            States.TREE -> {
-                GBJam6.playSFX(SFX.RETURN)
-                state = States.IDLE
-            }
-            else -> Unit
         }
     }
 
     override fun select() {
-        if ("HARD MODE" in City.progress.tree){
-            speed = 4 + (speed + 1) % 4
-        } else{
-            speed = (speed + 1) % 4
+        if (tutorial.active) {
+            tutorial.select()
+        } else {
+            speed = if ("HARD MODE" in City.progress.tree) {
+                4 + (speed + 1) % 4
+            } else {
+                (speed + 1) % 4
+            }
         }
     }
 

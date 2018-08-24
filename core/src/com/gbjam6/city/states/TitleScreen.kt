@@ -126,7 +126,11 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
                 gbJam6.setMusic("SMALL CITY")
                 gbJam6.setScreen<City>()
             }
-            1 -> gbJam6.setScreen<Tutorial>()
+            1 -> {
+                gbJam6.setMusic("SMALL CITY")
+                City.tutorial.reset()
+                gbJam6.setScreen<City>()
+            }
             2 -> gbJam6.setScreen<SoundTest>()
         }
     }

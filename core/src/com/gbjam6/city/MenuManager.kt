@@ -47,8 +47,8 @@ class MenuManager(private val gbJam6: GBJam6) {
                 menus.add(Menu(MenuType.CREATION, "SELECT CATEGORY", x + 4f, Def.menuY, gbJam6))
             } else {
                 val items = Def.customMenus[building.lBuilding.name]
-                        ?: Def.menus[MenuType.BUILDING]!!
-                menus.add(Menu(MenuType.BUILDING, "SELECT ACTION", x + 4f, Def.menuY, gbJam6, items))
+                        ?: Def.menus[MenuType.CONSTRUCTION]!!
+                menus.add(Menu(MenuType.CONSTRUCTION, "SELECT ACTION", x + 4f, Def.menuY, gbJam6, items))
                 menus.last().changeValidity()
             }
         }
@@ -130,7 +130,7 @@ class MenuManager(private val gbJam6: GBJam6) {
                 }
 
                 // The player checks a building
-                MenuType.BUILDING -> {
+                MenuType.CONSTRUCTION -> {
                     when (menu.items[menu.cursorPos]) {
 
                         "CITIZENS" -> {
@@ -169,7 +169,7 @@ class MenuManager(private val gbJam6: GBJam6) {
                         "UPGRADE" -> {
                             selectedB!!.upgrade()
                             selectedB.updateTexture()
-                            menu.items = Def.customMenus[selectedB.lBuilding.name] ?: Def.menus[MenuType.BUILDING]!!
+                            menu.items = Def.customMenus[selectedB.lBuilding.name] ?: Def.menus[MenuType.CONSTRUCTION]!!
                         }
                         "EXCHANGE" -> {
                             City.ressources.food -= Def.EXCHANGE_VALUE
