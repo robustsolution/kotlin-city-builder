@@ -94,7 +94,7 @@ object Def {
             LBuilding(BuildingType.OTHER, "WELL", 0, Pair(0, 17), Pair(0, 17), Pair(0, 17), 100),
             LBuilding(BuildingType.STONE, "CRAFTMAN", 1, Pair(20, 36), Pair(20, 36), Pair(20, 36), 100),
             LBuilding(BuildingType.FOOD, "WAREHOUSE", 1, Pair(24, 51), Pair(24, 51), Pair(24, 51), 200),
-            LBuilding(BuildingType.HAPPINESS, "GARDEN", 1, Pair(43, 88), Pair(43, 88), Pair(43, 88), 200),
+            LBuilding(BuildingType.HAPPINESS, "GARDEN", 1, Pair(0, 54), Pair(5, 49), Pair(4, 49), 200),
             LBuilding(BuildingType.RESEARCH, "HOSPITAL", 1, Pair(20, 43), Pair(20, 54), Pair(20, 64), 200),
             LBuilding(BuildingType.CITIZENS, "SCHOOL", 4, Pair(67, 79), Pair(31, 79), Pair(21, 79), 200)
     )
