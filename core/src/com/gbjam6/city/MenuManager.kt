@@ -355,10 +355,10 @@ class MenuManager(private val gbJam6: GBJam6) {
     /**
      * Draws the visible menu.
      */
-    fun drawMenu(batch: SpriteBatch, font: BitmapFont) {
+    fun drawMenu(batch: SpriteBatch, font: BitmapFont, disabledFont: BitmapFont) {
         // Draws the menu
         if (menus.any() && placingB == null && placingC == null) {
-            menus.last().draw(batch, font)
+            menus.last().draw(batch, font, disabledFont)
         }
     }
 

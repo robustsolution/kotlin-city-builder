@@ -120,15 +120,20 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     }
 
     fun canRepair(): Boolean {
-        return ((1-this.life/City.progress.buildlife.toFloat())*this.lBuilding.cost+1).toInt() <= City.ressources.stone && this.life != City.progress.buildlife
+        return ((1 - this.life / City.progress.buildlife.toFloat()) * this.lBuilding.cost + 1).toInt() <= City.ressources.stone && this.life != City.progress.buildlife
     }
 
     fun updateTexture() {
-        sprite.texture = manager.get("sprites/buildings/${this.lBuilding.name}.png", Texture::class.java)
+        // Gets new texture
+        val newText = manager.get("sprites/buildings/${this.lBuilding.name}.png", Texture::class.java)
+
+        // Changes the texture and update the sprite's height
+        sprite.texture = newText
+        sprite.regionHeight = newText.height
     }
 
     fun canUpgrade(): Boolean {
-        return (City.ressources.stone >= this.lBuilding.upgradeCost) && this.lBuilding.name+"+" in City.progress.tree
+        return (City.ressources.stone >= this.lBuilding.upgradeCost) && this.lBuilding.name + "+" in City.progress.tree
     }
 
     /**
@@ -192,13 +197,13 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     }
 
     /**
-     * Called each tick. Make citizens and the building older.
+     * Called each tick. Makes citizens and the building older.
      */
     fun older(ressources: Ressources, buildingsToDestroy: MutableList<Building>) {
-        // Make citizens older
+        // Makes citizens older
         citizens.map { it.older() }
 
-        // Kill dead citizens
+        // Kills dead citizens
         for (citizen in citizensToKill) {
             citizens.remove(citizen)
             if (citizen.water) {
@@ -209,10 +214,10 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
                 ressources.citizens -= 1
         }
         citizensToKill.clear()
-        // Update exchangeTimer for the Garden
+        // Updates exchangeTimer for the Garden
         if (this.lBuilding.name == "GARDEN" && exchangeTimer < Def.EXCHANGE_TIME)
             exchangeTimer++
-        // Make the building older
+        // Makes the building older
         life -= 1
         if (life > City.progress.buildlife)
             life = City.progress.buildlife
@@ -220,29 +225,34 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
             buildingsToDestroy.add(this)
         }
 
-        if (life <= City.progress.buildlife*Def.DAMAGED_LIMIT_PCT && lBuilding.name in Def.destroyedRessources) {
+        if (life <= City.progress.buildlife * Def.DAMAGED_LIMIT_PCT && lBuilding.name in Def.destroyedRessources) {
             sprite.texture = manager.get("sprites/buildings/destroyed/${lBuilding.name} DESTROYED.png", Texture::class.java)
         }
     }
-    fun destroy(menuManager: MenuManager){
-        if (City.state == States.MENU && Util.getBuilding() == this){
+
+    /**
+     * Called to remove this building from [City.buildings].
+     */
+    fun destroy(menuManager: MenuManager) {
+        if (City.state == States.MENU && Util.getBuilding() == this) {
             menuManager.menus.clear()
             MenuManager.helper.visible = false
             City.state = States.IDLE
         }
-        if (City.state == States.PLACE_CITIZEN && menuManager.placingC in this.citizens){
+        if (City.state == States.PLACE_CITIZEN && menuManager.placingC in this.citizens) {
             menuManager.menus.clear()
             MenuManager.helper.visible = false
             menuManager.placingC = null
             City.state = States.IDLE
         }
 
-        for (citizen in citizens){
+        for (citizen in citizens) {
             if (citizen.water)
                 citizen.well!!.wateredCitizens.remove(citizen)
         }
+
         City.buildings.remove(this)
-        when (this.lBuilding.name){
+        when (this.lBuilding.name) {
             "FACTORY" -> City.limits.stone -= Def.FACTORY_LIMIT
             "FARM" -> City.limits.food -= Def.FARM_LIMIT
             "HOUSE" -> City.limits.citizens -= Def.HOUSE_LIMIT
@@ -251,7 +261,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
                 if (City.buildings.filter { it.lBuilding.name == "SCHOLL" }.isEmpty())
                     City.progress.birthcost = Def.BIRTH_COST
             }
-            "WAREHOUSE"-> {
+            "WAREHOUSE" -> {
                 City.limits.food -= Def.WAREHOUSELIMIT
                 City.limits.stone -= Def.WAREHOUSELIMIT
             }
@@ -263,12 +273,13 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
                 if (City.buildings.filter { it.lBuilding.name == "CRAFTMAN" }.isEmpty())
                     City.progress.buildlife = Def.BUILD_LIFE_TIME
             }
-            "FACTORY+" -> City.limits.stone -= Def.FACTORY_LIMIT+Def.FACTORY_PLUS_LIMIT
-            "FARM+" -> City.limits.food -= Def.FARM_LIMIT+Def.FARM_PLUS_LIMIT
-            "HOUSE+" -> City.limits.citizens -= Def.HOUSE_LIMIT+Def.HOUSE_PLUS_LIMIT
+            "FACTORY+" -> City.limits.stone -= Def.FACTORY_LIMIT + Def.FACTORY_PLUS_LIMIT
+            "FARM+" -> City.limits.food -= Def.FARM_LIMIT + Def.FARM_PLUS_LIMIT
+            "HOUSE+" -> City.limits.citizens -= Def.HOUSE_LIMIT + Def.HOUSE_PLUS_LIMIT
         }
         City.ressources.citizens -= this.citizens.size
     }
+
     fun upgrade() {
         City.ressources.stone -= this.lBuilding.upgradeCost
         when (this.lBuilding.name) {
