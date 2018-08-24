@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.gbjam6.city.MenuManager
+import com.gbjam6.city.general.BuildingType
 import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.LBuilding
 import com.gbjam6.city.logic.Ressources
@@ -21,6 +22,11 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     val citizensToKill = mutableListOf<Citizen>()
     val wateredCitizens = mutableListOf<Citizen>()
     var exchangeTimer = Def.EXCHANGE_TIME
+    var tree = false
+    val buildingTree: Building? = null
+    var interaction = "Interqction :\n1.0"
+    var produc = "Production :\n0"
+
 
     private var sprite = Sprite(manager.get("sprites/buildings/${lBuilding.name}.png", Texture::class.java))
     val width = sprite.width
@@ -115,12 +121,8 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
 
     }
 
-    fun canUse(): Boolean {
-        return true
-    }
-
     fun canRepair(): Boolean {
-        return ((1-this.life/City.progress.buildlife.toFloat())*this.lBuilding.cost+1).toInt() <= City.ressources.stone && this.life != City.progress.buildlife
+        return ((1 - this.life / City.progress.buildlife.toFloat()) * this.lBuilding.cost + 1).toInt() <= City.ressources.stone && this.life != City.progress.buildlife
     }
 
     fun updateTexture() {
@@ -128,7 +130,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     }
 
     fun canUpgrade(): Boolean {
-        return (City.ressources.stone >= this.lBuilding.upgradeCost) && this.lBuilding.name+"+" in City.progress.tree
+        return (City.ressources.stone >= this.lBuilding.upgradeCost) && this.lBuilding.name + "+" in City.progress.tree
     }
 
     /**
@@ -165,19 +167,47 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
      * Returns the ressources producted by the building.
      */
     fun getProduction(): Ressources {
-        return when (lBuilding.name) {
-            "FACTORY", "FACTORY+" -> Ressources(stone = citizens.size, food = -citizens.size)
-            "FARM", "FARM+" -> Ressources(food = citizens.size * 3)
+        val interaction = this.getInteraction()
+        this.interaction = "Interaction :\n$interaction"
+        var produc = 0.0
+        for (citizen in citizens){
+            produc += citizen.getProductivity()
+        }
+        var ressource = Ressources()
+        ressource = when (lBuilding.name) {
+            "FACTORY", "FACTORY+" -> Ressources(stone = (interaction * produc * Def.FACTORY_PRODUCTION).toInt(), food = -citizens.size)
+            "FARM", "FARM+" -> Ressources(food = (interaction * produc * Def.FARM_PRODUCTION).toInt()-citizens.size)
             "HOUSE", "HOUSE+" -> Ressources(food = -citizens.size)
-            "TAVERN", "TAVERN+" -> Ressources(happiness = citizens.size * 1, food = -citizens.size)
-            "LABORATORY", "LABORATORY+" -> Ressources(research = citizens.size * 3, food = -citizens.size)
+            "TAVERN", "TAVERN+" -> Ressources(happiness = (interaction * produc * Def.TAVERN_PRODUCTION).toInt(), food = -citizens.size)
+            "LABORATORY", "LABORATORY+" -> Ressources(research = (interaction * produc * Def.LABORATORY_PRODUCTION).toInt(), food = -citizens.size)
             "SCHOOL" -> Ressources(food = -citizens.size)
-            "WAREHOUSE" -> Ressources(food = citizens.size * 5)
-            "CRAFTMAN" -> Ressources(stone = citizens.size * 2, food = -citizens.size)
-            "HOSPITAL" -> Ressources(research = citizens.size * 5, food = -citizens.size)
-            "GARDEN" -> Ressources(happiness = citizens.size, food = -citizens.size)
+            "WAREHOUSE" -> Ressources(food = (interaction * produc * Def.WAREHOUSE_PRODUCTION).toInt()-citizens.size)
+            "CRAFTMAN" -> Ressources(stone = (interaction * produc * Def.CRAFTMAN_PRODUCTION).toInt(), food = -citizens.size)
+            "HOSPITAL" -> Ressources(research = (interaction * produc * Def.HOSPITAL_PRODUCTION).toInt(), food = -citizens.size)
+            "GARDEN" -> Ressources(happiness = (interaction * produc * Def.GARDEN_PRODUCTION).toInt(), food = -citizens.size)
             else -> Ressources()
         }
+        this.produc = "Production :\n$ressource"
+        return ressource
+    }
+
+    private fun getInteraction(): Double {
+        val buildings = City.buildings.filter { Math.abs((it.x + it.width / 2) - (this.x + this.width / 2)) < Def.BUILDING_RANGE && it.lBuilding.type != BuildingType.OTHER}
+        val types = MutableList(buildings.size) { buildings[it].lBuilding.type }
+        var interaction = 1.toDouble()
+        val typeValue = Def.getTypeOrder(this.lBuilding.type)
+        for (type in types){
+            val order=(typeValue-Def.getTypeOrder(type)+5)%5
+            when {
+                order == 1 -> interaction += Def.INTERACTION_PLUS
+                order == 2 && this.tree.not() -> interaction += Def.INTERACTION_MALUS
+                order == 3 && this.tree.not() -> interaction += Def.INTERACTION_MALUS_MALUS
+                order == 4 -> interaction += Def.INTERACTION_PLUS_PLUS
+                else -> interaction += 0
+            }
+        }
+        this.interaction = "Interaction :\n$interaction"
+        return interaction
     }
 
     /**
@@ -185,7 +215,12 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
      * It will be displayed in [Helper].
      */
     fun getDescription(): String {
-        var description = "Citizen(s) : \n${citizens.size}/${lBuilding.capacity}\nIntegrity : \n${this.life}/${City.progress.buildlife}"
+        var description = ""
+        if (this.lBuilding.type != BuildingType.OTHER)
+            description += "Citizen(s) : \n${citizens.size}/${lBuilding.capacity}\n"
+        description += "Integrity : \n${this.life}/${City.progress.buildlife}"
+        if (this.lBuilding.type != BuildingType.OTHER)
+            description += "\n${this.interaction}\n${this.produc}"
         if (this.lBuilding.name == "GARDEN")
             description += "\n Coldown :\n${this.exchangeTimer}/${Def.EXCHANGE_TIME}"
         return description
@@ -220,29 +255,30 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
             buildingsToDestroy.add(this)
         }
 
-        if (life <= City.progress.buildlife*Def.DAMAGED_LIMIT_PCT && lBuilding.name in Def.destroyedRessources) {
+        if (life <= City.progress.buildlife * Def.DAMAGED_LIMIT_PCT && lBuilding.name in Def.destroyedRessources) {
             sprite.texture = manager.get("sprites/buildings/destroyed/${lBuilding.name} DESTROYED.png", Texture::class.java)
         }
     }
-    fun destroy(menuManager: MenuManager){
-        if (City.state == States.MENU && Util.getBuilding() == this){
+
+    fun destroy(menuManager: MenuManager) {
+        if (City.state == States.MENU && Util.getBuilding() == this) {
             menuManager.menus.clear()
             MenuManager.helper.visible = false
             City.state = States.IDLE
         }
-        if (City.state == States.PLACE_CITIZEN && menuManager.placingC in this.citizens){
+        if (City.state == States.PLACE_CITIZEN && menuManager.placingC in this.citizens) {
             menuManager.menus.clear()
             MenuManager.helper.visible = false
             menuManager.placingC = null
             City.state = States.IDLE
         }
 
-        for (citizen in citizens){
+        for (citizen in citizens) {
             if (citizen.water)
                 citizen.well!!.wateredCitizens.remove(citizen)
         }
         City.buildings.remove(this)
-        when (this.lBuilding.name){
+        when (this.lBuilding.name) {
             "FACTORY" -> City.limits.stone -= Def.FACTORY_LIMIT
             "FARM" -> City.limits.food -= Def.FARM_LIMIT
             "HOUSE" -> City.limits.citizens -= Def.HOUSE_LIMIT
@@ -251,7 +287,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
                 if (City.buildings.filter { it.lBuilding.name == "SCHOLL" }.isEmpty())
                     City.progress.birthcost = Def.BIRTH_COST
             }
-            "WAREHOUSE"-> {
+            "WAREHOUSE" -> {
                 City.limits.food -= Def.WAREHOUSELIMIT
                 City.limits.stone -= Def.WAREHOUSELIMIT
             }
@@ -263,12 +299,13 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
                 if (City.buildings.filter { it.lBuilding.name == "CRAFTMAN" }.isEmpty())
                     City.progress.buildlife = Def.BUILD_LIFE_TIME
             }
-            "FACTORY+" -> City.limits.stone -= Def.FACTORY_LIMIT+Def.FACTORY_PLUS_LIMIT
-            "FARM+" -> City.limits.food -= Def.FARM_LIMIT+Def.FARM_PLUS_LIMIT
-            "HOUSE+" -> City.limits.citizens -= Def.HOUSE_LIMIT+Def.HOUSE_PLUS_LIMIT
+            "FACTORY+" -> City.limits.stone -= Def.FACTORY_LIMIT + Def.FACTORY_PLUS_LIMIT
+            "FARM+" -> City.limits.food -= Def.FARM_LIMIT + Def.FARM_PLUS_LIMIT
+            "HOUSE+" -> City.limits.citizens -= Def.HOUSE_LIMIT + Def.HOUSE_PLUS_LIMIT
         }
         City.ressources.citizens -= this.citizens.size
     }
+
     fun upgrade() {
         City.ressources.stone -= this.lBuilding.upgradeCost
         when (this.lBuilding.name) {
