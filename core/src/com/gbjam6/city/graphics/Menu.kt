@@ -101,7 +101,11 @@ class Menu(val type: MenuType, val title: String, var x: Float, val y: Float, gb
             // Updates expand menu
             MenuType.EXPAND -> {
                 val nExp = Util.expandsMade()
-                activated[0] = nExp < Def.EXPAND_COST.size && City.ressources.happiness >= Def.EXPAND_COST[nExp]
+                if ("EXPAND" in City.progress.tree){
+                    activated[0] = nExp < Def.EXPAND_COST.size && City.ressources.happiness >= Def.EXPAND_COST[nExp]
+                }else{
+                    activated[0] = nExp < Def.EXPAND_COST.size-2 && City.ressources.happiness >= Def.EXPAND_COST[nExp]
+                }
             }
 
             else -> Unit

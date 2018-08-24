@@ -139,7 +139,9 @@ object Util {
                             var desc = ""
                             if (nExp >= Def.EXPAND_COST.size) {
                                 desc = "YOU PURCHASED\nALL TERRAIN\nUPGRADES."
-                            } else {
+                            } else if(nExp >= Def.EXPAND_COST.size-2 && "EXPAND" !in City.progress.tree){
+                                desc = "UNLOCK THE \nEXPAND RESEARCH \nTO PURCHASE \nMORE TERRAIN"
+                            }else {
                                 desc = "COST:\n${Def.EXPAND_COST[nExp]} HAPPINESS"
                             }
                             MenuManager.helper.update("EXPAND", desc)

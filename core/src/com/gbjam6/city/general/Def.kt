@@ -48,7 +48,7 @@ object Def {
     const val DESTROY_HAP_PCT = 0.5
     const val DESTROY_STN_PCT = 0.3
     val STARTING_LIMITS = Pair(-160, 160)
-    val EXPAND_COST = arrayOf(1, 1, 1, 1)
+    val EXPAND_COST = arrayOf(1, 1, 1, 1,1,1)
     const val EXPAND_SIZE: Int = 160
     const val BUILDING_RANGE = 90
     const val INTERACTION_PLUS = 0.20
@@ -66,7 +66,7 @@ object Def {
 
 
     // SIZE
-    const val nChunks = 60
+    const val nChunks = 80
     const val menuWidth = 72f
     const val menuY = 52f
     const val helperWidth = 64f
