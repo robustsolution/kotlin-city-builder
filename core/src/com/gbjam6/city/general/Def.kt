@@ -22,7 +22,7 @@ object Def {
     val startingRessources = Ressources(food = 200, happiness = 900, stone = 900, research = 2000)
 
     // GAME DESIGN
-    const val SPEED = 12
+    const val SPEED = 120
     const val BIRTH_COST = 100
     const val LIFE_TIME = 300
     const val DAMAGED_LIMIT_PCT = 0.30

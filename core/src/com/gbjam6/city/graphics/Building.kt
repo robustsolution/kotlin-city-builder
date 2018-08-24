@@ -123,7 +123,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     fun updateTexture() {
         // Gets new texture
         val up = if (upgrade >= 0) upgrade.toString() else ""
-        val newText = manager.get("sprites/buildings/upgrades/${this.lBuilding.name}$up.png", Texture::class.java)
+        val newText = manager.get("sprites/buildings/${this.lBuilding.name}$up.png", Texture::class.java)
 
         // Changes the texture and update the sprite's height
         sprite.texture = newText
