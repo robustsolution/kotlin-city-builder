@@ -74,17 +74,17 @@ object Util {
         // No food
         if (City.ressources.food == 0) {
             GBJam6.playSFX(SFX.NO_FOOD)
-            City.starvingtick ++
-        }else{
+            City.starvingtick++
+        } else {
             City.starvingtick = 0
         }
-        if (City.starvingtick >= Def.STARVING_KILL_TICK){
+        if (City.starvingtick >= Def.STARVING_KILL_TICK) {
             val buldings = City.buildings.filter { it.citizens.size > 0 }
             val citizens = mutableListOf<Citizen>()
             for (building in buldings)
                 for (citizen in building.citizens)
                     citizens.add(citizen)
-            if (citizens.size >0){
+            if (citizens.size > 0) {
                 val citizen = citizens.random()
                 citizen.building.citizensToKill.add(citizen)
             }
@@ -96,7 +96,11 @@ object Util {
      * Called when a building is placed.
      */
     fun placeBuilding(placingB: Building) {
-        City.buildings.add(placingB)
+        if (placingB.lBuilding.decoration) {
+            City.decorations.add(placingB)
+        } else {
+            City.buildings.add(placingB)
+        }
         placingB.onPlaced()
     }
 
@@ -155,9 +159,9 @@ object Util {
                             var desc = ""
                             if (nExp >= Def.EXPAND_COST.size) {
                                 desc = "YOU PURCHASED\nALL TERRAIN\nUPGRADES."
-                            } else if(nExp >= Def.EXPAND_COST.size-2 && "EXPAND" !in City.progress.tree){
+                            } else if (nExp >= Def.EXPAND_COST.size - 2 && "EXPAND" !in City.progress.tree) {
                                 desc = "UNLOCK THE \nEXPAND RESEARCH \nTO PURCHASE \nMORE TERRAIN"
-                            }else {
+                            } else {
                                 desc = "COST:\n${Def.EXPAND_COST[nExp]} HAPPINESS"
                             }
                             MenuManager.helper.update("EXPAND", desc)
