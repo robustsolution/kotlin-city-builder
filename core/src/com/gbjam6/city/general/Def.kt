@@ -49,7 +49,7 @@ object Def {
     const val DESTROY_HAP_PCT = 0.5
     const val DESTROY_STN_PCT = 0.3
     val STARTING_LIMITS = Pair(-160, 160)
-    val EXPAND_COST = arrayOf(1, 1, 1, 1,1,1)
+    val EXPAND_COST = arrayOf(1, 1, 1, 1, 1, 1)
     const val EXPAND_SIZE: Int = 160
     const val BUILDING_RANGE = 90
     const val INTERACTION_PLUS = 2
@@ -70,11 +70,11 @@ object Def {
     // SIZE
     const val nChunks = 80
     const val menuWidth = 72f
-    const val menuY = 52f
+    const val menuY = 50f
     const val helperWidth = 64f
-    const val helperY = 46f
-    const val speedY = 54f
-    const val speedOffset = 4f
+    const val helperY = 40f
+    const val speedY = 50f
+    const val speedOffset = 9f
 
     // MENUS
     val menus = mapOf(
@@ -161,7 +161,7 @@ object Def {
             "WAREHOUSE" to arrayOf("FARM+"),
             "PARENTING" to arrayOf("SCHOOL"),
             "EXPAND" to arrayOf("WAREHOUSE"),
-            "HARD MODE" to arrayOf("HOSPITAL","PARENTING")
+            "HARD MODE" to arrayOf("HOSPITAL", "PARENTING")
     )
 
     // NAMES
@@ -195,8 +195,9 @@ object Def {
             "SCHOOL" to "Cost :\n${Def.buildings[10].cost} Stones\nDECREASES\nBIRTH COST\nAND INCREASES\nPOPULATION",
             "TREE" to "Cost :\n${Def.buildings[10].cost} Stones\nMAKE INTERACTION\nABOVE 1"
     )
-    fun getTypeOrder(buildingType: BuildingType): Int{
-        return when (buildingType){
+
+    fun getTypeOrder(buildingType: BuildingType): Int {
+        return when (buildingType) {
             BuildingType.CITIZENS -> 1
             BuildingType.HAPPINESS -> 2
             BuildingType.FOOD -> 3
@@ -218,8 +219,10 @@ object Def {
             Color.valueOf("9bbc0f"), // GB green
             Color.valueOf("92d3ff"), // NES Blue
             Color.valueOf("d59d9d"), // yopox br
-            Color.valueOf("c3a38a") // nyx8
+            Color.valueOf("c3a38a"), // nyx8
+            Color.valueOf("c3c2ae"),
+            Color.valueOf("f7f7f7")
     )
-    var PALETTE_SIZE = 6
+    var PALETTE_SIZE = 8
 
 }

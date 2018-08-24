@@ -25,7 +25,7 @@ class GBJam6 : KtxGame<Screen>() {
     var paletteIndex = 0f
     lateinit var shader: ShaderProgram
 
-    val player = Player(48000, Player.INTERPOLATION_MODE_CUBIC)
+    val player = Player(48000, Player.INTERPOLATION_MODE_NONE)
     var titleMusic: Int = 0
     var cityMusic1: Int = 0
     var cityMusic2: Int = 0

@@ -40,10 +40,10 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         gbJam6.manager.load("fonts/littleDisabled.fnt", BitmapFont::class.java)
 
         // Music
-        gbJam6.titleMusic = gbJam6.player.loadXM(Gdx.files.internal("music/title.xm").readBytes(), 0f)
-        gbJam6.cityMusic1 = gbJam6.player.loadXM(Gdx.files.internal("music/city1.xm").readBytes(), 0f)
-        gbJam6.cityMusic2 = gbJam6.player.loadXM(Gdx.files.internal("music/city2.xm").readBytes(), 0f)
-        gbJam6.cityMusic3 = gbJam6.player.loadXM(Gdx.files.internal("music/city3.xm").readBytes(), 0f)
+        gbJam6.titleMusic = gbJam6.player.loadXM(Gdx.files.internal("music/0-title-screen.xm").readBytes(), 0f)
+        gbJam6.cityMusic1 = gbJam6.player.loadXM(Gdx.files.internal("music/1-early-game.xm").readBytes(), 0f)
+        gbJam6.cityMusic2 = gbJam6.player.loadXM(Gdx.files.internal("music/2-getting-started.xm").readBytes(), 0f)
+        gbJam6.cityMusic3 = gbJam6.player.loadXM(Gdx.files.internal("music/3-nice-city.xm").readBytes(), 0f)
 
         // Title screen
         gbJam6.manager.load("sprites/name.png", Texture::class.java)
@@ -70,9 +70,7 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         }
 
         // GUI
-        for (type in arrayOf("Citizens", "Food", "Happiness", "Research", "Stone")) {
-            gbJam6.manager.load("sprites/gui/$type.png", Texture::class.java)
-        }
+        gbJam6.manager.load("sprites/gui/GUI.png", Texture::class.java)
 
         // TREE
         gbJam6.manager.load("sprites/tree/tree.png", Texture::class.java)

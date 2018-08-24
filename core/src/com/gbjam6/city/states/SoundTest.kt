@@ -25,7 +25,7 @@ class SoundTest(private val gbJam6: GBJam6) : KtxScreen, Input {
     private lateinit var font: BitmapFont
     private lateinit var fontDisabled: BitmapFont
     private var selected = 0
-    private var songs = arrayOf("TITLE SCREEN", "CITY 1", "CITY 2", "CITY 3")
+    private var songs = arrayOf("TITLE SCREEN", "A QUIET START", "civilization's coming", "nice city")
     private var darkBg = Util.generateRectangle(160, 144, Def.color1)
 
     override fun show() {
@@ -62,16 +62,18 @@ class SoundTest(private val gbJam6: GBJam6) : KtxScreen, Input {
         batch.draw(darkBg, -80f, -72f)
 
         // Draw title
-        bigFont.draw(batch, "SOUND TEST\nChange song with UP & DOWN.", -80f, 56f, 160f, 1, true)
+        bigFont.draw(batch, "--------\nSOUND TEST\n--------", -80f, 56f, 160f, 1, true)
 
         // Draw song names
         for (i in 0 until songs.size) {
             if (i == selected) {
-                font.draw(batch, songs[i], -80f, -10f * i, 160f, 1, true)
+                font.draw(batch, songs[i], -80f, 8f - 10f * i, 160f, 1, true)
             } else {
-                fontDisabled.draw(batch, songs[i], -80f, -10f * i, 160f, 1, true)
+                fontDisabled.draw(batch, songs[i], -80f, 8f - 10f * i, 160f, 1, true)
             }
         }
+
+        font.draw(batch, "PRESS B TO RETURN TO TITLE", -80f, -54f, 160f, 1, true)
 
         batch.end()
 
@@ -96,11 +98,23 @@ class SoundTest(private val gbJam6: GBJam6) : KtxScreen, Input {
 
     override fun up() {
         Util.inputFreeze = 60
-        selected = (selected + 5) % 4
+        selected = (selected + 3) % 4
+        playSong()
+    }
+
+    override fun left() {
+        Util.inputFreeze = 60
+        selected = (selected + 3) % 4
         playSong()
     }
 
     override fun down() {
+        Util.inputFreeze = 60
+        selected = (selected + 1) % 4
+        playSong()
+    }
+
+    override fun right() {
         Util.inputFreeze = 60
         selected = (selected + 1) % 4
         playSong()
