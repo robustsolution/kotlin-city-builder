@@ -26,16 +26,26 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     var exchangeTimer = Def.EXCHANGE_TIME
     var tree = false
     val buildingTree: Building? = null
+    var altFrame = 0
     var interaction = "Interqction :\n1.0"
     var produc = "Production :\n0"
     var upgrade = -1
     var damaged = false
     var citizensInReach: List<Citizen>? = null
 
-    private var sprite = Sprite(manager.get("sprites/buildings/${lBuilding.name}.png", Texture::class.java))
-    val width = sprite.width
+    private var sprite: Sprite
+    val width: Float
     var lBuilding = lBuilding.copy()
     var validPos: Boolean = true
+
+    init {
+        sprite = if (lBuilding.name !in Def.altBuildings.keys) {
+            Sprite(manager.get("sprites/buildings/${lBuilding.name}.png", Texture::class.java))
+        } else {
+            Sprite(manager.get("sprites/buildings/${lBuilding.name}0.png", Texture::class.java))
+        }
+        width = sprite.width
+    }
 
     /**
      * Flip the building.
@@ -65,6 +75,12 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
      */
     fun isValid(): Boolean {
 
+        // Special case for decorations
+        if (lBuilding.decoration) {
+            val collision = City.decorations.firstOrNull { if (x < it.x) it.x - x <= width else x - it.x <= it.width }
+            return collision == null
+        }
+
         // The door must be placed on a flat surface
         val door = lBuilding.door
         val chunk1 = City.hills.chunks[Math.floor((x + door.first) / 32.0).toInt() + Def.nChunks / 2]
@@ -86,7 +102,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
         if (City.hills.chunks[leftChunkNb].slope < 0) {
             // 1st case : the start of the building is in a negative slope
             val overflowLeft = 32 - (x + Def.nChunks * 32) % 32
-            println("s8L : ${lBuilding.s8.first} ; s16L : ${lBuilding.s16.first} ; overflowL : $overflowLeft")
+            println("a s8L : ${lBuilding.s8.first} ; s16L : ${lBuilding.s16.first} ; overflowL : $overflowLeft")
             when (City.hills.chunks[leftChunkNb].slope) {
                 -8 -> if (overflowLeft > lBuilding.s8.first) return false
                 -16 -> if (overflowLeft > lBuilding.s16.first) return false
@@ -94,8 +110,8 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
         } else if (lBuilding.door.first > 32 && City.hills.chunks[leftChunkNb + 1].slope < 0) {
             // 2nd case : the part of the building before the door is in a negative slope, not the beggining
             val overflowLeft = 64 - (x + Def.nChunks * 32) % 32
-            println("s8L : ${lBuilding.s8.first} ; s16L : ${lBuilding.s16.first} ; overflowL : $overflowLeft")
-            when (City.hills.chunks[leftChunkNb - 1].slope) {
+            println("b s8L : ${lBuilding.s8.first} ; s16L : ${lBuilding.s16.first} ; overflowL : $overflowLeft ; ${City.hills.chunks[leftChunkNb - 1].slope}")
+            when (City.hills.chunks[leftChunkNb + 1].slope) {
                 -8 -> if (overflowLeft > lBuilding.s8.first) return false
                 -16 -> if (overflowLeft > lBuilding.s16.first) return false
             }
@@ -121,6 +137,12 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
             }
         }
 
+        // No OOB
+        val pos = lBuilding.door.first + Math.floor((lBuilding.door.second - lBuilding.door.first) / 2.0).toFloat()
+        if (City.camera.position.x - pos < City.progress.limits.first || City.camera.position.x + (width - pos) > City.progress.limits.second) {
+            return false
+        }
+
         return true
 
     }
@@ -132,7 +154,11 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     fun updateTexture() {
         // Gets new texture
         val up = if (upgrade >= 0) upgrade.toString() else ""
-        val newText = manager.get("sprites/buildings/${this.lBuilding.name}$up.png", Texture::class.java)
+        val newText = if (!lBuilding.decoration) {
+            manager.get("sprites/buildings/${this.lBuilding.name}$up.png", Texture::class.java)
+        } else {
+            manager.get("sprites/buildings/${this.lBuilding.name}$up$altFrame.png", Texture::class.java)
+        }
 
         // Changes the texture and update the sprite's height
         sprite.texture = newText
@@ -180,18 +206,18 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
         val interaction = this.getInteraction()
         this.interaction = "Interaction :\n$interaction"
         var produc = 0.0
-        for (citizen in citizens){
+        for (citizen in citizens) {
             produc += citizen.getProductivity()
         }
         var ressource = Ressources()
         ressource = when (lBuilding.name) {
             "FACTORY", "FACTORY+" -> Ressources(stone = (interaction * produc * Def.FACTORY_PRODUCTION).toInt(), food = -citizens.size)
-            "FARM", "FARM+" -> Ressources(food = (interaction * produc * Def.FARM_PRODUCTION).toInt()-citizens.size)
+            "FARM", "FARM+" -> Ressources(food = (interaction * produc * Def.FARM_PRODUCTION).toInt() - citizens.size)
             "HOUSE", "HOUSE+" -> Ressources(food = -citizens.size)
             "TAVERN", "TAVERN+" -> Ressources(happiness = (interaction * produc * Def.TAVERN_PRODUCTION).toInt(), food = -citizens.size)
             "LABORATORY", "LABORATORY+" -> Ressources(research = (interaction * produc * Def.LABORATORY_PRODUCTION).toInt(), food = -citizens.size)
             "SCHOOL" -> Ressources(food = -citizens.size)
-            "WAREHOUSE" -> Ressources(food = (interaction * produc * Def.WAREHOUSE_PRODUCTION).toInt()-citizens.size)
+            "WAREHOUSE" -> Ressources(food = (interaction * produc * Def.WAREHOUSE_PRODUCTION).toInt() - citizens.size)
             "CRAFTMAN" -> Ressources(stone = (interaction * produc * Def.CRAFTMAN_PRODUCTION).toInt(), food = -citizens.size)
             "HOSPITAL" -> Ressources(research = (interaction * produc * Def.HOSPITAL_PRODUCTION).toInt(), food = -citizens.size)
             "GARDEN" -> Ressources(happiness = (interaction * produc * Def.GARDEN_PRODUCTION).toInt(), food = -citizens.size)
@@ -202,12 +228,12 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
     }
 
     private fun getInteraction(): Float {
-        val buildings = City.buildings.filter { Math.abs((it.x + it.width / 2) - (this.x + this.width / 2)) < Def.BUILDING_RANGE && it.lBuilding.type != BuildingType.OTHER}
+        val buildings = City.buildings.filter { Math.abs((it.x + it.width / 2) - (this.x + this.width / 2)) < Def.BUILDING_RANGE && it.lBuilding.type != BuildingType.OTHER }
         val types = MutableList(buildings.size) { buildings[it].lBuilding.type }
         var interaction = 10
         val typeValue = Def.getTypeOrder(this.lBuilding.type)
-        for (type in types){
-            val order=(typeValue-Def.getTypeOrder(type)+5)%5
+        for (type in types) {
+            val order = (typeValue - Def.getTypeOrder(type) + 5) % 5
             when {
                 order == 1 -> interaction += Def.INTERACTION_PLUS
                 order == 2 && this.tree.not() -> interaction += Def.INTERACTION_MALUS
@@ -217,7 +243,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
             }
         }
         this.interaction = "Interaction :\n$interaction."
-        return interaction.toFloat()/10
+        return interaction.toFloat() / 10
     }
 
     /**

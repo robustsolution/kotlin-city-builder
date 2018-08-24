@@ -58,7 +58,13 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         // Tiles
         gbJam6.manager.load("sprites/tiles-sheet.png", Texture::class.java)
         for (lBuilding in Def.buildings) {
-            gbJam6.manager.load("sprites/buildings/${lBuilding.name}.png", Texture::class.java)
+            if (lBuilding.name !in Def.altBuildings.keys) {
+                gbJam6.manager.load("sprites/buildings/${lBuilding.name}.png", Texture::class.java)
+            } else {
+                for (i in 0 until Def.altBuildings[lBuilding.name]!!) {
+                    gbJam6.manager.load("sprites/buildings/${lBuilding.name}$i.png", Texture::class.java)
+                }
+            }
         }
         for (building in Def.destroyedRessources) {
             gbJam6.manager.load("sprites/buildings/destroyed/$building DESTROYED.png", Texture::class.java)

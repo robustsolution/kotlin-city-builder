@@ -122,7 +122,11 @@ class MenuManager(private val gbJam6: GBJam6) {
 
                     // Closes the helper
                     MenuManager.helper.visible = false
-                    return States.PLACE_BUILDING
+                    if (placingB!!.lBuilding.decoration) {
+                        return States.PLACE_DECORATION
+                    } else {
+                        return States.PLACE_BUILDING
+                    }
                 }
 
                 // The player checks a building
@@ -143,8 +147,8 @@ class MenuManager(private val gbJam6: GBJam6) {
                         "BIRTH" -> {
                             // Creates the new citizen
                             placingC = Citizen(Def.names.random(), selectedB!!)
-                            if ("PARENTING" in City.progress.tree && selectedB!!.citizens.size > 0)
-                                placingC!!.parent = selectedB!!.citizens.first()
+                            if ("PARENTING" in City.progress.tree && selectedB.citizens.size > 0)
+                                placingC!!.parent = selectedB.citizens.first()
                             selectedB.citizens.add(placingC!!)
 
                             // Updates ressources
@@ -226,7 +230,7 @@ class MenuManager(private val gbJam6: GBJam6) {
                         "RETURN" -> close()
                         else -> {
                             if (menu.cursorPos < selectedB!!.citizensInReach!!.size) {
-                                selectedB!!.wateredCitizens.add(selectedB.citizensInReach!!.elementAt(menu.cursorPos))
+                                selectedB.wateredCitizens.add(selectedB.citizensInReach!!.elementAt(menu.cursorPos))
                                 selectedB.citizensInReach!!.elementAt(menu.cursorPos).water = true
                                 selectedB.citizensInReach!!.elementAt(menu.cursorPos).well = selectedB
                             }
@@ -323,6 +327,18 @@ class MenuManager(private val gbJam6: GBJam6) {
                 GBJam6.playSFX(SFX.BUILD)
             } else {
                 return States.PLACE_BUILDING
+            }
+
+        } else if (City.state == States.PLACE_DECORATION) {
+
+            // The building is placed
+            if (placingB!!.validPos) {
+                Util.placeBuilding(placingB!!)
+                menus.clear()
+                placingB = null
+                GBJam6.playSFX(SFX.BUILD)
+            } else {
+                return States.PLACE_DECORATION
             }
 
         } else if (City.state == States.PLACE_CITIZEN) {
@@ -437,6 +453,14 @@ class MenuManager(private val gbJam6: GBJam6) {
         val menu = menus.lastOrNull()
         if (menu != null && City.state == States.MENU)
             menu.changeValidity()
+    }
+
+    /**
+     * Alternates between the different tree sprites.
+     */
+    fun switchDecoration() {
+        placingB!!.altFrame = (placingB!!.altFrame + 1) % Def.altBuildings[placingB!!.lBuilding.name]!!
+        placingB!!.updateTexture()
     }
 
 }

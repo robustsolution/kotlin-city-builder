@@ -2,7 +2,6 @@ package com.gbjam6.city.general
 
 import com.badlogic.gdx.graphics.Color
 import com.gbjam6.city.logic.Ressources
-import com.gbjam6.city.states.City
 
 enum class MenuType {
     CREATION, CATEGORY, BUILDING, CITIZENS, CONFIRM, IMPROVE, HYDRATE, ADD, REMOVE, EXPAND
@@ -17,7 +16,7 @@ enum class SFX {
 }
 
 
-data class LBuilding(val type: BuildingType, val name: String, val capacity: Int, var door: Pair<Int, Int>, var s8: Pair<Int, Int>, var s16: Pair<Int, Int>, val cost: Int, val upgradeCost: Int = (cost * 1.5).toInt())
+data class LBuilding(val type: BuildingType, val name: String, val capacity: Int, var door: Pair<Int, Int>, var s8: Pair<Int, Int>, var s16: Pair<Int, Int>, val cost: Int, val upgradeCost: Int = (cost * 1.5).toInt(), val decoration: Boolean = false)
 
 data class TreeUpgrade(val x: Int, val y: Int, val name: String, val cost: Int, val desc: String)
 
@@ -87,25 +86,43 @@ object Def {
 
     // BUILDINGS
     val buildings = listOf(
-            LBuilding(BuildingType.CITIZENS, "HOUSE", 6, Pair(34, 41), Pair(34, 41), Pair(24, 41), 100),
-            LBuilding(BuildingType.HAPPINESS, "TAVERN", 2, Pair(13, 20), Pair(13, 26), Pair(13, 39), 100),
-            LBuilding(BuildingType.FOOD, "FARM", 2, Pair(19, 39), Pair(19, 39), Pair(19, 39), 100),
-            LBuilding(BuildingType.RESEARCH, "LABORATORY", 2, Pair(20, 28), Pair(20, 29), Pair(20, 38), 100),
-            LBuilding(BuildingType.STONE, "FACTORY", 2, Pair(6, 19), Pair(6, 30), Pair(6, 22), 100),
-            LBuilding(BuildingType.OTHER, "WELL", 0, Pair(0, 17), Pair(0, 17), Pair(0, 17), 100),
-            LBuilding(BuildingType.STONE, "CRAFTMAN", 1, Pair(20, 36), Pair(20, 36), Pair(20, 36), 100),
-            LBuilding(BuildingType.FOOD, "WAREHOUSE", 1, Pair(24, 51), Pair(24, 51), Pair(24, 51), 200),
-            LBuilding(BuildingType.HAPPINESS, "GARDEN", 1, Pair(21, 35), Pair(0, 55), Pair(0, 55), 200),
-            LBuilding(BuildingType.RESEARCH, "HOSPITAL", 1, Pair(20, 43), Pair(20, 54), Pair(20, 64), 200),
-            LBuilding(BuildingType.CITIZENS, "SCHOOL", 4, Pair(67, 79), Pair(31, 79), Pair(21, 79), 200)
+            LBuilding(BuildingType.CITIZENS, "HOUSE", 6,
+                    Pair(34, 41), Pair(34, 41), Pair(24, 41), 100),
+            LBuilding(BuildingType.HAPPINESS, "TAVERN", 2,
+                    Pair(13, 20), Pair(13, 26), Pair(13, 39), 100),
+            LBuilding(BuildingType.FOOD, "FARM", 2,
+                    Pair(19, 39), Pair(19, 39), Pair(19, 39), 100),
+            LBuilding(BuildingType.RESEARCH, "LABORATORY", 2,
+                    Pair(20, 28), Pair(20, 29), Pair(20, 38), 100),
+            LBuilding(BuildingType.STONE, "FACTORY", 2,
+                    Pair(6, 19), Pair(6, 30), Pair(6, 22), 100),
+            LBuilding(BuildingType.OTHER, "WELL", 0,
+                    Pair(0, 17), Pair(0, 17), Pair(0, 17), 100),
+            LBuilding(BuildingType.STONE, "CRAFTMAN", 1,
+                    Pair(20, 36), Pair(20, 36), Pair(20, 36), 100),
+            LBuilding(BuildingType.FOOD, "WAREHOUSE", 1,
+                    Pair(24, 51), Pair(24, 51), Pair(24, 51), 200),
+            LBuilding(BuildingType.HAPPINESS, "GARDEN", 1,
+                    Pair(21, 35), Pair(0, 55), Pair(0, 55), 200),
+            LBuilding(BuildingType.RESEARCH, "HOSPITAL", 1,
+                    Pair(20, 43), Pair(20, 54), Pair(20, 64), 200),
+            LBuilding(BuildingType.CITIZENS, "SCHOOL", 4,
+                    Pair(67, 79), Pair(31, 79), Pair(21, 79), 200),
+            LBuilding(BuildingType.OTHER, "TREE", 0,
+                    Pair(14, 14), Pair(0, 0), Pair(0, 0), 200, decoration = true)
     )
 
     val upgradedBuilding = listOf(
-            LBuilding(BuildingType.CITIZENS, "HOUSE+", 9, Pair(34, 41), Pair(34, 41), Pair(24, 41), 150),
-            LBuilding(BuildingType.HAPPINESS, "TAVERN+", 3, Pair(13, 20), Pair(13, 26), Pair(13, 39), 150),
-            LBuilding(BuildingType.FOOD, "FARM+", 3, Pair(19, 39), Pair(19, 39), Pair(19, 39), 150),
-            LBuilding(BuildingType.RESEARCH, "LABORATORY+", 3, Pair(20, 28), Pair(20, 29), Pair(20, 38), 150),
-            LBuilding(BuildingType.STONE, "FACTORY+", 3, Pair(6, 19), Pair(6, 30), Pair(6, 22), 150)
+            LBuilding(BuildingType.CITIZENS, "HOUSE+", 9,
+                    Pair(34, 41), Pair(34, 41), Pair(24, 41), 150),
+            LBuilding(BuildingType.HAPPINESS, "TAVERN+", 3,
+                    Pair(13, 20), Pair(13, 26), Pair(13, 39), 150),
+            LBuilding(BuildingType.FOOD, "FARM+", 3,
+                    Pair(19, 39), Pair(19, 39), Pair(19, 39), 150),
+            LBuilding(BuildingType.RESEARCH, "LABORATORY+", 3,
+                    Pair(20, 28), Pair(20, 29), Pair(20, 38), 150),
+            LBuilding(BuildingType.STONE, "FACTORY+", 3,
+                    Pair(6, 19), Pair(6, 30), Pair(6, 22), 150)
     )
 
     val initAvailableBuilding = listOf(
@@ -126,6 +143,9 @@ object Def {
             "FACTORY" to arrayOf("CITIZENS", "UPGRADE", "REPAIR", "DESTROY"),
             "FARM" to arrayOf("CITIZENS", "UPGRADE", "REPAIR", "DESTROY"),
             "GARDEN" to arrayOf("CITIZENS", "EXCHANGE", "REPAIR", "DESTROY")
+    )
+    val altBuildings = mapOf(
+            "TREE" to 3
     )
 
     // TREE

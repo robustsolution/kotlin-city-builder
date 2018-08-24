@@ -22,7 +22,7 @@ import ktx.app.KtxScreen
 import kotlin.math.abs
 
 enum class States {
-    IDLE, PLACE_BUILDING, MENU, PLACE_CITIZEN, TREE
+    IDLE, PLACE_BUILDING, MENU, PLACE_CITIZEN, TREE, PLACE_DECORATION
 }
 
 data class Progress(val tree: MutableList<String> = mutableListOf(), var limits: Pair<Int, Int> = Def.STARTING_LIMITS.copy(), var birthcost: Int, var lifetime: Int, var buildlife: Int)
@@ -52,6 +52,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         var hills = Hills()
         var state = States.IDLE
         val buildings = mutableListOf<Building>()
+        val decorations = mutableListOf<Building>()
         val ressources = Def.startingRessources.copy()
         val limits = Ressources(happiness = 9999, research = 9999)
         val progress = Progress(mutableListOf(), birthcost = Def.BIRTH_COST, lifetime = Def.LIFE_TIME, buildlife = Def.BUILD_LIFE_TIME)
@@ -139,6 +140,12 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
         // Draws buildings
         for (building in buildings) {
+            if (Math.abs(building.x - camera.position.x) < 240)
+                building.draw(batch)
+        }
+
+        // Draws decorations
+        for (building in decorations) {
             if (Math.abs(building.x - camera.position.x) < 240)
                 building.draw(batch)
         }
@@ -237,6 +244,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 menuManager.moveCursor(1)
             }
             States.PLACE_BUILDING -> menuManager.flip(pointer.y)
+            States.PLACE_DECORATION -> menuManager.switchDecoration()
             States.IDLE -> Util.showIDLEHelper()
             States.TREE -> tree.down()
             else -> Unit
@@ -245,7 +253,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
     override fun left() {
         when (state) {
-            States.IDLE, States.PLACE_CITIZEN, States.PLACE_BUILDING -> {
+            States.IDLE, States.PLACE_CITIZEN, States.PLACE_BUILDING, States.PLACE_DECORATION -> {
                 // Moves the camera
                 Util.inputFreeze = 1
                 if (camera.position.x > progress.limits.first - 16) {
@@ -266,7 +274,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
     override fun right() {
         when (state) {
-            States.IDLE, States.PLACE_BUILDING, States.PLACE_CITIZEN -> {
+            States.IDLE, States.PLACE_BUILDING, States.PLACE_CITIZEN, States.PLACE_DECORATION -> {
                 // Moves the camera
                 Util.inputFreeze = 1
                 if (camera.position.x < progress.limits.second + 16) {
@@ -294,7 +302,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 menuManager.open()
             }
             // Selects the pointed menu option or the pointed spot
-            States.MENU, States.PLACE_BUILDING, States.PLACE_CITIZEN -> {
+            States.MENU, States.PLACE_BUILDING, States.PLACE_CITIZEN, States.PLACE_DECORATION -> {
                 if (state == States.MENU && !menuManager.menus.last().activated[menuManager.menus.last().cursorPos]) {
                     GBJam6.playSFX(SFX.DISABLED)
                 } else {
@@ -321,7 +329,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                     States.IDLE
                 }
             }
-            States.PLACE_BUILDING -> {
+            States.PLACE_BUILDING, States.PLACE_DECORATION -> {
                 GBJam6.playSFX(SFX.RETURN)
                 menuManager.placingB = null
                 menuManager.updateMenu()
