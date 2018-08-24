@@ -115,7 +115,7 @@ object Def {
     val destroyedRessources = listOf(
             "HOUSE", "HOUSE+", "TAVERN", "TAVERN+", "FARM", "FARM+",
             "LABORATORY", "LABORATORY+", "FACTORY", "FACTORY+",
-            "CRAFTMAN", "HOSPITAL", "SCHOOL", "WAREHOUSE"
+            "CRAFTMAN", "HOSPITAL", "SCHOOL", "WAREHOUSE","WELL","GARDEN"
     )
     val customMenus = mapOf(
             "WELL" to arrayOf("HYDRATE", "REPAIR", "DESTROY"),
