@@ -249,7 +249,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
                 citizen.well!!.wateredCitizens.remove(citizen)
                 citizen.well = null
             }
-            if (citizen.life == 0)
+            if (citizen.life >= 0)
                 ressources.citizens -= 1
         }
         if (citizensToKill.any()) GBJam6.playSFX(SFX.DIE)

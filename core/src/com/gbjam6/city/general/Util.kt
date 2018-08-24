@@ -8,6 +8,7 @@ import com.gbjam6.city.GBJam6
 import com.gbjam6.city.graphics.Building
 import com.gbjam6.city.MenuManager
 import com.gbjam6.city.graphics.Menu
+import com.gbjam6.city.logic.Citizen
 import com.gbjam6.city.logic.Ressources
 import com.gbjam6.city.states.City
 import com.gbjam6.city.states.States
@@ -73,6 +74,23 @@ object Util {
         // No food
         if (City.ressources.food == 0) {
             GBJam6.playSFX(SFX.NO_FOOD)
+            City.starvingtick ++
+            println(City.starvingtick)
+        }else{
+            City.starvingtick = 0
+        }
+        if (City.starvingtick >= Def.STARVING_KILL_TICK){
+            val buldings = City.buildings.filter { it.citizens.size > 0 }
+            val citizens = mutableListOf<Citizen>()
+            for (building in buldings)
+                for (citizen in building.citizens)
+                    citizens.add(citizen)
+            if (citizens.size >0){
+                val citizen = citizens.random()
+                println(citizen.name)
+                citizen.building.citizensToKill.add(citizen)
+            }
+            City.starvingtick = 0
         }
     }
 

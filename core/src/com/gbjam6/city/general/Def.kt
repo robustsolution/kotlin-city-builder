@@ -23,7 +23,7 @@ data class TreeUpgrade(val x: Int, val y: Int, val name: String, val cost: Int, 
 object Def {
 
     // GENERAL
-    val startingRessources = Ressources(food = 200, happiness = 900, stone = 900, research = 2000)
+    val startingRessources = Ressources(food = 10, happiness = 900, stone = 900, research = 2000)
 
     // GAME DESIGN
     const val SPEED = 120
@@ -63,6 +63,7 @@ object Def {
     const val GARDEN_PRODUCTION = 2.0
     const val CRAFTMAN_PRODUCTION = 4.0
     const val WAREHOUSE_PRODUCTION = 6.0
+    const val STARVING_KILL_TICK = 10
 
 
     // SIZE

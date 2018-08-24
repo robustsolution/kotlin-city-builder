@@ -57,6 +57,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         val ressources = Def.startingRessources.copy()
         val limits = Ressources(happiness = 9999, research = 9999)
         val progress = Progress(mutableListOf(),birthcost = Def.BIRTH_COST,lifetime = Def.LIFE_TIME,buildlife = Def.BUILD_LIFE_TIME)
+        var starvingtick = 0
     }
 
     override fun show() {
