@@ -26,7 +26,7 @@ object Def {
     val startingRessources = Ressources(food = 100, happiness = 500, stone = 500)
 
     // GAME DESIGN
-    const val SPEED = 100
+    const val SPEED = 10
     const val BIRTH_COST = 100
     const val LIFE_TIME = 300
     const val DAMAGED_LIMIT_PCT = 0.30
@@ -87,11 +87,11 @@ object Def {
     // BUILDINGS
     val buildings = listOf(
             LBuilding(BuildingType.CITIZENS, "HOUSE", 6,
-                    Pair(34, 41), Pair(34, 41), Pair(24, 41), 100,upgradeCost = 100),
+                    Pair(34, 41), Pair(34, 41), Pair(24, 41), 100),
             LBuilding(BuildingType.HAPPINESS, "TAVERN", 2,
                     Pair(13, 20), Pair(13, 26), Pair(13, 39), 100),
             LBuilding(BuildingType.FOOD, "FARM", 2,
-                    Pair(19, 39), Pair(19, 39), Pair(19, 39), 100),
+                    Pair(19, 39), Pair(19, 39), Pair(19, 39), 100,upgradeCost = 100),
             LBuilding(BuildingType.RESEARCH, "LABORATORY", 2,
                     Pair(20, 28), Pair(20, 29), Pair(20, 38), 100),
             LBuilding(BuildingType.STONE, "FACTORY", 2,
