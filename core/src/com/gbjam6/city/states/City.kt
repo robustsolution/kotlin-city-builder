@@ -208,6 +208,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         gui.draw(batch, smallFontDark)
 
         // Draws the birds
+        birds.map { it.update(speed) }
         birds.map { it.draw(batch) }
         val birdsToRemove = mutableListOf<Int>()
         birds.withIndex().map { (i, b) -> if (abs(b.x) > (Def.nChunks + 2) * 16) birdsToRemove.add(i) }

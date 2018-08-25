@@ -36,14 +36,17 @@ class Bird(gbJam6: GBJam6) {
     }
 
     fun draw(batch: SpriteBatch) {
-        frame += 1
-        x += direction
         val compensation = if (Util.inputFreeze == 1 && direction == stop) direction else 0
         if (frame % 16 < 8) {
             batch.draw(spr1, x + compensation, y)
         } else {
             batch.draw(spr2, x + compensation, y)
         }
+    }
+
+    fun update(speed: Int) {
+        frame += speed
+        x += direction * speed
     }
 
 }
