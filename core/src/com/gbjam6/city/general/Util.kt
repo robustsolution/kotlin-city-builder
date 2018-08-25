@@ -2,17 +2,21 @@ package com.gbjam6.city.general
 
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.gbjam6.city.GBJam6
 import com.gbjam6.city.graphics.Building
 import com.gbjam6.city.MenuManager
+import com.gbjam6.city.Tutorial
 import com.gbjam6.city.graphics.Menu
 import com.gbjam6.city.logic.Citizen
+import com.gbjam6.city.logic.Hills
 import com.gbjam6.city.logic.Ressources
 import com.gbjam6.city.states.City
 import com.gbjam6.city.states.GameOver
+import com.gbjam6.city.states.Progress
 import com.gbjam6.city.states.States
 import java.util.*
 import kotlin.math.abs
@@ -289,5 +293,25 @@ object Util {
         pointer.y = Util.getPixel(-87f + chunk.height + diff * chunk.slope / 32)
         pointerSmiley.x = pointer.x
         pointerSmiley.y = pointer.y + 1
+    }
+
+
+    fun reset() {
+        City.hills = Hills()
+        City.state = States.IDLE
+        City.buildings = mutableListOf()
+        City.decorations = mutableListOf()
+        City.ressources = Def.startingRessources.copy()
+        City.limits = Ressources(happiness = 9999, research = 9999)
+        City.progress = Progress(mutableListOf(), birthcost = Def.BIRTH_COST, lifetime = Def.LIFE_TIME, buildlife = Def.BUILD_LIFE_TIME)
+        City.starvingtick = 0
+        City.speed = 1
+        City.tutorial = Tutorial()
+        City.camera.position.x = 0f
+    }
+
+    fun getVolume(sfx: SFX): Float = when (sfx) {
+        SFX.COLLAPSE, SFX.DIE, SFX.DESTROYED -> 1f
+        else -> 0.25f
     }
 }

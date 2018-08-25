@@ -125,10 +125,12 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
         when (cursorPos) {
             0 -> {
                 gbJam6.setMusic("SMALL CITY")
+                Util.reset()
                 gbJam6.setScreen<City>()
             }
             1 -> {
                 gbJam6.setMusic("SMALL CITY")
+                Util.reset()
                 City.tutorial.reset()
                 City.ressources = Ressources(stone = 300, happiness = 400, food = 100)
                 City.speed = 0

@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.gbjam6.city.general.SFX
+import com.gbjam6.city.general.Util
 import com.gbjam6.city.states.*
 import com.tanjent.tanjentxm.Player
 import ktx.app.KtxGame
@@ -35,7 +36,7 @@ class GBJam6 : KtxGame<Screen>() {
         val sfxMap = mutableMapOf<SFX, Sound>()
 
         fun playSFX(sfx: SFX) {
-            sfxMap[sfx]!!.play()
+            sfxMap[sfx]!!.play(Util.getVolume(sfx))
         }
     }
 

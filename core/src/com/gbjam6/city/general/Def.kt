@@ -65,7 +65,6 @@ object Def {
     const val WAREHOUSE_PRODUCTION = 6.0
     const val STARVING_KILL_TICK = 10
 
-
     // SIZE
     const val nChunks = 82
     const val menuWidth = 72f

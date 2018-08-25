@@ -33,7 +33,7 @@ data class Progress(val tree: MutableList<String> = mutableListOf(), var limits:
 class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private val batch = SpriteBatch()
     private val viewport = FitViewport(160f, 144f, camera)
-    private val menuManager = MenuManager(gbJam6)
+    private var menuManager = MenuManager(gbJam6)
 
     private lateinit var hillSprites: Array<Sprite>
     private lateinit var pointer: Sprite
@@ -48,22 +48,24 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private var frame = 0
 
     companion object {
-        val camera = OrthographicCamera()
+        var camera = OrthographicCamera()
         var hills = Hills()
         var state = States.IDLE
-        val buildings = mutableListOf<Building>()
-        val decorations = mutableListOf<Building>()
+        var buildings = mutableListOf<Building>()
+        var decorations = mutableListOf<Building>()
         var ressources = Def.startingRessources.copy()
-        val limits = Ressources(happiness = 9999, research = 9999)
-        val progress = Progress(mutableListOf(), birthcost = Def.BIRTH_COST, lifetime = Def.LIFE_TIME, buildlife = Def.BUILD_LIFE_TIME)
+        var limits = Ressources(happiness = 9999, research = 9999)
+        var progress = Progress(mutableListOf(), birthcost = Def.BIRTH_COST, lifetime = Def.LIFE_TIME, buildlife = Def.BUILD_LIFE_TIME)
         var starvingtick = 0
         var speed = 1
-        val tutorial = Tutorial()
+        var tutorial = Tutorial()
     }
 
     override fun show() {
         super.show()
         camera.position.x = 0f
+        frame = 0
+        menuManager = MenuManager(gbJam6)
 
         // Inits fonts
         font = gbJam6.manager.get("fonts/skullboy.fnt", BitmapFont::class.java)
