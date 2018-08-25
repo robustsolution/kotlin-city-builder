@@ -28,8 +28,8 @@
 |Factory|![Factory](../android/assets/sprites/buildings/FACTORY.png)|Stone|2 citizens|1 Stone / Citizen in / Month|Increases the maximum number of stones by 100|
 |Factory+|![Factory+](../android/assets/sprites/buildings/FACTORY+2.png)|Stone|3 citizens|1 Stone / Citizen in / Month|Increases the maximum number of stones by 150|
 |Craftman|![Cratman](../android/assets/sprites/buildings/CRAFTMAN.png)|Stone|1 citizen|2 Stone / Citizen in / Month|The buildings are damaged twice less. (not combinable)|
-|Well|![Well](../android/assets/sprites/buildings/WELL.png)|Other|None|None|Increases by 50% the effectiveness of 2 citizens who are in the 80 pixels around the well|
-|Tree|![Tree](../android/assets/sprites/buildings/TREE_A.png)|Other|None|None| Stands on a building and prevents it from negative interaction|
+|Well|![Well](../android/assets/sprites/buildings/WELL.png)|Other|None|None|Increases by 50% the productivity of 2 citizens who are in the 90 pixels around the well|
+|Tree|![Tree0](../android/assets/sprites/buildings/TREE0.png)![Tree1](../android/assets/sprites/buildings/TREE1.png)![Tree2](../android/assets/sprites/buildings/TREE2.png)|Other|None|None| Stands on a building and prevents it from negative interaction|
 ## Interactions between the different types of buildings
 
 Each building produces its ressource, but this production is influenced by different factors, including the proximity other buildings.
@@ -64,6 +64,7 @@ Each building produces its ressource, but this production is influenced by diffe
 |  Blue  |           -0.2           |
 | Yellow |          -0.4          |
 
+Production = BuildingProduction * BuildingInteraction * CitizensProduction
 ## Research tree
 ![mermaid
 graph LR
@@ -98,7 +99,7 @@ graph LR
 |Warehouse|400|Unlocks the Warehouse|
 |Tree|600|Unlocks the Tree|
 |Hospital|600|Unlocks the Hospital|
-|Parenting|600|If a citizen is birth in a house with a citizen inside. The latter becomes the parent of the former. The child gains a bonus of productivity if he works with their parent|
+|Parenting|600|If a citizen is birth in a house with a citizen inside. The latter becomes the parent of the former. The child gains a bonus of 50% of productivity if he works with their parent|
 |Garden|800|Unlocks the Garden|
 |Hard_Mode|800|No pause and only speed 4,5,6,7|
 |Expand|800|You can expand your map 2 more times (4 without)|
