@@ -19,7 +19,6 @@ import com.gbjam6.city.graphics.GUI
 import com.gbjam6.city.graphics.Tree
 import com.gbjam6.city.logic.Hills
 import ktx.app.KtxScreen
-import javax.swing.Action
 import kotlin.math.abs
 
 enum class States {
@@ -108,7 +107,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 frame += speed
             if (frame > Def.SPEED) {
                 frame = 0
-                Util.tick(menuManager)
+                Util.tick(menuManager, gbJam6)
                 menuManager.tick()
                 tutorial.tick(menuManager)
             }
@@ -195,10 +194,10 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         // Draws the menu
         menuManager.drawMenu(batch, smallFont, smallFontDisabled)
 
-        // Draw the tree
+        // Draws the tree
         tree.draw(batch, smallFontDark)
 
-        // Updates and draw the helper
+        // Updates and draws the helper
         Util.updateHelper(menuManager.menus)
         menuManager.drawHelper(batch, smallFont)
 

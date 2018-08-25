@@ -12,6 +12,7 @@ import com.gbjam6.city.graphics.Menu
 import com.gbjam6.city.logic.Citizen
 import com.gbjam6.city.logic.Ressources
 import com.gbjam6.city.states.City
+import com.gbjam6.city.states.GameOver
 import com.gbjam6.city.states.States
 import java.util.*
 import kotlin.math.abs
@@ -44,7 +45,7 @@ object Util {
         return false
     }
 
-    fun tick(menuManager: MenuManager) {
+    fun tick(menuManager: MenuManager, gbJam6: GBJam6) {
         // println("tick")
         val ressources = Ressources()
         val buildingsToDestroy = mutableListOf<Building>()
@@ -92,9 +93,15 @@ object Util {
             City.starvingtick = 0
         }
 
-        //Game Over
-        if (City.buildings.filter { it.lBuilding.type == BuildingType.STONE }.isEmpty() && City.ressources.stone < Def.buildings[4].cost || City.ressources.citizens == 0 && City.ressources.happiness < City.progress.birthcost && City.ressources.food < Def.EXCHANGE_VALUE)
-            println("Game Over")
+        // Game Over
+        if (City.buildings.none { it.lBuilding.type == BuildingType.STONE }
+                && City.ressources.stone < Def.buildings[4].cost
+                || City.ressources.citizens == 0
+                && City.ressources.happiness < City.progress.birthcost
+                && City.ressources.food < Def.EXCHANGE_VALUE) {
+            GameOver.text = "GAME OVER!\nPRESS A TO RETURN TO TITLE."
+            gbJam6.setScreen<GameOver>()
+        }
     }
 
     /**

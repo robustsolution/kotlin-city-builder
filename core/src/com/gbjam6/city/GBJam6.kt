@@ -50,6 +50,7 @@ class GBJam6 : KtxGame<Screen>() {
         addScreen(TitleScreen(this))
         addScreen(City(this))
         addScreen(SoundTest(this))
+        addScreen(GameOver(this))
 
         // Start loading screen
         setScreen<Preload>()

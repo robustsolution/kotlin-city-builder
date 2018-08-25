@@ -265,7 +265,7 @@ class Building(lBuilding: LBuilding, var x: Float, var y: Float, val manager: As
         if (this.lBuilding.type != BuildingType.OTHER)
             description += "\n${this.interaction}\n${this.produc}"
         if (this.lBuilding.name == "GARDEN")
-            description += "\n Coldown :\n${this.exchangeTimer}/${Def.EXCHANGE_TIME}"
+            description += "\n Cooldown :\n${this.exchangeTimer}/${Def.EXCHANGE_TIME}"
         return description
     }
 
