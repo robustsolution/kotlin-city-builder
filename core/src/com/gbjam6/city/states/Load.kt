@@ -76,6 +76,10 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         // GUI
         gbJam6.manager.load("sprites/gui/GUI.png", Texture::class.java)
 
+        // PARALLAX
+        gbJam6.manager.load("sprites/parallax/bg1.png", Texture::class.java)
+        gbJam6.manager.load("sprites/parallax/bg2.png", Texture::class.java)
+
         // TREE
         gbJam6.manager.load("sprites/tree/tree.png", Texture::class.java)
         gbJam6.manager.load("sprites/tree/cursor-sheet.png", Texture::class.java)

@@ -43,6 +43,8 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     private lateinit var smallFont: BitmapFont
     private lateinit var smallFontDisabled: BitmapFont
     private lateinit var smallFontDark: BitmapFont
+    private lateinit var bg1: Texture
+    private lateinit var bg2: Texture
     private lateinit var tree: Tree
     private val greyBg = Util.generateRectangle(120, 144, Def.color3)
     private var frame = 0
@@ -72,6 +74,10 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         smallFont = gbJam6.manager.get("fonts/little.fnt", BitmapFont::class.java)
         smallFontDisabled = gbJam6.manager.get("fonts/littleDisabled.fnt", BitmapFont::class.java)
         smallFontDark = gbJam6.manager.get("fonts/littleDark.fnt", BitmapFont::class.java)
+
+        // Inits parallax
+        bg1 = gbJam6.manager.get("sprites/parallax/bg1.png", Texture::class.java)
+        bg2 = gbJam6.manager.get("sprites/parallax/bg2.png", Texture::class.java)
 
         // Inits pointers
         pointer = Sprite(gbJam6.manager.get("sprites/pointerUp.png", Texture::class.java))
@@ -134,8 +140,9 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         gbJam6.shader.setUniformi("colorTable", 1)
         gbJam6.shader.setUniformf("paletteIndex", gbJam6.paletteIndex)
 
-        // Draws background
-        // TODO: Add a background
+        // Draws parallax
+        batch.draw(bg2, camera.position.x + Util.getPixel(-camera.position.x / 32 - Def.parallax / 2), -72 + 8f)
+        batch.draw(bg1, camera.position.x + Util.getPixel(-camera.position.x / 16 - Def.parallax / 2), -72 + 14f)
 
         // Draws limit background
         if (abs(camera.position.x - progress.limits.first) < 180 || abs(camera.position.x - progress.limits.second) < 180) {

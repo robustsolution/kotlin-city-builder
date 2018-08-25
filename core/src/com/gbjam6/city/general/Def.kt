@@ -73,6 +73,7 @@ object Def {
     const val helperY = 40f
     const val speedY = 50f
     const val speedOffset = 9f
+    const val parallax = 320f
 
     // MENUS
     val menus = mapOf(
