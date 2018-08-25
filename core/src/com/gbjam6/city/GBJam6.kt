@@ -11,6 +11,7 @@ import com.gbjam6.city.general.Util
 import com.gbjam6.city.states.*
 import com.tanjent.tanjentxm.Player
 import ktx.app.KtxGame
+import javax.swing.ImageIcon
 
 /**
  * Main class.
@@ -41,6 +42,8 @@ class GBJam6 : KtxGame<Screen>() {
     }
 
     override fun create() {
+
+        setIcon()
 
         shaderVertIndexPalette = Gdx.files.internal("shaders/indexpalette.vert").readString()
         shaderFragIndexPalette = Gdx.files.internal("shaders/indexpalette.frag").readString()
@@ -78,6 +81,18 @@ class GBJam6 : KtxGame<Screen>() {
                     1f, 0.1f)
             "BIG CITY" -> player.play(cityMusic3, true, true,
                     1f, 0.1f)
+        }
+    }
+
+    fun setIcon() {
+        try {
+            val cls = Class.forName("com.apple.eawt.Application")
+            val application = cls.newInstance().javaClass.getMethod("getApplication").invoke(null)
+
+            val icon = Gdx.files.local("sprites/gui/ICON.png")
+            application.javaClass.getMethod("setDockIconImage", java.awt.Image::class.java)
+                    .invoke(application, ImageIcon(icon.file().absolutePath).image)
+        } catch (ignored: Exception) {
         }
     }
 
