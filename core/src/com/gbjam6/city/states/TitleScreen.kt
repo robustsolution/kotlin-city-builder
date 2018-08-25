@@ -12,6 +12,7 @@ import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.Util
 import ktx.app.KtxScreen
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
+import com.gbjam6.city.logic.Ressources
 
 
 /**
@@ -129,6 +130,7 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
             1 -> {
                 gbJam6.setMusic("SMALL CITY")
                 City.tutorial.reset()
+                City.ressources = Ressources(stone = 300, happiness = 400, food = 100)
                 City.speed = 0
                 gbJam6.setScreen<City>()
             }
