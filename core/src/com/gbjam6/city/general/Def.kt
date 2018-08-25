@@ -26,7 +26,7 @@ object Def {
     val startingRessources = Ressources(food = 100, happiness = 500, stone = 500)
 
     // GAME DESIGN
-    const val SPEED = 100
+    const val SPEED = 90
     const val BIRTH_COST = 100
     const val LIFE_TIME = 300
     const val DAMAGED_LIMIT_PCT = 0.30
@@ -87,11 +87,11 @@ object Def {
     // BUILDINGS
     val buildings = listOf(
             LBuilding(BuildingType.CITIZENS, "HOUSE", 6,
-                    Pair(34, 41), Pair(34, 41), Pair(24, 41), 100,upgradeCost = 100),
+                    Pair(34, 41), Pair(34, 41), Pair(24, 41), 100),
             LBuilding(BuildingType.HAPPINESS, "TAVERN", 2,
                     Pair(13, 20), Pair(13, 26), Pair(13, 39), 100),
             LBuilding(BuildingType.FOOD, "FARM", 2,
-                    Pair(19, 39), Pair(19, 39), Pair(19, 39), 100),
+                    Pair(19, 39), Pair(19, 39), Pair(19, 39), 100,upgradeCost = 100),
             LBuilding(BuildingType.RESEARCH, "LABORATORY", 2,
                     Pair(20, 28), Pair(20, 29), Pair(20, 38), 100),
             LBuilding(BuildingType.STONE, "FACTORY", 2,
@@ -159,15 +159,15 @@ object Def {
             TreeUpgrade(xPos[1], yPos2[0], "WELL", 200, "Unlocks the Well.\nIt hydrates citizens and increases their production."),
             TreeUpgrade(xPos[1], yPos2[1], "LABORATORY+", 200, "Laboratory becomes upgradable.\n(+1 Citizen)"),
             TreeUpgrade(xPos[1], yPos2[2], "HOUSE+", 200, "House becomes upgradable.\n (+3 Citizens & +3 Population)"),
-            TreeUpgrade(xPos[2], yPos1[0], "CRAFTMAN", 400, "Unlocks the Craftman.\nDoubles building's integrity when constructed."),
-            TreeUpgrade(xPos[2], yPos1[1], "SCHOOL", 400, "Unlocks the School.\nBirth costs 75 Hapiness when constructed."),
+            TreeUpgrade(xPos[2], yPos1[0], "CRAFTMAN", 400, "Unlocks the Craftman.\nDoubles building's integrity when built."),
+            TreeUpgrade(xPos[2], yPos1[1], "SCHOOL", 400, "Unlocks the School.\nBirth costs 75 Happiness when built."),
             TreeUpgrade(xPos[2], yPos1[2], "WAREHOUSE", 400, "Unlocks the Warehouse.\nIncreases food and stone storage by 200."),
-            TreeUpgrade(xPos[3], yPos2[0], "TREE", 600, "Unlocks the Tree.\nThe building whewe it's placed don't receive negative interaction from other buildings"),
+            TreeUpgrade(xPos[3], yPos2[0], "TREE", 600, "Unlocks the Tree.\nThe building where it's placed won't receive anymore negative interaction from other buildings"),
             TreeUpgrade(xPos[3], yPos2[1], "HOSPITAL", 600, "Unlocks the Hospital.\nDoubles your Citizens's lifetime."),
-            TreeUpgrade(xPos[3], yPos2[2], "PARENTING", 600, "New born citizens have a parent from the house and receive a bonus of production if he works with him"),
+            TreeUpgrade(xPos[3], yPos2[2], "PARENTING", 600, "New born citizens have a parent from the house and receive a bonus of production if they work with them"),
             TreeUpgrade(xPos[4], yPos1[0], "GARDEN", 800, "Unlocks the Garden.\nExchanges 50 Food against 50 Happiness."),
             TreeUpgrade(xPos[4], yPos1[1], "HARD MODE", 800, "\nBETTER, FASTER, STRONGER"),
-            TreeUpgrade(xPos[4], yPos1[2], "EXPAND", 800, "Allow you to expand 2 more time")
+            TreeUpgrade(xPos[4], yPos1[2], "EXPAND", 800, "Allow you to expand 2 more times")
     )
     val treeRequirements = mapOf(
             "WELL" to arrayOf("FACTORY+"),
@@ -191,10 +191,10 @@ object Def {
     // DESCRIPTIONS
     private const val backupDesc = "MISSING :-c\nADD ME IN\nDEF.DESCRIPTIONS"
     private val descriptions = mapOf(
-            "CITIZENS" to "Change of\nbuilding a\ncitizen",
+            "CITIZENS" to "The citizens\ngoes to another\nbuilding",
             "HAPPINESS" to "Happiness is\nthe ressource\nwhich allows\ncitizens's birth\nand expansion",
             "FOOD" to "Food is the\nressource\nconsumed by\nevery citizen",
-            "RESEARCH" to "Research is\nthe ressource\nwhich lets\nyou obtain\nimprovements",
+            "RESEARCH" to "Stone is the\nressource which\nallows you\nbuilding new\nbuildings",
             "STONE" to "Stone is the\nressource which\nlets you build\nnew buildings",
             "RETURN" to "GO BACK",
             "OTHER" to "OTHER CONSTRUCTION",
