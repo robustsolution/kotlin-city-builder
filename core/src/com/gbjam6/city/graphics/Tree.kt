@@ -18,7 +18,7 @@ class Tree(val gbJam6: GBJam6) {
     private val cursor2 = TextureRegion(gbJam6.manager.get("sprites/tree/cursor-sheet.png", Texture::class.java), 20, 2, 16, 16)
     private val border = gbJam6.manager.get("sprites/tree/unlocked.png", Texture::class.java)
     private var x = 0
-    private var y = 0
+    private var y = 2
     var frame = 0
 
     fun draw(batch: SpriteBatch, font: BitmapFont) {

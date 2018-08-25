@@ -110,7 +110,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                 frame = 0
                 Util.tick(menuManager)
                 menuManager.tick()
-                tutorial.tick()
+                tutorial.tick(menuManager)
             }
         }
         tree.frame = (tree.frame + 1) % 60
@@ -195,12 +195,12 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         // Draws the menu
         menuManager.drawMenu(batch, smallFont, smallFontDisabled)
 
+        // Draw the tree
+        tree.draw(batch, smallFontDark)
+
         // Updates and draw the helper
         Util.updateHelper(menuManager.menus)
         menuManager.drawHelper(batch, smallFont)
-
-        // Draw the tree
-        tree.draw(batch, smallFontDark)
 
         batch.end()
 
@@ -325,7 +325,9 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
     }
 
     override fun b() {
-        if (!tutorial.active) {
+        if (tutorial.active) {
+            tutorial.b(menuManager)
+        } else {
             state = when (state) {
                 States.MENU -> {
                     GBJam6.playSFX(SFX.RETURN)
@@ -368,11 +370,12 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
     override fun start() {
         if (tutorial.active) {
-            tutorial.start()
+            tutorial.start(menuManager)
         } else {
             when (state) {
                 States.IDLE -> {
                     GBJam6.playSFX(SFX.SELECT)
+                    MenuManager.helper.visible = false
                     state = States.TREE
                 }
                 States.TREE -> {
