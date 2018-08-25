@@ -54,7 +54,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         var state = States.IDLE
         val buildings = mutableListOf<Building>()
         val decorations = mutableListOf<Building>()
-        val ressources = Def.startingRessources.copy()
+        var ressources = Def.startingRessources.copy()
         val limits = Ressources(happiness = 9999, research = 9999)
         val progress = Progress(mutableListOf(), birthcost = Def.BIRTH_COST, lifetime = Def.LIFE_TIME, buildlife = Def.BUILD_LIFE_TIME)
         var starvingtick = 0
