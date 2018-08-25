@@ -131,11 +131,11 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         val progress = gbJam6.manager.progress
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
         shapeRenderer.color = Def.color4
-        shapeRenderer.rect(-60f, -48f, progress * 120, 2f)
+        shapeRenderer.rect(-60f, -65f, progress * 120, 2f)
         shapeRenderer.end()
 
         batch.begin()
-        font.draw(batch, "PUBLIC DOMAIN\nLICENSED BY NO ONE", -80f, -51f, 160f, 1, true)
+        font.draw(batch, "PUBLIC DOMAIN", -80f, -49f, 160f, 1, true)
         batch.end()
 
     }
