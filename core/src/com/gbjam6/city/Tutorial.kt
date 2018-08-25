@@ -48,7 +48,7 @@ class Tutorial {
             Step(ACTION.SELECT_EMPTY, "Select an\nempty spot."),
             Step(ACTION.SELECT, "Select\nstone.", menuItem = "STONE"),
             Step(ACTION.SELECT, "Select\nthe factory.", menuItem = "FACTORY"),
-            Step(ACTION.PLACE, "Select a\nwise spot\nfor the factory!"),
+            Step(ACTION.PLACE, "Select a\nwise spot\nfor the\nfactory!"),
             Step(ACTION.CLICK, "Now we will\nput a citizen\nin this factory."),
             Step(ACTION.SELECT_BUILDING, "Select the\nhouse.", building = "HOUSE"),
             Step(ACTION.SELECT, "Select\nbirth.", menuItem = "BIRTH"),
@@ -70,7 +70,7 @@ class Tutorial {
             Step(ACTION.SELECT, "Like this :)", menuItem = "BIRTH"),
             Step(ACTION.PLACE, "Where is the\ntavern already?", building = "TAVERN"),
             Step(ACTION.GIVE, "", ressource = Ressources(stone = 100)),
-            Step(ACTION.SELECT_EMPTY, "Let's build\nsomething\nto gain research\npoints."),
+            Step(ACTION.SELECT_EMPTY, "Let's build\nsomething\nto gain\nresearch points."),
             Step(ACTION.SELECT, "Which one is\nit?", menuItem = "RESEARCH"),
             Step(ACTION.SELECT, "Found it!", menuItem = "LABORATORY"),
             Step(ACTION.PLACE, "I think\nthis one\nlooks pretty\nrad :p"),
@@ -83,7 +83,7 @@ class Tutorial {
             Step(ACTION.GIVE, "", ressource = Ressources(stone = 100)),
             Step(ACTION.SELECT_BUILDING, "Select the\nFarm to\nupgrade it.", building = "FARM"),
             Step(ACTION.SELECT, "Select upgrade.", menuItem = "UPGRADE"),
-            Step(ACTION.WAIT, "Listen\ncarefully.", ticks = 2),
+            Step(ACTION.WAIT, "It is\nupgrading...", ticks = 2),
             Step(ACTION.CLOSE, "Press B\nto close\nthe menu."),
             Step(ACTION.CLICK, "Wow!"),
             Step(ACTION.CLICK, "Press A\nand listen\ncarefully!"),
@@ -103,9 +103,10 @@ class Tutorial {
             Step(ACTION.CLICK, "Here's some\nadvice :"),
             Step(ACTION.CLICK, "1- Press down\nto display\nbuildings'\ndescription."),
             Step(ACTION.CLICK, "2- Press up\nto hide\nthe GUI."),
-            Step(ACTION.CLICK, "3- Press P\nto change the\npalette."),
+            Step(ACTION.CLICK, "3- When you\nplace a\nbuinding,\npress down to\nflip it."),
+            Step(ACTION.CLICK, "4- Press P\nto change the\npalette."),
             Step(ACTION.GIVE, "", ressource = Ressources(stone = 100,food = 150,happiness = 100)),
-            Step(ACTION.FINISHED, "4- Enjoy!")
+            Step(ACTION.FINISHED, "5- Enjoy!")
     )
     var active = false
     var progression = steps.toMutableList()
