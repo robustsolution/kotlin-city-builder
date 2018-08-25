@@ -14,11 +14,13 @@ import com.gbjam6.city.general.Def
 import com.gbjam6.city.general.SFX
 import com.gbjam6.city.logic.Ressources
 import com.gbjam6.city.general.Util
+import com.gbjam6.city.graphics.Bird
 import com.gbjam6.city.graphics.Building
 import com.gbjam6.city.graphics.GUI
 import com.gbjam6.city.graphics.Tree
 import com.gbjam6.city.logic.Hills
 import ktx.app.KtxScreen
+import java.util.*
 import kotlin.math.abs
 
 enum class States {
@@ -61,6 +63,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         var starvingtick = 0
         var speed = 1
         var tutorial = Tutorial()
+        var birds = mutableListOf<Bird>()
     }
 
     override fun show() {
@@ -111,13 +114,17 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
 
         // Time based or frame based stuff
         if (speed > 0) {
-            if (!tutorial.active || tutorial.active && tutorial.progression[0].action == ACTION.WAIT)
+            if (!tutorial.active || tutorial.active && tutorial.progression[0].action == ACTION.WAIT) {
                 frame += speed
+            }
             if (frame > Def.SPEED) {
                 frame = 0
                 Util.tick(menuManager, gbJam6)
                 menuManager.tick()
                 tutorial.tick(menuManager)
+                if (Math.random() < Def.BIRD_PROBA) {
+                    birds.add(Bird(gbJam6))
+                }
             }
         }
         tree.frame = (tree.frame + 1) % 60
@@ -200,6 +207,12 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
         // Draws the GUI
         gui.draw(batch, smallFontDark)
 
+        // Draws the birds
+        birds.map { it.draw(batch) }
+        val birdsToRemove = mutableListOf<Int>()
+        birds.withIndex().map { (i, b) -> if (abs(b.x) > (Def.nChunks + 2) * 16) birdsToRemove.add(i) }
+        birdsToRemove.reversed().map { birds.removeAt(it) }
+
         // Draws the menu
         menuManager.drawMenu(batch, smallFont, smallFontDisabled)
 
@@ -268,6 +281,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                     if (camera.position.x > progress.limits.first - 16) {
                         if (Util.wasPressed) {
                             camera.translate(-3f, 0f)
+                            Bird.stop = -1
                         } else {
                             // Special slow first frame (for precise movements)
                             Util.inputFreeze = 4
@@ -293,6 +307,7 @@ class City(private val gbJam6: GBJam6) : KtxScreen, Input {
                     if (camera.position.x < progress.limits.second + 16) {
                         if (Util.wasPressed) {
                             camera.translate(3f, 0f)
+                            Bird.stop = 1
                         } else {
                             // Special slow first frame (for precise movements)
                             Util.inputFreeze = 4

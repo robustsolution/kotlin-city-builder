@@ -85,6 +85,10 @@ class Load(private val gbJam6: GBJam6) : KtxScreen {
         gbJam6.manager.load("sprites/tree/cursor-sheet.png", Texture::class.java)
         gbJam6.manager.load("sprites/tree/unlocked.png", Texture::class.java)
 
+        // BIRD
+        gbJam6.manager.load("sprites/bird1.png", Texture::class.java)
+        gbJam6.manager.load("sprites/bird2.png", Texture::class.java)
+
         // SHADER
         gbJam6.manager.load("shaders/colorTable.png", Texture::class.java)
 

@@ -102,9 +102,10 @@ class Tutorial {
             Step(ACTION.CLICK, "The tutorial\nis finished."),
             Step(ACTION.CLICK, "Here's some\nadvice :"),
             Step(ACTION.CLICK, "1- Press down\nto display\nbuildings'\ndescription."),
-            Step(ACTION.CLICK, "2- Press P\nto change the\npalette."),
+            Step(ACTION.CLICK, "2- Press up\nto hide\nthe GUI."),
+            Step(ACTION.CLICK, "3- Press P\nto change the\npalette."),
             Step(ACTION.GIVE, "", ressource = Ressources(stone = 100,food = 150,happiness = 100)),
-            Step(ACTION.FINISHED, "3- Enjoy!")
+            Step(ACTION.FINISHED, "4- Enjoy!")
     )
     var active = false
     var progression = steps.toMutableList()

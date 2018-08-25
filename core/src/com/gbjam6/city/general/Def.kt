@@ -24,6 +24,7 @@ object Def {
 
     // GENERAL
     val startingRessources = Ressources(food = 100, happiness = 500, stone = 500)
+    const val BIRD_PROBA = 0.2
 
     // GAME DESIGN
     const val SPEED = 90
