@@ -65,7 +65,7 @@ Each building produces its ressource, but this production is influenced by diffe
 | Yellow |          -0.4          |
 
 ## Research tree
-```mermaid
+![mermaid
 graph LR
   Well --> Tree;
   Tree --> Garden;
@@ -83,5 +83,22 @@ graph LR
   Laboratory+ --> School;
   School --> Parenting;
   Warehouse --> Expand;
-  House+ --> School;
-```
+  House+ --> School;](assets/Tree.png)
+
+| Research  |Cost| Explanation |
+| :----: | :-: |:-------------------: |
+|Factory+|100|Factory becomes upgradable|
+|Tavern+|100|Tavern becomes upgradabl|
+|Farm+|100|Farm becomes upgradable|
+|Well|200|Unlocks the Well|
+|Laboratory+|200|Laboratory becomes upgradable|
+|House+|200|House becomes upgradable|
+|Craftman|400|Unlocks the Craftman|
+|School|400|Unlocks the School|
+|Warehouse|400|Unlocks the Warehouse|
+|Tree|600|Unlocks the Tree|
+|Hospital|600|Unlocks the Hospital|
+|Parenting|600|If a citizen is birth in a house with a citizen inside. The latter becomes the parent of the former. The child gains a bonus of productivity if he works with their parent|
+|Garden|800|Unlocks the Garden|
+|Hard_Mode|800|No pause and only speed 4,5,6,7|
+|Expand|800|You can expand your map 2 more times (4 without)|
