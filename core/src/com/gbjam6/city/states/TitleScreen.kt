@@ -30,7 +30,6 @@ class TitleScreen(private val gbJam6: GBJam6) : KtxScreen, com.gbjam6.city.Input
     private lateinit var titleName: Texture
     private lateinit var bg: Texture
     private lateinit var cursor: Texture
-    private lateinit var colorTable: Texture
 
     companion object {
         // Successive logo y positions

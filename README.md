@@ -1,8 +1,10 @@
 [![Kotlin](https://img.shields.io/badge/kotlin-1.2.60-f88909.svg)](http://kotlinlang.org/) [![LibGDX](https://img.shields.io/badge/libgdx-1.9.8-e44d3c.svg)](https://libgdx.badlogicgames.com/) [![LibKTX](https://img.shields.io/badge/libktx-1.9.8--b1-0095d5.svg)](https://github.com/libktx/ktx) [![license](https://img.shields.io/badge/license-CC0--1.0-green.svg)](https://github.com/yopox/GBJAM6/blob/master/LICENSE)
 
-# GBJAM6
+# Campagne
 
-<!-- Title screen gif -->
+![Title screen](pic.png)
+
+This is our entry for GBJAM6. Check it out [here](https://yopox.itch.io/campagne).
 
 ## Team
 
